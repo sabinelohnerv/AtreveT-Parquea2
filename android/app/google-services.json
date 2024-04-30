@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "665176182069",
+    "project_id": "atrevet-parquea2",
+    "storage_bucket": "atrevet-parquea2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:665176182069:android:fc8ad9e3e8ba7592bb507c",
+        "android_client_info": {
+          "package_name": "com.example.parquea2"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBDwyJZQnUEjZP7SoY4YcqrnF0x1gVEXcI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
