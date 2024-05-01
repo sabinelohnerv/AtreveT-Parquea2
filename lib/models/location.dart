@@ -8,4 +8,12 @@ class Location {
     required this.coordinates,
     this.reference,
   });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'location': location,
+      'coordinates': coordinates,
+      'reference': reference,
+    };
+  }
 }

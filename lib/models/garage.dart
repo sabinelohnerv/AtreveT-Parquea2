@@ -1,5 +1,4 @@
 import 'package:parquea2/models/available_time.dart';
-import 'package:parquea2/models/garage_space.dart';
 import 'package:parquea2/models/location.dart';
 
 class Garage {
@@ -9,8 +8,8 @@ class Garage {
   String? imgUrl;
   Location location;
   List<String>? details;
-  List<GarageSpace> garageSpaces;
   List<AvailableTimeInDay> availableTime;
+  int numberOfSpaces;
   int reservationsCompleted;
   double rating;
 
@@ -21,9 +20,24 @@ class Garage {
     this.imgUrl,
     required this.location,
     this.details,
-    required this.garageSpaces,
     required this.availableTime,
+    required this.numberOfSpaces,
     required this.reservationsCompleted,
     required this.rating,
   });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'userId': userId,
+      'name': name,
+      'imgUrl': imgUrl,
+      'location': location.toJson(),
+      'details': details,
+      'availableTime': availableTime.map((x) => x.toJson()).toList(),
+      'numberOfSpaces': numberOfSpaces,
+      'reservationsCompleted': reservationsCompleted,
+      'rating': rating,
+    };
+  }
 }
