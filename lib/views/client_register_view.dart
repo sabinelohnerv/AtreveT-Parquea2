@@ -45,10 +45,8 @@ class ClientRegisterView extends StatelessWidget {
                   phoneNumberController.text,
                 );
                 if (registered) {
-                  // Navegar a la siguiente pantalla o mostrar éxito
-                  Navigator.of(context).pushReplacementNamed('/clientLogin'); // Asegúrate de configurar tus rutas
+                  Navigator.of(context).pushReplacementNamed('/clientLogin');
                 } else {
-                  // Mostrar un mensaje de error
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('Registro fallido'))
                   );

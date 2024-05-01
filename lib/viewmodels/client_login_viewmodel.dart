@@ -10,10 +10,8 @@ class ClientLoginViewModel extends ChangeNotifier {
         email: email,
         password: password,
       );
-      // Aquí puedes añadir lógica adicional tras un inicio de sesión exitoso.
       return true;
     } on FirebaseAuthException catch (e) {
-      // Manejar diferentes errores de autenticación aquí
       return false;
     }
   }

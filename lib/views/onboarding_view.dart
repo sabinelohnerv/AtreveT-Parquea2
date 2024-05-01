@@ -10,8 +10,8 @@ class OnboardingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double basePadding = MediaQuery.of(context).size.width * 0.05; // Base padding as 5% of screen width
-    double cardMarginVertical = MediaQuery.of(context).size.height * 0.06; // Margin as 6% of screen height
+    double basePadding = MediaQuery.of(context).size.width * 0.05;
+    double cardMarginVertical = MediaQuery.of(context).size.height * 0.06;
 
     return Scaffold(
       body: Column(

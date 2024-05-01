@@ -21,7 +21,6 @@ class ClientRegisterViewModel extends ChangeNotifier {
       });
       return true;
     } on FirebaseAuthException catch (e) {
-      // Handle different auth errors here, e.g., email already in use
       return false;
     }
   }

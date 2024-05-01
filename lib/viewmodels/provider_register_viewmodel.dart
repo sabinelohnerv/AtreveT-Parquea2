@@ -21,7 +21,6 @@ class ProviderRegisterViewModel extends ChangeNotifier {
       });
       return true;
     } on FirebaseAuthException catch (e) {
-      // Handle different auth errors here
       return false;
     }
   }

@@ -45,10 +45,8 @@ class ProviderRegisterView extends StatelessWidget {
                   phoneNumberController.text,
                 );
                 if (registered) {
-                  // Navegar a la pantalla de login del ofertante
                   Navigator.pushReplacementNamed(context, '/providerLogin');
                 } else {
-                  // Mostrar mensaje de error en caso de registro fallido
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error en el registro")));
                 }
               },
