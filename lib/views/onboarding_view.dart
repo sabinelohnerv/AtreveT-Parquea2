@@ -10,9 +10,6 @@ class OnboardingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double basePadding = MediaQuery.of(context).size.width * 0.05;
-    double cardMarginVertical = MediaQuery.of(context).size.height * 0.06;
-
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -21,41 +18,36 @@ class OnboardingPage extends StatelessWidget {
             child: PageView(
               controller: pageController,
               children: [
-                buildPage(
-                  context,
-                  'assets/images/onBoarding.png',
-                  'Encuentra el lugar perfecto para estacionar en zonas urbanas congestionadas.',
-                  basePadding,
-                  cardMarginVertical
+                OnboardingSlide(
+                  imagePath: 'assets/images/onBoarding.png',
+                  title: 'Descubre Lugares',
+                  description: 'Encuentra el lugar perfecto para estacionar en zonas urbanas congestionadas.',
                 ),
-                buildPage(
-                  context,
-                  'assets/images/onBoarding2.png',
-                  'Reserva y paga estacionamientos seguros con facilidad en cualquier parte de la ciudad.',
-                  basePadding,
-                  cardMarginVertical
+                OnboardingSlide(
+                  imagePath: 'assets/images/onBoarding2.png',
+                  title: 'Reserva Fácilmente',
+                  description: 'Reserva y paga estacionamientos seguros con facilidad en cualquier parte de la ciudad.',
                 ),
-                buildPage(
-                  context,
-                  'assets/images/onBoarding3.png',
-                  'Gana dinero aprovechando tus garajes vacíos y conviértelos en una fuente de ingresos constante sin esfuerzo.',
-                  basePadding,
-                  cardMarginVertical
+                OnboardingSlide(
+                  imagePath: 'assets/images/onBoarding3.png',
+                  title: 'Gana con Nosotros',
+                  description: 'Gana dinero aprovechando tus garajes vacíos y conviértelos en una fuente de ingresos constante sin esfuerzo.',
+                  isLast: true,
+                  context: context,
                 ),
-                buildCallToActionPage(context, basePadding, cardMarginVertical),
               ],
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(top: 10, bottom: 20),
+            padding: EdgeInsets.symmetric(vertical: 20),
             child: SmoothPageIndicator(
               controller: pageController,
-              count: 4,
-              effect: WormEffect(
+              count: 3,
+              effect: ExpandingDotsEffect(
+                activeDotColor: Theme.of(context).colorScheme.primary,
+                dotColor: Colors.grey,
                 dotHeight: 10,
                 dotWidth: 10,
-                activeDotColor: Color.fromARGB(255, 255, 211, 40),
-                dotColor: Colors.black.withOpacity(0.3),
               ),
             ),
           ),
@@ -63,80 +55,77 @@ class OnboardingPage extends StatelessWidget {
       ),
     );
   }
+}
 
-  Widget buildPage(BuildContext context, String imagePath, String text, double basePadding, double cardMarginVertical) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: basePadding, vertical: 10),
-      child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16.0),
+class OnboardingSlide extends StatelessWidget {
+  final String imagePath;
+  final String title;
+  final String description;
+  final bool isLast;
+  final BuildContext? context;
+
+  const OnboardingSlide({
+    Key? key,
+    required this.imagePath,
+    required this.title,
+    required this.description,
+    this.isLast = false,
+    this.context,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Expanded(
+          flex: 3,
+          child: Image.asset(imagePath, fit: BoxFit.cover),
         ),
-        margin: EdgeInsets.symmetric(horizontal: basePadding, vertical: cardMarginVertical),
-        child: Padding(
-          padding: EdgeInsets.all(basePadding),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset(imagePath, fit: BoxFit.contain, height: MediaQuery.of(context).size.height * 0.25),
-              SizedBox(height: 20),
-              Text(
-                text,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+        Expanded(
+          flex: 2,
+          child: Container(
+            padding: EdgeInsets.all(20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black),
+                  textAlign: TextAlign.center,
                 ),
-              ),
-            ],
+                SizedBox(height: 10),
+                Text(
+                  description,
+                  style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                  textAlign: TextAlign.center,
+                ),
+                if (isLast) ...[
+                  SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () => Navigator.pushNamed(context, '/clientRegister'),
+                    child: Text('Registrarse como Cliente'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Theme.of(context).colorScheme.primary,
+                      foregroundColor: Colors.white,
+                      minimumSize: Size(double.infinity, 50),
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  ElevatedButton(
+                    onPressed: () => Navigator.pushNamed(context, '/providerRegister'),
+                    child: Text('Registrarse como Ofertante'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Theme.of(context).colorScheme.secondary,
+                      foregroundColor: Colors.white,
+                      minimumSize: Size(double.infinity, 50),
+                    ),
+                  ),
+                ],
+              ],
+            ),
           ),
         ),
-      ),
-    );
-  }
-
-  Widget buildCallToActionPage(BuildContext context, double basePadding, double cardMarginVertical) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: basePadding, vertical: 10),
-      child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16.0),
-        ),
-        margin: EdgeInsets.all(basePadding),
-        child: Padding(
-          padding: EdgeInsets.all(basePadding),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text('Únete a nosotros ahora!', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black)),
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () => Navigator.pushNamed(context, '/clientRegister'),
-                child: Text('Registrarse como Cliente'),
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: const Color.fromARGB(255, 0, 0, 0), backgroundColor: Color.fromARGB(255, 255, 211, 40),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  minimumSize: Size(double.infinity, 50)
-                ),
-              ),
-              SizedBox(height: 10),
-              ElevatedButton(
-                onPressed: () => Navigator.pushNamed(context, '/providerRegister'),
-                child: Text('Registrarse como Ofertante'),
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: const Color.fromARGB(255, 0, 0, 0), backgroundColor: Color.fromARGB(255, 255, 211, 40),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  minimumSize: Size(double.infinity, 50)
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+      ],
     );
   }
 }
