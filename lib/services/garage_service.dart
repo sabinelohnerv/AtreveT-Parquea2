@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:parquea2/models/garage.dart';
 
@@ -14,7 +13,7 @@ class GarageService {
     firebase_storage.Reference storageReference = firebase_storage
         .FirebaseStorage.instance
         .ref()
-        .child('garage_images/$garageId}');
+        .child('garage_images/$garageId');
     firebase_storage.UploadTask uploadTask = storageReference.putFile(image);
     await uploadTask;
     String url = await storageReference.getDownloadURL();

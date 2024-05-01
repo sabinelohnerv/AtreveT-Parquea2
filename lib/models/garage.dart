@@ -34,7 +34,7 @@ class Garage {
       'imgUrl': imgUrl,
       'location': location.toJson(),
       'details': details,
-      'availableTime': availableTime.map((x) => x.toJson()).toList(),
+      'availableTimeInWeek': availableTime.map((x) => x.toJson()).toList(),
       'numberOfSpaces': numberOfSpaces,
       'reservationsCompleted': reservationsCompleted,
       'rating': rating,
