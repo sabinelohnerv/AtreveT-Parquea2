@@ -4,6 +4,7 @@ import 'package:parquea2/models/location.dart';
 
 class Garage {
   String id;
+  String userId;
   String name;
   String? imgUrl;
   Location location;
@@ -15,6 +16,7 @@ class Garage {
 
   Garage({
     required this.id,
+    required this.userId,
     required this.name,
     this.imgUrl,
     required this.location,
