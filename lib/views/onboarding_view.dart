@@ -100,13 +100,19 @@ class OnboardingSlide extends StatelessWidget {
     return Column(
       children: [
         Expanded(
-          flex: 3,
-          child: Image.asset(imagePath, fit: BoxFit.cover),
+          flex: 5,
+          child: Padding(
+            padding: EdgeInsets.only(top: 200),
+            child: Container(
+              constraints: BoxConstraints(maxHeight: 200),
+              child: Image.asset(imagePath, fit: BoxFit.contain),
+            ),
+          ),
         ),
         Expanded(
-          flex: 2,
+          flex: 3,
           child: Container(
-            padding: EdgeInsets.all(20),
+            padding: EdgeInsets.symmetric(horizontal: 20),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
