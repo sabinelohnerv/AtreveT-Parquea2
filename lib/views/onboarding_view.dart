@@ -38,19 +38,41 @@ class OnboardingPage extends StatelessWidget {
               ],
             ),
           ),
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: 20),
-            child: SmoothPageIndicator(
-              controller: pageController,
-              count: 3,
-              effect: ExpandingDotsEffect(
-                activeDotColor: Theme.of(context).colorScheme.primary,
-                dotColor: Colors.grey,
-                dotHeight: 10,
-                dotWidth: 10,
-              ),
+          SmoothPageIndicator(
+            controller: pageController,
+            count: 3,
+            effect: ExpandingDotsEffect(
+              activeDotColor: Theme.of(context).colorScheme.primary,
+              dotColor: Colors.grey,
+              dotHeight: 10,
+              dotWidth: 10,
+              spacing: 4,
+            ),
+            onDotClicked: (index) => pageController.animateToPage(
+              index,
+              duration: Duration(milliseconds: 500),
+              curve: Curves.easeInOut,
             ),
           ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextButton(
+                  onPressed: () => pageController.jumpToPage(2),
+                  child: Text('Skip', style: TextStyle(color: Colors.grey)),
+                ),
+                TextButton(
+                  onPressed: () => pageController.nextPage(
+                    duration: Duration(milliseconds: 400),
+                    curve: Curves.easeInOut,
+                  ),
+                  child: Text('Next', style: TextStyle(color: Theme.of(context).colorScheme.primary)),
+                ),
+              ],
+            ),
+          )
         ],
       ),
     );
