@@ -16,4 +16,12 @@ class Location {
       'reference': reference,
     };
   }
+
+  factory Location.fromJson(Map<String, dynamic> json) {
+    return Location(
+      location: json['location'] as String,
+      coordinates: json['coordinates'] as String,
+      reference: json['reference'] as String? ?? '',
+    );
+  }
 }
