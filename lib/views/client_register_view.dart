@@ -45,7 +45,8 @@ class ClientRegisterView extends StatelessWidget {
                   child: Align(
                     alignment: Alignment.topLeft,
                     child: IconButton(
-                      icon: Icon(Icons.arrow_back, color: Color.fromARGB(255, 255, 211, 40)),
+                      icon: const Icon(Icons.arrow_back,
+                          color: Color.fromARGB(255, 255, 211, 40)),
                       onPressed: () => Navigator.of(context).pop(),
                     ),
                   ),
@@ -60,7 +61,13 @@ class ClientRegisterView extends StatelessWidget {
                             delay: 100,
                             child: Text(
                               "Registro de Cliente",
-                              style: Theme.of(context).textTheme.headline5?.copyWith(fontWeight: FontWeight.bold) ?? TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+                              style: Theme.of(context)
+                                      .textTheme
+                                      .headline5
+                                      ?.copyWith(fontWeight: FontWeight.bold) ??
+                                  const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 24),
                             ),
                           ),
                           const SizedBox(height: 20),
@@ -68,9 +75,10 @@ class ClientRegisterView extends StatelessWidget {
                             delay: 200,
                             child: TextField(
                               controller: fullNameController,
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 labelText: "Nombre Completo",
-                                prefixIcon: Icon(Icons.person, color: Colors.grey),
+                                prefixIcon:
+                                    Icon(Icons.person, color: Colors.grey),
                               ),
                             ),
                           ),
@@ -80,9 +88,10 @@ class ClientRegisterView extends StatelessWidget {
                             child: TextField(
                               controller: phoneNumberController,
                               keyboardType: TextInputType.phone,
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 labelText: "Número de Teléfono",
-                                prefixIcon: Icon(Icons.phone, color: Colors.grey),
+                                prefixIcon:
+                                    Icon(Icons.phone, color: Colors.grey),
                               ),
                             ),
                           ),
@@ -92,9 +101,10 @@ class ClientRegisterView extends StatelessWidget {
                             child: TextField(
                               controller: emailController,
                               keyboardType: TextInputType.emailAddress,
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 labelText: "Email",
-                                prefixIcon: Icon(Icons.email, color: Colors.grey),
+                                prefixIcon:
+                                    Icon(Icons.email, color: Colors.grey),
                               ),
                             ),
                           ),
@@ -104,42 +114,77 @@ class ClientRegisterView extends StatelessWidget {
                             child: TextField(
                               controller: passwordController,
                               obscureText: true,
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 labelText: "Contraseña",
-                                prefixIcon: Icon(Icons.lock, color: Colors.grey),
+                                prefixIcon:
+                                    Icon(Icons.lock, color: Colors.grey),
                               ),
                             ),
                           ),
                           const SizedBox(height: 20),
                           FadeInAnimation(
                             delay: 600,
-                            child: ElevatedButton.icon(
-                              icon: Icon(Icons.app_registration_outlined),
-                              label: Text("Registrarse"),
-                              onPressed: () async {
-                                bool registered = await viewModel.registerClient(
-                                  emailController.text,
-                                  passwordController.text,
-                                  fullNameController.text,
-                                  phoneNumberController.text,
-                                );
-                                if (registered) {
-                                  Navigator.of(context).pushReplacementNamed('/clientLogin');
-                                } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(content: Text('Registro fallido'))
-                                  );
-                                }
-                              },
-                              style: ElevatedButton.styleFrom(
-                                foregroundColor: Colors.white, 
-                                backgroundColor: Color.fromARGB(255, 255, 211, 40),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                                elevation: 5,
-                              ),
-                            ),
+                            child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  ElevatedButton.icon(
+                                    icon: const Icon(
+                                        Icons.app_registration_outlined),
+                                    label: const Text("Registrarse"),
+                                    onPressed: () async {
+                                      bool registered =
+                                          await viewModel.registerClient(
+                                        emailController.text,
+                                        passwordController.text,
+                                        fullNameController.text,
+                                        phoneNumberController.text,
+                                      );
+                                      if (registered) {
+                                        Navigator.of(context)
+                                            .pushReplacementNamed(
+                                                '/clientLogin');
+                                      } else {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(const SnackBar(
+                                                content:
+                                                    Text('Registro fallido')));
+                                      }
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      foregroundColor: Colors.white,
+                                      backgroundColor: const Color.fromARGB(
+                                          255, 255, 211, 40),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10.0),
+                                      ),
+                                      elevation: 5,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: 30,
+                                  ),
+                                  ElevatedButton.icon(
+                                    icon: const Icon(
+                                        Icons.app_registration_outlined),
+                                    label: const Text("Log In"),
+                                    onPressed: () async {
+                                      Navigator.of(context)
+                                          .pushReplacementNamed('/clientLogin');
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      foregroundColor: Colors.white,
+                                      backgroundColor: const Color.fromARGB(
+                                          255, 255, 211, 40),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10.0),
+                                      ),
+                                      elevation: 5,
+                                    ),
+                                  ),
+                                ]),
                           ),
                           const SizedBox(height: 50),
                         ],

@@ -11,10 +11,10 @@ class AddVehicleViewModel extends ChangeNotifier {
   final VehicleService _vehicleService = VehicleService();
 
   bool _isUploading = false;
+
   String? _imgUrl = '';
   File? imagePath;
 
-  // Text editing controllers for vehicle properties and measurements
   TextEditingController makeController = TextEditingController();
   TextEditingController modelController = TextEditingController();
   TextEditingController yearController = TextEditingController();
@@ -23,11 +23,9 @@ class AddVehicleViewModel extends ChangeNotifier {
   TextEditingController lengthController = TextEditingController();
   TextEditingController plateController = TextEditingController();
 
-  // Getters for UI updates
   bool get isUploading => _isUploading;
   String get imgUrl => _imgUrl ?? 'path/to/default/image.png';
 
-  // Methods to handle manual and API data updates
   void updateVehicleFromApi(Map<String, dynamic> apiData) {
     makeController.text = apiData['make'];
     modelController.text = apiData['model'];
@@ -38,12 +36,14 @@ class AddVehicleViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> uploadVehicleImage(String userId, String vehicleId) async {
+  Future<String> uploadVehicleImage(String userId, String vehicleId) async {
     if (imagePath != null) {
       _imgUrl = await _vehicleService.uploadVehicleImage(
           imagePath!, userId, vehicleId);
       notifyListeners();
+      return _imgUrl!;
     }
+    return '';
   }
 
   void setImagePath(File imagePath) {
@@ -86,7 +86,7 @@ class AddVehicleViewModel extends ChangeNotifier {
     super.dispose();
   }
 
-  Future<void> addVehicle(ScaffoldMessengerState scaffoldMessenger) async {
+  Future<bool> addVehicle(ScaffoldMessengerState scaffoldMessenger) async {
     _isUploading = true;
     notifyListeners();
 
@@ -95,11 +95,13 @@ class AddVehicleViewModel extends ChangeNotifier {
       _showSnackbar(scaffoldMessenger, "Failed to get user ID", Colors.red);
       _isUploading = false;
       notifyListeners();
-      return;
+      return false;
     }
 
     try {
       String vehicleId = "Vehicle_${DateTime.now().millisecondsSinceEpoch}";
+      String imageUrl = await uploadVehicleImage(userId, vehicleId);
+
       Measurements measurements = Measurements(
           height: double.parse(heightController.text),
           width: double.parse(widthController.text),
@@ -111,15 +113,18 @@ class AddVehicleViewModel extends ChangeNotifier {
           model: modelController.text,
           year: int.tryParse(yearController.text) ?? DateTime.now().year,
           measurements: measurements,
-          plateNumber: plateController.text);
+          plateNumber: plateController.text,
+          imgUrl: imageUrl);
 
       await _vehicleService.addVehicle(userId, newVehicle);
       _showSnackbar(
           scaffoldMessenger, "VEHICULO REGISTRADO CON EXITO", Colors.green);
       resetData();
+      return true;
     } catch (e) {
       _showSnackbar(
           scaffoldMessenger, "REGISTRO FALLIDO, REVISE SUS DATOS", Colors.red);
+      return false;
     } finally {
       _isUploading = false;
       notifyListeners();
