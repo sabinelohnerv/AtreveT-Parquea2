@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:parquea2/viewmodels/add_garage_space_viewmodel.dart';
-import 'package:parquea2/viewmodels/add_vehicle_viewmodel.dart';
 import 'package:parquea2/views/widgets/textfields/custom_numberinput.dart';
 import 'package:parquea2/views/widgets/textfields/custom_selectionfield.dart';
 
