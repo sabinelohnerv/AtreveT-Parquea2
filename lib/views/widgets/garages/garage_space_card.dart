@@ -88,7 +88,7 @@ class GarageSpaceCard extends StatelessWidget {
         child: const Icon(Icons.delete, color: Colors.white),
       ),
       child: Container(
-        padding: const EdgeInsets.fromLTRB(6, 10, 28, 10),
+        padding: const EdgeInsets.fromLTRB(6, 10, 24, 10),
         decoration: BoxDecoration(
           border: Border.all(color: Colors.grey.shade200),
         ),
