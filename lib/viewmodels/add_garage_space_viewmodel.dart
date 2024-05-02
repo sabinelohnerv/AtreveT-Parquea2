@@ -27,14 +27,6 @@ class AddGarageSpaceViewModel extends ChangeNotifier {
     lengthController.addListener(() => updateLength(lengthController.text));
   }
 
-  @override
-  void dispose() {
-    widthController.dispose();
-    heightController.dispose();
-    lengthController.dispose();
-    super.dispose();
-  }
-
   //Getters
   bool get isUploading => _isUploading;
 
@@ -137,5 +129,23 @@ class AddGarageSpaceViewModel extends ChangeNotifier {
 
     await _garageService.addGarageSpaceAndUpdateSpacesCount(
         newGarage, garageId);
+  }
+
+  void resetData() {
+    heightController.clear();
+    widthController.clear();
+    lengthController.clear();
+    detailsController.clear();
+    selectedDetails.clear();
+    notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    widthController.dispose();
+    heightController.dispose();
+    lengthController.dispose();
+    detailsController.dispose();
+    super.dispose();
   }
 }

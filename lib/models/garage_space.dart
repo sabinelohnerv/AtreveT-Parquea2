@@ -28,9 +28,11 @@ class GarageSpace {
 
     return GarageSpace(
       id: snapshot.id,
-      measurements: Measurements.fromJson(json['measurements']),
-      details: List<String>.from(json['details'] ?? []),
-      state: json['state'],
+      measurements: Measurements.fromJson(json['measurements'] as Map<String, dynamic>),
+      details: json['details'] != null
+          ? List<String>.from(json['details'] as List)
+          : [],
+      state: json['state'] as String,
     );
   }
 }

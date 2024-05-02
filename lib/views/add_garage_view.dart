@@ -176,6 +176,7 @@ class _AddGarageViewState extends State<AddGarageView> {
                           content: Text('Garaje agregado exitosamente'),
                           backgroundColor: Colors.green,
                         ));
+                        garageViewModel.resetData();
                         Navigator.pop(context);
                       }
                     },
