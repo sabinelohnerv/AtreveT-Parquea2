@@ -26,16 +26,6 @@ class HomeView extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const AddGarageView()),
-                )
-              },
-              child: const Text('Agregar Garaje'),
-            ),
-            ElevatedButton(
-              onPressed: () => {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
                       builder: (context) => const AddVehicleView()),
                 )
               },
