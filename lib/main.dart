@@ -53,10 +53,10 @@ class MyApp extends StatelessWidget {
         title: 'Parquea2',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          fontFamily: 'Montserrat',
+          fontFamily: 'PlusJakartaSans',
           colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color.fromARGB(255, 255, 211, 40),
-            primary: const Color.fromARGB(255, 255, 211, 40),
+            seedColor: const Color.fromARGB(255, 255, 188, 7),
+            primary: const Color.fromARGB(255, 255, 188, 7),
           ),
           useMaterial3: true,
         ),
