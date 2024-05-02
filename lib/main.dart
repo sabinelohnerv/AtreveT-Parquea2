@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-<<<<<<< HEAD
-=======
-import 'package:parquea2/viewmodels/add_garage_viewmodel.dart';
 import 'package:parquea2/viewmodels/add_vehicle_viewmodel.dart';
->>>>>>> 0c5d1b831507c8c23af1866cefdd2dc3a864b763
 import 'package:parquea2/viewmodels/provider_add_garage_viewmodel.dart';
 import 'package:parquea2/viewmodels/provider_garage_list_viewmodel.dart';
 import 'package:provider/provider.dart';
@@ -37,16 +33,18 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<OnboardingViewModel>(create: (context) => OnboardingViewModel(OnboardingService())),
-        ChangeNotifierProvider<ClientRegisterViewModel>(create: (context) => ClientRegisterViewModel()),
-        ChangeNotifierProvider<ProviderRegisterViewModel>(create: (context) => ProviderRegisterViewModel()),
-        ChangeNotifierProvider<ClientLoginViewModel>(create: (context) => ClientLoginViewModel()),
-        ChangeNotifierProvider<ProviderLoginViewModel>(create: (context) => ProviderLoginViewModel()),
+        ChangeNotifierProvider<OnboardingViewModel>(
+            create: (context) => OnboardingViewModel(OnboardingService())),
+        ChangeNotifierProvider<ClientRegisterViewModel>(
+            create: (context) => ClientRegisterViewModel()),
+        ChangeNotifierProvider<ProviderRegisterViewModel>(
+            create: (context) => ProviderRegisterViewModel()),
+        ChangeNotifierProvider<ClientLoginViewModel>(
+            create: (context) => ClientLoginViewModel()),
+        ChangeNotifierProvider<ProviderLoginViewModel>(
+            create: (context) => ProviderLoginViewModel()),
         ChangeNotifierProvider(create: (_) => AddGarageViewModel()),
-<<<<<<< HEAD
-=======
         ChangeNotifierProvider(create: (_) => AddVehicleViewModel()),
->>>>>>> 0c5d1b831507c8c23af1866cefdd2dc3a864b763
         ChangeNotifierProvider(create: (context) => GarageListViewModel()),
       ],
       child: MaterialApp(
@@ -63,14 +61,19 @@ class MyApp extends StatelessWidget {
         initialRoute: '/',
         routes: {
           '/': (context) => FutureBuilder<bool>(
-            future: Provider.of<OnboardingViewModel>(context, listen: false).isComplete(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                return snapshot.data == true ? const HomeView() : OnboardingPage(viewModel: Provider.of<OnboardingViewModel>(context));
-              }
-              return const Center(child: CircularProgressIndicator());
-            },
-          ),
+                future: Provider.of<OnboardingViewModel>(context, listen: false)
+                    .isComplete(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    return snapshot.data == true
+                        ? const HomeView()
+                        : OnboardingPage(
+                            viewModel:
+                                Provider.of<OnboardingViewModel>(context));
+                  }
+                  return const Center(child: CircularProgressIndicator());
+                },
+              ),
           '/clientRegister': (context) => ClientRegisterView(),
           '/providerRegister': (context) => ProviderRegisterView(),
           '/clientLogin': (context) => ClientLoginView(),
