@@ -8,9 +8,9 @@ class AddGarageSpaceViewModel extends ChangeNotifier {
 
   bool _isUploading = false;
   List<String>? _details;
-  double width = 0;
-  double height = 0;
-  double length = 0;
+  double _width = 0.0;
+  double _height = 0.0;
+  double _length = 0.0;
 
   //Controllers
 
@@ -18,25 +18,19 @@ class AddGarageSpaceViewModel extends ChangeNotifier {
   TextEditingController detailsController = TextEditingController();
 
   TextEditingController widthController = TextEditingController();
-  TextEditingController heigthController = TextEditingController();
+  TextEditingController heightController = TextEditingController();
   TextEditingController lengthController = TextEditingController();
 
-  AddGarageViewModel() {
-    widthController.addListener(() {
-      notifyListeners();
-    });
-    heigthController.addListener(() {
-      notifyListeners();
-    });
-    lengthController.addListener(() {
-      notifyListeners();
-    });
+  AddGarageSpaceViewModel() {
+    widthController.addListener(() => updateWidth(widthController.text));
+    heightController.addListener(() => updateHeight(heightController.text));
+    lengthController.addListener(() => updateLength(lengthController.text));
   }
 
   @override
   void dispose() {
     widthController.dispose();
-    heigthController.dispose();
+    heightController.dispose();
     lengthController.dispose();
     super.dispose();
   }
@@ -55,6 +49,21 @@ class AddGarageSpaceViewModel extends ChangeNotifier {
 
   set details(List<String>? value) {
     _details = value;
+    notifyListeners();
+  }
+
+  void updateWidth(String value) {
+    _width = double.tryParse(value) ?? 0;
+    notifyListeners();
+  }
+
+  void updateHeight(String value) {
+    _height = double.tryParse(value) ?? 0;
+    notifyListeners();
+  }
+
+  void updateLength(String value) {
+    _length = double.tryParse(value) ?? 0;
     notifyListeners();
   }
 
@@ -112,39 +121,21 @@ class AddGarageSpaceViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateWidth(double value) {
-    width = value;
-    widthController.text = value.toString();
-    notifyListeners();
-  }
-
-  void updateHeight(double value) {
-    height = value;
-    widthController.text = value.toString();
-    notifyListeners();
-  }
-
-  void updateLength(double value) {
-    length = value;
-    widthController.text = value.toString();
-    notifyListeners();
-  }
-
   Future<void> addGarageSpace(String garageId) async {
     _isUploading = true;
     notifyListeners();
 
-
     String garageSpaceId = "Space_${DateTime.now().millisecondsSinceEpoch}";
-    Measurements measurements = Measurements(height: height, width: width, length: length);
+    Measurements measurements =
+        Measurements(height: _height, width: _width, length: _length);
 
     GarageSpace newGarage = GarageSpace(
-      id: garageSpaceId,
-      details: selectedDetails,
-      measurements: measurements,
-      state: 'libre'
-    );
+        id: garageSpaceId,
+        details: selectedDetails,
+        measurements: measurements,
+        state: 'libre');
 
-    await _garageService.addGarageSpaceAndUpdateSpacesCount(newGarage, garageId);
+    await _garageService.addGarageSpaceAndUpdateSpacesCount(
+        newGarage, garageId);
   }
 }

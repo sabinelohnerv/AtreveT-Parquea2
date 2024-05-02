@@ -12,7 +12,6 @@ class AddGarageViewModel extends ChangeNotifier {
 
   bool _isUploading = false;
 
-  String? _imgUrl = '';
   List<String>? _details;
   List<AvailableTimeInDay> _availableTime = [];
   AvailableTimeInDay monday =

@@ -32,26 +32,14 @@ class _AddGarageSpaceViewState extends State<AddGarageSpaceView> {
                 CustomNumberInput(
                   labelText: 'Ancho (m)',
                   controller: viewModel.widthController,
-                  onSaved: (value) {
-                    double width = double.tryParse(value) ?? 0;
-                    viewModel.updateWidth(width);
-                  },
                 ),
                 CustomNumberInput(
                   labelText: 'Altura (m)',
-                  controller: viewModel.heigthController,
-                  onSaved: (value) {
-                    double height = double.tryParse(value) ?? 0;
-                    viewModel.updateHeight(height);
-                  },
+                  controller: viewModel.heightController,
                 ),
                 CustomNumberInput(
                   labelText: 'Longitud (m)',
                   controller: viewModel.lengthController,
-                  onSaved: (value) {
-                    double length = double.tryParse(value) ?? 0;
-                    viewModel.updateLength(length);
-                  },
                 ),
                 CustomSelectionField(
                   labelText: 'Detalles del Garaje',
