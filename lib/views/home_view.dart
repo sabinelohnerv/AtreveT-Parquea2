@@ -41,15 +41,17 @@ class HomeView extends StatelessWidget {
               },
               child: const Text('Agregar Vehiculo'),
             ),
+            ElevatedButton(
+              onPressed: () => {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const GarageListView()),
+                )
+              },
+              child: const Text('Agregar Garaje'),
+            ),
           ],
-        child: ElevatedButton(
-          onPressed: () => {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const GarageListView()),
-            )
-          },
-          child: const Text('Agregar Garaje'),
         ),
       ),
     );

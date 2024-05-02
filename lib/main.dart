@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:parquea2/viewmodels/add_garage_viewmodel.dart';
 import 'package:parquea2/viewmodels/add_vehicle_viewmodel.dart';
 import 'package:parquea2/viewmodels/provider_add_garage_viewmodel.dart';
 import 'package:parquea2/viewmodels/provider_garage_list_viewmodel.dart';
@@ -52,10 +51,10 @@ class MyApp extends StatelessWidget {
         title: 'Parquea2',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          fontFamily: 'Lato',
+          fontFamily: 'Montserrat',
           colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color.fromARGB(255, 255, 188, 7),
-            primary: const Color.fromARGB(255, 255, 188, 7),
+            seedColor: const Color.fromARGB(255, 255, 211, 40),
+            primary: const Color.fromARGB(255, 255, 211, 40),
           ),
           useMaterial3: true,
         ),
