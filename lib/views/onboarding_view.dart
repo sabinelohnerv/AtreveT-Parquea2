@@ -170,6 +170,16 @@ class OnboardingSlide extends StatelessWidget {
                       minimumSize: const Size(double.infinity, 50),
                     ),
                   ),
+                  ElevatedButton(
+                    onPressed: () =>
+                        Navigator.pushNamed(context, '/providerLogin'),
+                    child: const Text('Iniciar Sesion'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Theme.of(context).colorScheme.tertiary,
+                      foregroundColor: Colors.white,
+                      minimumSize: const Size(double.infinity, 50),
+                    ),
+                  ),
                 ],
               ],
             ),

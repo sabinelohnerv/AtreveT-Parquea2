@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:parquea2/services/garage_service.dart';
-import 'package:parquea2/viewmodels/provider_garage_list_viewmodel.dart';
+import 'package:parquea2/viewmodels/client_garage_list_viewmodel.dart';
 import 'package:parquea2/views/widgets/garages/garage_card.dart';
 import 'package:provider/provider.dart';
 
-class GarageListView extends StatelessWidget {
-  const GarageListView({super.key});
+class ClientGarageListView extends StatelessWidget {
+  const ClientGarageListView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -26,28 +26,17 @@ class GarageListView extends StatelessWidget {
             Navigator.of(context).pop();
           },
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(
-              Icons.add,
-              color: Colors.white,
-              size: 30,
-            ),
-            onPressed: () =>
-                Provider.of<GarageListViewModel>(context, listen: false)
-                    .navigateToAddGarage(context),
-          ),
-        ],
       ),
-      body: ChangeNotifierProvider<GarageListViewModel>(
-        create: (context) => GarageListViewModel(),
-        child: Consumer<GarageListViewModel>(
+      body: ChangeNotifierProvider<ClientGarageListViewModel>(
+        create: (context) => ClientGarageListViewModel(),
+        child: Consumer<ClientGarageListViewModel>(
           builder: (context, viewModel, child) {
             if (viewModel.isLoading) {
               return const Center(child: CircularProgressIndicator());
             }
             if (viewModel.garages.isEmpty) {
-              return const Center(child: Text('No se encontraron garajes.'));
+              return const Center(
+                  child: Text('No se encontraron garajes.'));
             }
             return ListView.builder(
               itemCount: viewModel.garages.length,
@@ -57,7 +46,7 @@ class GarageListView extends StatelessWidget {
                   garage: garage,
                   garageService: GarageService(),
                   onTap: () {
-                    viewModel.navigateToGarageDetails(context, garage.id);
+                    viewModel.navigateToGarageSpaces(context, garage.id);
                   },
                 );
               },

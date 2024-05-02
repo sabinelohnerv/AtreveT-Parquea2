@@ -37,10 +37,6 @@ class GarageSpaceCard extends StatelessWidget {
           textColor = Colors.red;
           stateText = 'DESHABILITADO';
           break;
-        case 'deshabilitado-m':
-          textColor = Colors.red;
-          stateText = 'DESHABILITADO';
-          break;
         default:
           textColor = Colors.grey;
           stateText = 'DESCONOCIDO';
