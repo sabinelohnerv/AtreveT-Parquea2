@@ -28,7 +28,7 @@ class VehicleService {
 
   Future<void> updateVehicle(String userId, Vehicle vehicle) async {
     DocumentReference vehicleRef = _firestore
-        .collection('users')
+        .collection('clients')
         .doc(userId)
         .collection('vehicles')
         .doc(vehicle.id);
@@ -37,10 +37,38 @@ class VehicleService {
 
   Future<void> deleteVehicle(String userId, String vehicleId) async {
     DocumentReference vehicleRef = _firestore
-        .collection('users')
+        .collection('clients')
         .doc(userId)
         .collection('vehicles')
         .doc(vehicleId);
     await vehicleRef.delete();
+  }
+
+  Stream<List<Vehicle>> streamVehicles(String userId) {
+    return _firestore
+        .collection('clients')
+        .doc(userId)
+        .collection('vehicles')
+        .snapshots()
+        .handleError((error) {
+      print("Error fetching vehicles: $error");
+    }).map((snapshot) =>
+            snapshot.docs.map((doc) => Vehicle.fromSnapshot(doc)).toList());
+  }
+
+  Stream<Vehicle?> getVehicleByIdStream(String userId, String vehicleId) {
+    return _firestore
+        .collection('clients')
+        .doc(userId)
+        .collection('vehicles')
+        .doc(vehicleId)
+        .snapshots()
+        .map((snapshot) {
+      if (snapshot.exists && snapshot.data() != null) {
+        return Vehicle.fromSnapshot(snapshot);
+      } else {
+        return null;
+      }
+    });
   }
 }

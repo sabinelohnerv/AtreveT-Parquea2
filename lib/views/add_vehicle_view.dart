@@ -148,6 +148,8 @@ class _AddVehicleViewState extends State<AddVehicleView> {
                             _formKey.currentState!.save();
                             vehicleViewModel
                                 .addVehicle(ScaffoldMessenger.of(context));
+                            vehicleViewModel.resetData();
+                            Navigator.of(context).pop();
                           }
                         },
                         style: ElevatedButton.styleFrom(
