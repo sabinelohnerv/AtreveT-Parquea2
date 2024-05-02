@@ -29,12 +29,18 @@ class _EditGarageViewState extends State<EditGarageView> {
       child: Consumer<EditGarageViewModel>(
         builder: (context, garageViewModel, child) => Scaffold(
           appBar: AppBar(
-            title: const Text("EDITAR GARAJE", style: TextStyle(fontWeight: FontWeight.w600),),
+            title: const Text(
+              "EDITAR GARAJE",
+              style: TextStyle(fontWeight: FontWeight.w600),
+            ),
             foregroundColor: Colors.white,
             centerTitle: true,
             backgroundColor: Theme.of(context).colorScheme.primary,
             leading: IconButton(
-              icon: const Icon(Icons.arrow_back_ios, color: Colors.white,),
+              icon: const Icon(
+                Icons.arrow_back_ios,
+                color: Colors.white,
+              ),
               onPressed: () => Navigator.of(context).pop(),
             ),
           ),
@@ -158,9 +164,10 @@ class _EditGarageViewState extends State<EditGarageView> {
                         (index) {
                       return dayAvailabilityWidget(
                           garageViewModel.availableTime[index].day,
-                          garageViewModel.availableTime[index].availableTime!,
-                          context,
-                          garageViewModel);
+                          garageViewModel.availableTime[index].availableTime!
+                              as List<AvailableTime>,
+                          context as BuildContext,
+                          garageViewModel as EditGarageViewModel);
                     }),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(15, 30, 15, 10),
@@ -193,72 +200,85 @@ class _EditGarageViewState extends State<EditGarageView> {
     );
   }
 
-  void showEditDialog(BuildContext context, String day,
-      List<AvailableTime> times, EditGarageViewModel viewModel) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            return AlertDialog(
-              title: Text('Editar horarios para $day'),
-              content: SingleChildScrollView(
-                child: ListBody(
-                  children: times.map((time) {
-                    return Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('${time.startTime} - ${time.endTime}'),
-                        IconButton(
-                          icon: const Icon(Icons.edit),
-                          onPressed: () async {
-                            TimeOfDay? newStartTime = await showTimePicker(
-                              context: context,
-                              initialTime: timeOfDayFromString(time.startTime),
-                            );
-                            TimeOfDay? newEndTime = await showTimePicker(
-                              context: context,
-                              initialTime: timeOfDayFromString(time.endTime),
-                            );
-                            if (newStartTime != null && newEndTime != null) {
-                              AvailableTime updatedTime = AvailableTime(
+  void showEditDialog(BuildContext context, String day, List<AvailableTime> times, EditGarageViewModel viewModel) {
+  // Copia local para el manejo de estado del diálogo
+  List<AvailableTime> localTimes = times.map((t) => AvailableTime(startTime: t.startTime, endTime: t.endTime)).toList();
+
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return StatefulBuilder(
+        builder: (BuildContext innerContext, StateSetter setState) {
+          return AlertDialog(
+            title: Text('Editar horarios para $day'),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: List.generate(localTimes.length, (index) {
+                  AvailableTime time = localTimes[index];
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(child: Text('${time.startTime} - ${time.endTime}')),
+                      IconButton(
+                        icon: const Icon(Icons.edit),
+                        onPressed: () async {
+                          TimeOfDay? newStartTime = await showTimePicker(
+                            context: innerContext,
+                            initialTime: timeOfDayFromString(time.startTime),
+                          );
+                          if (newStartTime != null) {
+                            setState(() {
+                              localTimes[index] = AvailableTime(
                                 startTime: formatTimeOfDay(newStartTime),
+                                endTime: time.endTime,
+                              );
+                            });
+                          }
+                          TimeOfDay? newEndTime = await showTimePicker(
+                            context: innerContext,
+                            initialTime: timeOfDayFromString(time.endTime),
+                          );
+                          if (newEndTime != null) {
+                            setState(() {
+                              localTimes[index] = AvailableTime(
+                                startTime: localTimes[index].startTime,
                                 endTime: formatTimeOfDay(newEndTime),
                               );
-                              int timeIndex = times.indexOf(time);
-                              times[timeIndex] = updatedTime;
-                              viewModel.updateDayAvailability(day, times);
-                              setState(
-                                  () {});
-                            }
-                          },
-                        ),
-                      ],
-                    );
-                  }).toList(),
-                ),
+                            });
+                          }
+                        },
+                      ),
+                    ],
+                  );
+                }),
               ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: const Text('Cerrar'),
-                ),
-              ],
-            );
-          },
-        );
-      },
-    );
-  }
+            ),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  viewModel.updateDayAvailability(day, localTimes); // Aplica cambios solo aquí
+                  Navigator.of(innerContext).pop();
+                },
+                child: Text('Guardar Cambios'),
+              ),
+            ],
+          );
+        },
+      );
+    },
+  );
+}
 
-  TimeOfDay timeOfDayFromString(String timeStr) {
-    List<String> parts = timeStr.split(':');
-    return TimeOfDay(hour: int.parse(parts[0]), minute: int.parse(parts[1]));
-  }
+TimeOfDay timeOfDayFromString(String timeStr) {
+  List<String> parts = timeStr.split(':');
+  return TimeOfDay(hour: int.parse(parts[0]), minute: int.parse(parts[1]));
+}
 
-  String formatTimeOfDay(TimeOfDay time) {
-    return '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
-  }
+String formatTimeOfDay(TimeOfDay time) {
+  return '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
+}
+
+
 
   void showAddTimeDialog(
       BuildContext context, String day, EditGarageViewModel viewModel) {
@@ -343,21 +363,36 @@ class _EditGarageViewState extends State<EditGarageView> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                day,
-                style:
-                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-              IconButton(
-                icon: const Icon(Icons.edit),
-                onPressed: () => showEditDialog(context, day, times, viewModel),
-              )
+              Text(day,
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.bold)),
             ],
           ),
         ),
         ...times.map((time) {
-          return ListTile(
-            title: Text('${time.startTime} - ${time.endTime}'),
+          return Container(
+            margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey.shade300),
+              borderRadius: BorderRadius.circular(5),
+            ),
+            child: ListTile(
+              title: Text('${time.startTime} - ${time.endTime}'),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.edit),
+                    onPressed: () =>
+                        viewModel.showEditTimeDialog(context, day, time),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.delete, color: Colors.red),
+                    onPressed: () => viewModel.removeTime(day, time),
+                  ),
+                ],
+              ),
+            ),
           );
         }).toList(),
       ],
