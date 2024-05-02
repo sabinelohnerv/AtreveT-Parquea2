@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:parquea2/models/available_time.dart';
 import 'package:parquea2/models/location.dart';
 
@@ -34,10 +35,33 @@ class Garage {
       'imgUrl': imgUrl,
       'location': location.toJson(),
       'details': details,
-      'availableTime': availableTime.map((x) => x.toJson()).toList(),
+      'availableTimeInWeek': availableTime.map((x) => x.toJson()).toList(),
       'numberOfSpaces': numberOfSpaces,
       'reservationsCompleted': reservationsCompleted,
       'rating': rating,
     };
+  }
+
+  factory Garage.fromSnapshot(DocumentSnapshot snapshot) {
+    Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+    return Garage(
+      id: snapshot.id,
+      userId: data['userId'] as String,
+      name: data['name'] as String,
+      imgUrl: data['imgUrl'] as String? ?? '',
+      location: Location.fromJson(data['location'] as Map<String, dynamic>),
+      details: data['details'] != null
+          ? List<String>.from(data['details'] as List)
+          : [],
+      availableTime: data['availableTimeInWeek'] != null
+          ? (data['availableTimeInWeek'] as List)
+              .map(
+                  (x) => AvailableTimeInDay.fromJson(x as Map<String, dynamic>))
+              .toList()
+          : [],
+      numberOfSpaces: data['numberOfSpaces'] as int,
+      reservationsCompleted: data['reservationsCompleted'] as int,
+      rating: (data['rating'] as num).toDouble(),
+    );
   }
 }

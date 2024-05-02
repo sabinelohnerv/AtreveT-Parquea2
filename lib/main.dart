@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:parquea2/viewmodels/add_garage_viewmodel.dart';
 import 'package:parquea2/viewmodels/add_vehicle_viewmodel.dart';
+import 'package:parquea2/viewmodels/provider_add_garage_viewmodel.dart';
+import 'package:parquea2/viewmodels/provider_garage_list_viewmodel.dart';
 import 'package:provider/provider.dart';
 import 'package:parquea2/viewmodels/onboarding.viewmodel.dart';
 import 'package:parquea2/viewmodels/client_register_viewmodel.dart';
@@ -44,6 +46,7 @@ class MyApp extends StatelessWidget {
             create: (context) => ProviderLoginViewModel()),
         ChangeNotifierProvider(create: (_) => AddGarageViewModel()),
         ChangeNotifierProvider(create: (_) => AddVehicleViewModel()),
+        ChangeNotifierProvider(create: (context) => GarageListViewModel()),
       ],
       child: MaterialApp(
         title: 'Parquea2',

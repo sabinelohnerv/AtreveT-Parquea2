@@ -10,15 +10,9 @@ import 'package:parquea2/services/garage_service.dart';
 class AddGarageViewModel extends ChangeNotifier {
   final GarageService _garageService = GarageService();
 
-  AddGarageViewModel();
-
   bool _isUploading = false;
 
   String? _imgUrl = '';
-  String _name = '';
-  Location _location = Location(location: '', coordinates: '');
-  String _coordinates = '';
-  String? _reference;
   List<String>? _details;
   List<AvailableTimeInDay> _availableTime = [];
   AvailableTimeInDay monday =
@@ -35,23 +29,51 @@ class AddGarageViewModel extends ChangeNotifier {
       AvailableTimeInDay(day: 'saturday', availableTime: []);
   AvailableTimeInDay sunday =
       AvailableTimeInDay(day: 'sunday', availableTime: []);
-  int _numberOfSpaces = 0;
-  int _reservationsCompleted = 0;
-  double _rating = 0.0;
   File? imagePath;
+
+  //Controllers
+
+  List<String> selectedDetails = [];
+  TextEditingController detailsController = TextEditingController();
+
+  TextEditingController nameController = TextEditingController();
+  TextEditingController locationController = TextEditingController();
+  TextEditingController coordinatesController = TextEditingController();
+  TextEditingController referenceController = TextEditingController();
+
+  AddGarageViewModel() {
+    nameController.addListener(() {
+      notifyListeners();
+    });
+    locationController.addListener(() {
+      notifyListeners();
+    });
+    coordinatesController.addListener(() {
+      notifyListeners();
+    });
+    referenceController.addListener(() {
+      notifyListeners();
+    });
+  }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    locationController.dispose();
+    coordinatesController.dispose();
+    referenceController.dispose();
+    super.dispose();
+  }
 
   //Getters
   bool get isUploading => _isUploading;
+  String get name => nameController.text;
+  String get location => locationController.text;
+  String get coordinates => coordinatesController.text;
+  String get reference => referenceController.text;
 
-  String get name => _name;
-  Location get location => _location;
-  String get coordinates => _coordinates;
-  String? get reference => _reference;
   List<String>? get details => _details;
   List<AvailableTimeInDay> get availableTime => _availableTime;
-  int get numberOfSpaces => _numberOfSpaces;
-  int get reservationsCompleted => _reservationsCompleted;
-  double get rating => _rating;
 
   List<String> predefinedDetails = [
     'Portón con visibilidad hacia afuera',
@@ -61,29 +83,7 @@ class AddGarageViewModel extends ChangeNotifier {
     'Vigilancia por guardias',
   ];
 
-  List<String> selectedDetails = [];
-  TextEditingController detailsController = TextEditingController();
-
   //Setters
-  set name(String value) {
-    _name = value;
-    notifyListeners();
-  }
-
-  set location(Location value) {
-    _location = value;
-    notifyListeners();
-  }
-
-  set coordinates(String value) {
-    _coordinates = value;
-    notifyListeners();
-  }
-
-  set reference(String? value) {
-    _reference = value;
-    notifyListeners();
-  }
 
   set details(List<String>? value) {
     _details = value;
@@ -92,21 +92,6 @@ class AddGarageViewModel extends ChangeNotifier {
 
   set availableTime(List<AvailableTimeInDay> value) {
     _availableTime = value;
-    notifyListeners();
-  }
-
-  set numberOfSpaces(int value) {
-    _numberOfSpaces = value;
-    notifyListeners();
-  }
-
-  set reservationsCompleted(int value) {
-    _reservationsCompleted = value;
-    notifyListeners();
-  }
-
-  set rating(double value) {
-    _rating = value;
     notifyListeners();
   }
 
@@ -447,14 +432,18 @@ class AddGarageViewModel extends ChangeNotifier {
   }
 
   //Save Garage
-  Future<void> uploadGarageImage(String garageId) async {
+  Future<String> uploadGarageImage(String garageId) async {
+    String imageUrl;
     if (imagePath != null) {
-      _imgUrl = await _garageService.uploadGarageImage(imagePath!, garageId);
-      notifyListeners();
+      imageUrl = await _garageService.uploadGarageImage(imagePath!, garageId);
+    } else {
+      imageUrl = '';
     }
+    return imageUrl;
   }
 
   void addTimesToAvailableTime() {
+    _availableTime.clear();
     _availableTime.add(monday);
     _availableTime.add(tuesday);
     _availableTime.add(wednesday);
@@ -479,29 +468,31 @@ class AddGarageViewModel extends ChangeNotifier {
   Future<void> addGarage() async {
     _isUploading = true;
     notifyListeners();
-    Future<String> userId = getUserId();
-    String currentUser = userId.toString();
+
+    String currentUser = await getUserId();
     if (currentUser == '') {
+      _isUploading = false;
+      notifyListeners();
       return;
     }
-    _location = Location(
-        location: _location.location,
-        coordinates: _coordinates,
-        reference: _reference);
+
+    Location fullLocation = Location(
+        location: location, coordinates: coordinates, reference: reference);
+
     String garageId = "Garage_${DateTime.now().millisecondsSinceEpoch}";
     addTimesToAvailableTime();
-    uploadGarageImage(garageId);
+    String imageUrl = await uploadGarageImage(garageId);
     Garage newGarage = Garage(
       id: garageId,
       userId: currentUser,
-      name: _name,
-      imgUrl: _imgUrl,
-      location: _location,
-      details: _details,
+      name: name,
+      imgUrl: imageUrl,
+      location: fullLocation,
+      details: selectedDetails,
       availableTime: _availableTime,
-      numberOfSpaces: _numberOfSpaces,
-      reservationsCompleted: _reservationsCompleted,
-      rating: _rating,
+      numberOfSpaces: 0,
+      reservationsCompleted: 0,
+      rating: 0,
     );
 
     await _garageService.addGarage(newGarage);

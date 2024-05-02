@@ -3,11 +3,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:parquea2/models/available_time.dart';
-import 'package:parquea2/viewmodels/add_garage_viewmodel.dart';
+import 'package:parquea2/viewmodels/provider_add_garage_viewmodel.dart';
 import 'package:parquea2/views/widgets/textfields/custom_selectionfield.dart';
 import 'package:parquea2/views/widgets/textfields/custom_textfield.dart';
 import 'package:provider/provider.dart';
-import 'package:parquea2/models/location.dart';
 
 class AddGarageView extends StatefulWidget {
   const AddGarageView({super.key});
@@ -50,7 +49,7 @@ class _AddGarageViewState extends State<AddGarageView> {
               children: [
                 CustomTextFormField(
                   labelText: 'Nombre del Garaje',
-                  onSaved: (value) => garageViewModel.name = value!,
+                  controller: garageViewModel.nameController,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Por favor ingrese el nombre del garaje.';
@@ -119,8 +118,7 @@ class _AddGarageViewState extends State<AddGarageView> {
                 ),
                 CustomTextFormField(
                   labelText: 'Dirección Escrita',
-                  onSaved: (value) => garageViewModel.location =
-                      Location(location: value!, coordinates: ''),
+                  controller: garageViewModel.locationController,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Por favor ingrese la dirección del garaje.';
@@ -131,7 +129,7 @@ class _AddGarageViewState extends State<AddGarageView> {
                 //TODO: Implement Location Coordenates From Google Maps API
                 CustomTextFormField(
                   labelText: 'Ubicación',
-                  onSaved: (value) => garageViewModel.coordinates = value!,
+                  controller: garageViewModel.coordinatesController,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Por favor ingrese la ubicación del garaje.';
@@ -141,13 +139,7 @@ class _AddGarageViewState extends State<AddGarageView> {
                 ),
                 CustomTextFormField(
                   labelText: 'Indicaciones Adicionales',
-                  onSaved: (value) {
-                    if (value != null && value.isNotEmpty) {
-                      garageViewModel.coordinates = value;
-                    } else {
-                      garageViewModel.coordinates = '';
-                    }
-                  },
+                  controller: garageViewModel.referenceController,
                   validator: (value) {
                     return null;
                   },
