@@ -18,20 +18,23 @@ class OnboardingPage extends StatelessWidget {
             child: PageView(
               controller: pageController,
               children: [
-                OnboardingSlide(
+                const OnboardingSlide(
                   imagePath: 'assets/images/onBoarding.png',
                   title: 'Descubre Lugares',
-                  description: 'Encuentra el lugar perfecto para estacionar en zonas urbanas congestionadas.',
+                  description:
+                      'Encuentra el lugar perfecto para estacionar en zonas urbanas congestionadas.',
                 ),
-                OnboardingSlide(
+                const OnboardingSlide(
                   imagePath: 'assets/images/onBoarding2.png',
                   title: 'Reserva Fácilmente',
-                  description: 'Reserva y paga estacionamientos seguros con facilidad en cualquier parte de la ciudad.',
+                  description:
+                      'Reserva y paga estacionamientos seguros con facilidad en cualquier parte de la ciudad.',
                 ),
                 OnboardingSlide(
                   imagePath: 'assets/images/onBoarding3.png',
                   title: 'Gana con Nosotros',
-                  description: 'Gana dinero aprovechando tus garajes vacíos y conviértelos en una fuente de ingresos constante sin esfuerzo.',
+                  description:
+                      'Gana dinero aprovechando tus garajes vacíos y conviértelos en una fuente de ingresos constante sin esfuerzo.',
                   isLast: true,
                   context: context,
                 ),
@@ -50,25 +53,28 @@ class OnboardingPage extends StatelessWidget {
             ),
             onDotClicked: (index) => pageController.animateToPage(
               index,
-              duration: Duration(milliseconds: 500),
+              duration: const Duration(milliseconds: 500),
               curve: Curves.easeInOut,
             ),
           ),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 TextButton(
                   onPressed: () => pageController.jumpToPage(2),
-                  child: Text('Skip', style: TextStyle(color: Colors.grey)),
+                  child:
+                      const Text('Skip', style: TextStyle(color: Colors.grey)),
                 ),
                 TextButton(
                   onPressed: () => pageController.nextPage(
-                    duration: Duration(milliseconds: 400),
+                    duration: const Duration(milliseconds: 400),
                     curve: Curves.easeInOut,
                   ),
-                  child: Text('Next', style: TextStyle(color: Theme.of(context).colorScheme.primary)),
+                  child: Text('Next',
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.primary)),
                 ),
               ],
             ),
@@ -100,52 +106,68 @@ class OnboardingSlide extends StatelessWidget {
     return Column(
       children: [
         Expanded(
-          flex: 5,
+          flex: 4,
           child: Padding(
-            padding: EdgeInsets.only(top: 200),
+            padding: const EdgeInsets.only(top: 200),
             child: Container(
-              constraints: BoxConstraints(maxHeight: 200),
+              constraints: const BoxConstraints(maxHeight: 200),
               child: Image.asset(imagePath, fit: BoxFit.contain),
             ),
           ),
         ),
         Expanded(
-          flex: 3,
+          flex: 4,
           child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
                   title,
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black),
+                  style: const TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black),
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Text(
                   description,
                   style: TextStyle(fontSize: 16, color: Colors.grey[600]),
                   textAlign: TextAlign.center,
                 ),
                 if (isLast) ...[
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   ElevatedButton(
-                    onPressed: () => Navigator.pushNamed(context, '/clientRegister'),
-                    child: Text('Registrarse como Cliente'),
+                    onPressed: () =>
+                        Navigator.pushNamed(context, '/clientRegister'),
+                    child: const Text('Registrarse como Cliente'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Theme.of(context).colorScheme.primary,
                       foregroundColor: Colors.white,
-                      minimumSize: Size(double.infinity, 50),
+                      minimumSize: const Size(double.infinity, 50),
                     ),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   ElevatedButton(
-                    onPressed: () => Navigator.pushNamed(context, '/providerRegister'),
-                    child: Text('Registrarse como Ofertante'),
+                    onPressed: () =>
+                        Navigator.pushNamed(context, '/providerRegister'),
+                    child: const Text('Registrarse como Ofertante'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Theme.of(context).colorScheme.secondary,
                       foregroundColor: Colors.white,
-                      minimumSize: Size(double.infinity, 50),
+                      minimumSize: const Size(double.infinity, 50),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  ElevatedButton(
+                    onPressed: () =>
+                        Navigator.pushNamed(context, '/clientLogin'),
+                    child: const Text('Iniciar Sesion'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Theme.of(context).colorScheme.tertiary,
+                      foregroundColor: Colors.white,
+                      minimumSize: const Size(double.infinity, 50),
                     ),
                   ),
                 ],

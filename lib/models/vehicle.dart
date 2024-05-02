@@ -7,6 +7,7 @@ class Vehicle {
   String model;
   int year;
   String plateNumber;
+  String? imgUrl;
   Measurements measurements;
 
   Vehicle({
@@ -15,6 +16,7 @@ class Vehicle {
     required this.model,
     required this.year,
     required this.plateNumber,
+    this.imgUrl,
     required this.measurements,
   });
 
@@ -23,6 +25,7 @@ class Vehicle {
       id: json['id'],
       make: json['make'],
       model: json['model'],
+      imgUrl: json['imgUrl'],
       year: int.parse(json['year']),
       plateNumber: json['plateNumber'],
       measurements: Measurements.fromJson(json['measurements']),
@@ -36,6 +39,7 @@ class Vehicle {
       'model': model,
       'year': year,
       'plateNumber': plateNumber,
+      'imgUrl': imgUrl,
       'measurements': measurements.toJson(),
     };
   }

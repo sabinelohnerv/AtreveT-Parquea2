@@ -16,6 +16,8 @@ class AddVehicleView extends StatefulWidget {
 class _AddVehicleViewState extends State<AddVehicleView> {
   final _formKey = GlobalKey<FormState>();
   final ImagePicker _picker = ImagePicker();
+  bool _isSubmitting = false;
+
   XFile? _image;
 
   @override
@@ -143,23 +145,34 @@ class _AddVehicleViewState extends State<AddVehicleView> {
                     Padding(
                       padding: const EdgeInsets.all(30.0),
                       child: FilledButton(
-                        onPressed: () {
+                        onPressed: () async {
                           if (_formKey.currentState!.validate()) {
+                            setState(() {
+                              _isSubmitting = true;
+                            });
                             _formKey.currentState!.save();
-                            vehicleViewModel
+                            bool success = await vehicleViewModel
                                 .addVehicle(ScaffoldMessenger.of(context));
-                            vehicleViewModel.resetData();
-                            Navigator.of(context).pop();
+                            if (success) {
+                              Navigator.of(context).pop();
+                            }
+                            setState(() {
+                              _isSubmitting = false;
+                            });
                           }
                         },
-                        style: ElevatedButton.styleFrom(
+                        style: FilledButton.styleFrom(
                           elevation: 0,
                           padding: const EdgeInsets.symmetric(vertical: 12),
                         ),
-                        child: const Text(
-                          'REGISTRAR VEHICULO',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
+                        child: _isSubmitting
+                            ? const CircularProgressIndicator(
+                                valueColor:
+                                    AlwaysStoppedAnimation<Color>(Colors.white))
+                            : const Text(
+                                'REGISTRAR VEHICULO',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
                       ),
                     ),
                   ],
