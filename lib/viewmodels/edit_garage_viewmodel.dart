@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:parquea2/models/available_time.dart';
@@ -18,15 +19,49 @@ class EditGarageViewModel extends ChangeNotifier {
   TextEditingController referenceController;
   TextEditingController detailsController;
   File? imagePath;
+  String? imageUrl;
 
   EditGarageViewModel(this._originalGarage)
       : nameController = TextEditingController(text: _originalGarage.name),
-        locationController = TextEditingController(text: _originalGarage.location.location),
-        coordinatesController = TextEditingController(text: _originalGarage.location.coordinates),
-        referenceController = TextEditingController(text: _originalGarage.location.reference),
-        detailsController = TextEditingController(text: _originalGarage.details?.join(', '));
+        locationController =
+            TextEditingController(text: _originalGarage.location.location),
+        coordinatesController =
+            TextEditingController(text: _originalGarage.location.coordinates),
+        referenceController =
+            TextEditingController(text: _originalGarage.location.reference),
+        detailsController =
+            TextEditingController(text: _originalGarage.details?.join(', ')),
+        imageUrl = _originalGarage.imgUrl;
 
   List<AvailableTimeInDay> get availableTime => _originalGarage.availableTime;
+
+  void updateImageUrl(String newUrl) async {
+    imageUrl = newUrl;
+    notifyListeners();
+
+    _originalGarage.imgUrl = newUrl;
+
+    try {
+      await _garageService.updateGarageImageUrl(_originalGarage.id, newUrl);
+    } catch (e) {
+      print("Error updating image URL in Firestore: $e");
+    }
+  }
+
+  Future<String> uploadImageToFirebase(File imageFile) async {
+    try {
+      String fileName =
+          'garage_images/${DateTime.now().millisecondsSinceEpoch}';
+      Reference storageRef = FirebaseStorage.instance.ref().child(fileName);
+      UploadTask uploadTask = storageRef.putFile(imageFile);
+      TaskSnapshot taskSnapshot = await uploadTask;
+      final String downloadUrl = await taskSnapshot.ref.getDownloadURL();
+      return downloadUrl;
+    } catch (e) {
+      print(e);
+      return '';
+    }
+  }
 
   Future<void> updateGarage() async {
     _isUploading = true;
@@ -93,7 +128,8 @@ class EditGarageViewModel extends ChangeNotifier {
           title: const Text('Editar Detalles'),
           content: TextField(
             controller: detailsController,
-            decoration: const InputDecoration(hintText: "Detalles separados por comas"),
+            decoration:
+                const InputDecoration(hintText: "Detalles separados por comas"),
           ),
           actions: [
             TextButton(
@@ -108,7 +144,8 @@ class EditGarageViewModel extends ChangeNotifier {
     );
   }
 
-  void showEditTimeDialog(BuildContext context, String day, AvailableTime time) {
+  void showEditTimeDialog(
+      BuildContext context, String day, AvailableTime time) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -123,7 +160,8 @@ class EditGarageViewModel extends ChangeNotifier {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   ListTile(
-                    title: Text('Hora de inicio: ${formatTimeOfDay(initialStartTime)}'),
+                    title: Text(
+                        'Hora de inicio: ${formatTimeOfDay(initialStartTime)}'),
                     onTap: () async {
                       TimeOfDay? newStartTime = await showTimePicker(
                         context: context,
@@ -137,7 +175,8 @@ class EditGarageViewModel extends ChangeNotifier {
                     },
                   ),
                   ListTile(
-                    title: Text('Hora de fin: ${formatTimeOfDay(initialEndTime)}'),
+                    title:
+                        Text('Hora de fin: ${formatTimeOfDay(initialEndTime)}'),
                     onTap: () async {
                       TimeOfDay? newEndTime = await showTimePicker(
                         context: context,
@@ -155,7 +194,11 @@ class EditGarageViewModel extends ChangeNotifier {
               actions: [
                 TextButton(
                   onPressed: () {
-                    updateDayAvailability(day, _originalGarage.availableTime.firstWhere((x) => x.day == day).availableTime!);
+                    updateDayAvailability(
+                        day,
+                        _originalGarage.availableTime
+                            .firstWhere((x) => x.day == day)
+                            .availableTime!);
                     notifyListeners();
                     Navigator.of(context).pop();
                   },

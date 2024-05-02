@@ -21,6 +21,13 @@ class _EditGarageViewState extends State<EditGarageView> {
   final _formKey = GlobalKey<FormState>();
   final ImagePicker _picker = ImagePicker();
   XFile? _image;
+  String? _imageUrl;
+
+  @override
+  void initState() {
+    super.initState();
+    _imageUrl = widget.garage.imgUrl;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,12 +86,20 @@ class _EditGarageViewState extends State<EditGarageView> {
                     _image == null
                         ? Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 15),
-                            child: Container(
-                                height: 220,
-                                color: Colors.grey.shade100,
-                                child: const Center(
-                                    child: Text(
-                                        'No has seleccionado una imagen aún.'))),
+                            child: _imageUrl == null
+                                ? Container(
+                                    height: 220,
+                                    color: Colors.grey.shade100,
+                                    child: const Center(
+                                        child: Text(
+                                            'No has seleccionado una imagen aún.')),
+                                  )
+                                : SizedBox(
+                                    height: 220,
+                                    width: MediaQuery.of(context).size.width,
+                                    child: Image.network(_imageUrl!,
+                                        fit: BoxFit.cover),
+                                  ),
                           )
                         : Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -109,7 +124,14 @@ class _EditGarageViewState extends State<EditGarageView> {
                             setState(() {
                               _image = image;
                             });
-                            garageViewModel.imagePath = File(_image!.path);
+                            String newImageUrl = await garageViewModel
+                                .uploadImageToFirebase(File(_image!.path));
+                            setState(() {
+                              _imageUrl =
+                                  newImageUrl;
+                            });
+                            garageViewModel.updateImageUrl(
+                                newImageUrl);
                           }
                         },
                         icon: const Icon(Icons.image),
@@ -200,85 +222,87 @@ class _EditGarageViewState extends State<EditGarageView> {
     );
   }
 
-  void showEditDialog(BuildContext context, String day, List<AvailableTime> times, EditGarageViewModel viewModel) {
-  // Copia local para el manejo de estado del diálogo
-  List<AvailableTime> localTimes = times.map((t) => AvailableTime(startTime: t.startTime, endTime: t.endTime)).toList();
+  void showEditDialog(BuildContext context, String day,
+      List<AvailableTime> times, EditGarageViewModel viewModel) {
+    List<AvailableTime> localTimes = times
+        .map((t) => AvailableTime(startTime: t.startTime, endTime: t.endTime))
+        .toList();
 
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return StatefulBuilder(
-        builder: (BuildContext innerContext, StateSetter setState) {
-          return AlertDialog(
-            title: Text('Editar horarios para $day'),
-            content: SingleChildScrollView(
-              child: ListBody(
-                children: List.generate(localTimes.length, (index) {
-                  AvailableTime time = localTimes[index];
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(child: Text('${time.startTime} - ${time.endTime}')),
-                      IconButton(
-                        icon: const Icon(Icons.edit),
-                        onPressed: () async {
-                          TimeOfDay? newStartTime = await showTimePicker(
-                            context: innerContext,
-                            initialTime: timeOfDayFromString(time.startTime),
-                          );
-                          if (newStartTime != null) {
-                            setState(() {
-                              localTimes[index] = AvailableTime(
-                                startTime: formatTimeOfDay(newStartTime),
-                                endTime: time.endTime,
-                              );
-                            });
-                          }
-                          TimeOfDay? newEndTime = await showTimePicker(
-                            context: innerContext,
-                            initialTime: timeOfDayFromString(time.endTime),
-                          );
-                          if (newEndTime != null) {
-                            setState(() {
-                              localTimes[index] = AvailableTime(
-                                startTime: localTimes[index].startTime,
-                                endTime: formatTimeOfDay(newEndTime),
-                              );
-                            });
-                          }
-                        },
-                      ),
-                    ],
-                  );
-                }),
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (BuildContext innerContext, StateSetter setState) {
+            return AlertDialog(
+              title: Text('Editar horarios para $day'),
+              content: SingleChildScrollView(
+                child: ListBody(
+                  children: List.generate(localTimes.length, (index) {
+                    AvailableTime time = localTimes[index];
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                            child: Text('${time.startTime} - ${time.endTime}')),
+                        IconButton(
+                          icon: const Icon(Icons.edit),
+                          onPressed: () async {
+                            TimeOfDay? newStartTime = await showTimePicker(
+                              context: innerContext,
+                              initialTime: timeOfDayFromString(time.startTime),
+                            );
+                            if (newStartTime != null) {
+                              setState(() {
+                                localTimes[index] = AvailableTime(
+                                  startTime: formatTimeOfDay(newStartTime),
+                                  endTime: time.endTime,
+                                );
+                              });
+                            }
+                            TimeOfDay? newEndTime = await showTimePicker(
+                              context: innerContext,
+                              initialTime: timeOfDayFromString(time.endTime),
+                            );
+                            if (newEndTime != null) {
+                              setState(() {
+                                localTimes[index] = AvailableTime(
+                                  startTime: localTimes[index].startTime,
+                                  endTime: formatTimeOfDay(newEndTime),
+                                );
+                              });
+                            }
+                          },
+                        ),
+                      ],
+                    );
+                  }),
+                ),
               ),
-            ),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  viewModel.updateDayAvailability(day, localTimes); // Aplica cambios solo aquí
-                  Navigator.of(innerContext).pop();
-                },
-                child: Text('Guardar Cambios'),
-              ),
-            ],
-          );
-        },
-      );
-    },
-  );
-}
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    viewModel.updateDayAvailability(
+                        day, localTimes);
+                    Navigator.of(innerContext).pop();
+                  },
+                  child: Text('Guardar Cambios'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
 
-TimeOfDay timeOfDayFromString(String timeStr) {
-  List<String> parts = timeStr.split(':');
-  return TimeOfDay(hour: int.parse(parts[0]), minute: int.parse(parts[1]));
-}
+  TimeOfDay timeOfDayFromString(String timeStr) {
+    List<String> parts = timeStr.split(':');
+    return TimeOfDay(hour: int.parse(parts[0]), minute: int.parse(parts[1]));
+  }
 
-String formatTimeOfDay(TimeOfDay time) {
-  return '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
-}
-
-
+  String formatTimeOfDay(TimeOfDay time) {
+    return '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
+  }
 
   void showAddTimeDialog(
       BuildContext context, String day, EditGarageViewModel viewModel) {

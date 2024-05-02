@@ -100,4 +100,10 @@ class GarageService {
       }
     });
   }
+
+  Future<void> updateGarageImageUrl(String garageId, String newImageUrl) async {
+  DocumentReference garageRef = _firestore.collection('garages').doc(garageId);
+  return garageRef.update({'imgUrl': newImageUrl});
+}
+
 }
