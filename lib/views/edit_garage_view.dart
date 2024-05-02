@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:parquea2/models/available_time.dart';
@@ -103,7 +102,6 @@ class _EditGarageViewState extends State<EditGarageView> {
                             setState(() {
                               _image = image;
                             });
-                            // Update the image path in the view model
                             garageViewModel.imagePath = File(_image!.path);
                           }
                         },
@@ -200,7 +198,6 @@ class _EditGarageViewState extends State<EditGarageView> {
       context: context,
       builder: (BuildContext context) {
         return StatefulBuilder(
-          // Utiliza StatefulBuilder para manejar el estado local
           builder: (context, setState) {
             return AlertDialog(
               title: Text('Editar horarios para $day'),
@@ -231,7 +228,7 @@ class _EditGarageViewState extends State<EditGarageView> {
                               times[timeIndex] = updatedTime;
                               viewModel.updateDayAvailability(day, times);
                               setState(
-                                  () {}); // Llama a setState para actualizar la UI del diálogo
+                                  () {});
                             }
                           },
                         ),
@@ -285,7 +282,6 @@ class _EditGarageViewState extends State<EditGarageView> {
                   );
                   if (pickedStartTime != null) {
                     startTime = pickedStartTime;
-                    // Forcing rebuild of AlertDialog by setting state
                     (context as Element).markNeedsBuild();
                   }
                 },
@@ -301,7 +297,6 @@ class _EditGarageViewState extends State<EditGarageView> {
                   );
                   if (pickedEndTime != null) {
                     endTime = pickedEndTime;
-                    // Forcing rebuild of AlertDialog by setting state
                     (context as Element).markNeedsBuild();
                   }
                 },
@@ -323,7 +318,6 @@ class _EditGarageViewState extends State<EditGarageView> {
                     viewModel.addAvailableTime(day, newTime);
                     Navigator.of(context).pop();
                   } else {
-                    // Optionally alert the user that both times need to be selected
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                       content: Text(
                           "Por favor seleccione ambas horas de inicio y fin."),
