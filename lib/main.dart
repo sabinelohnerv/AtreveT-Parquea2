@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:parquea2/viewmodels/add_garage_space_viewmodel.dart';
 import 'package:parquea2/viewmodels/provider_add_garage_viewmodel.dart';
 import 'package:parquea2/viewmodels/provider_garage_list_viewmodel.dart';
 import 'package:provider/provider.dart';
@@ -39,6 +40,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<ProviderLoginViewModel>(create: (context) => ProviderLoginViewModel()),
         ChangeNotifierProvider(create: (_) => AddGarageViewModel()),
         ChangeNotifierProvider(create: (context) => GarageListViewModel()),
+        ChangeNotifierProvider(create: (context) => AddGarageSpaceViewModel()),
       ],
       child: MaterialApp(
         title: 'Parquea2',

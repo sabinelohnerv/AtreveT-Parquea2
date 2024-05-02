@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:parquea2/models/garage.dart';
+import 'package:parquea2/models/garage_space.dart';
 
 class GarageService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -23,6 +24,30 @@ class GarageService {
   Future<void> addGarage(Garage garage) async {
     CollectionReference garages = _firestore.collection('garages');
     await garages.doc(garage.id).set(garage.toJson());
+  }
+
+  Future<void> addGarageSpaceAndUpdateSpacesCount(
+      GarageSpace garageSpace, String garageId) async {
+    DocumentReference garageRef =
+        _firestore.collection('garages').doc(garageId);
+    CollectionReference garageSpaces = garageRef.collection('spaces');
+
+    await _firestore.runTransaction((transaction) async {
+      DocumentSnapshot garageSnapshot = await transaction.get(garageRef);
+
+      if (!garageSnapshot.exists) {
+        throw Exception("Garage does not exist!");
+      }
+
+      Garage garage = Garage.fromSnapshot(garageSnapshot);
+
+      int updatedNumberOfSpaces = garage.numberOfSpaces + 1;
+
+      transaction.update(garageRef, {'numberOfSpaces': updatedNumberOfSpaces});
+
+      DocumentReference newSpaceRef = garageSpaces.doc(garageSpace.id);
+      transaction.set(newSpaceRef, garageSpace.toJson());
+    });
   }
 
   Future<void> updateGarage(Garage garage) async {

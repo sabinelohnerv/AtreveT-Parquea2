@@ -32,7 +32,9 @@ class GarageDetailsViewModel extends ChangeNotifier {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => const AddGarageSpaceView(),
+        builder: (context) => AddGarageSpaceView(
+          garageId: garageId,
+        ),
       ),
     );
   }
