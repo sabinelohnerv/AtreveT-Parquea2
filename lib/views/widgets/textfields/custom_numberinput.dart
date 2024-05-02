@@ -21,10 +21,12 @@ class CustomNumberInput extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
       child: TextFormField(
         decoration: InputDecoration(
-          labelText: labelText,
-          border: const OutlineInputBorder(),
-          prefixIcon: prefixIcon
-        ),
+            labelText: labelText,
+            filled: true,
+            fillColor: Colors.white,
+            border: const OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(15))),
+            prefixIcon: prefixIcon),
         controller: controller,
         onSaved: onSaved != null ? (value) => onSaved!(value!) : null,
         validator: (value) {

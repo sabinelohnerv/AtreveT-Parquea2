@@ -6,13 +6,12 @@ class CustomSelectionField extends StatelessWidget {
   final VoidCallback onTap;
   final Widget? prefixIcon;
 
-  const CustomSelectionField({
-    super.key,
-    required this.labelText,
-    required this.controller,
-    required this.onTap,
-    this.prefixIcon
-  });
+  const CustomSelectionField(
+      {super.key,
+      required this.labelText,
+      required this.controller,
+      required this.onTap,
+      this.prefixIcon});
 
   @override
   Widget build(BuildContext context) {
@@ -22,14 +21,14 @@ class CustomSelectionField extends StatelessWidget {
         controller: controller,
         readOnly: true,
         decoration: InputDecoration(
-          label: Text(labelText),
-          border: const OutlineInputBorder(),
-          hintText: 'Toca para seleccionar',
-          prefixIcon: prefixIcon
-        ),
+            label: Text(labelText),
+            border: const OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(15))),
+            hintText: 'Toca para seleccionar',
+            prefixIcon: prefixIcon),
         onTap: onTap,
         validator: (value) =>
-                          value!.isEmpty ? 'Este campo es obligatorio.' : null,
+            value!.isEmpty ? 'Este campo es obligatorio.' : null,
       ),
     );
   }

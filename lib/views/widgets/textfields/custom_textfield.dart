@@ -49,12 +49,18 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
       child: TextFormField(
         decoration: InputDecoration(
           labelText: widget.labelText,
-          border: const OutlineInputBorder(),
+          border: const OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(15))),
           prefixIcon: widget.prefixIcon,
-          suffixIcon: widget.obscureText ? IconButton(
-            icon: Icon(_isObscured ? Icons.visibility : Icons.visibility_off),
-            onPressed: _togglePasswordVisibility,
-          ) : null,
+          filled: true,
+          fillColor: Colors.white,
+          suffixIcon: widget.obscureText
+              ? IconButton(
+                  icon: Icon(
+                      _isObscured ? Icons.visibility : Icons.visibility_off),
+                  onPressed: _togglePasswordVisibility,
+                )
+              : null,
         ),
         onSaved: widget.onSaved,
         validator: widget.validator,
