@@ -15,6 +15,9 @@ class VehicleListViewModel extends ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
+  String _userId = '';
+  String get userId => _userId;
+
   bool _knownUserId = true;
   bool get knownUserId => _knownUserId;
 
@@ -33,19 +36,13 @@ class VehicleListViewModel extends ChangeNotifier {
   Future<void> _fetchUserAndListenToVehicles() async {
     _isLoading = true;
     notifyListeners();
-    String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
+    _userId = FirebaseAuth.instance.currentUser?.uid ?? '';
+    notifyListeners();
 
-    print("Attempting to fetch vehicles for user ID: $userId");
-
-    if (userId.isNotEmpty) {
+    if (_userId.isNotEmpty) {
       _knownUserId = true;
       _vehicleSubscription =
-          _vehicleService.streamVehicles(userId).listen((vehicleData) {
-        if (vehicleData.isEmpty) {
-          print("Received empty vehicle data for user ID: $userId");
-        } else {
-          print('Received vehicle data: $vehicleData');
-        }
+          _vehicleService.streamVehicles(_userId).listen((vehicleData) {
         _vehicles = vehicleData;
         _isLoading = false;
         notifyListeners();
@@ -58,7 +55,6 @@ class VehicleListViewModel extends ChangeNotifier {
       _knownUserId = false;
       _isLoading = false;
       notifyListeners();
-      print('No user ID found, cannot load vehicles');
     }
   }
 
@@ -69,20 +65,21 @@ class VehicleListViewModel extends ChangeNotifier {
     );
   }
 
-  void navigateToVehicleDetails(BuildContext context, String vehicleId) {
-    String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
-    if (userId.isNotEmpty) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => VehicleDetails(
-            vehicleId: vehicleId,
-            userId: userId,
+    void navigateToVehicleDetails(BuildContext context, String vehicleId) {
+      _userId = FirebaseAuth.instance.currentUser?.uid ?? '';
+      notifyListeners();
+      if (_userId.isNotEmpty) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => VehicleDetailsView(
+              vehicleId: vehicleId,
+              userId: _userId,
+            ),
           ),
-        ),
-      );
-    } else {
-      return;
+        );
+      } else {
+        return;
+      }
     }
-  }
 }
