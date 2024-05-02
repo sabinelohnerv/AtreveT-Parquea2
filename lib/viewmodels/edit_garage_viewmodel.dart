@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:parquea2/models/available_time.dart';
 import 'package:parquea2/models/garage.dart';
 import 'package:parquea2/models/location.dart';
 import 'package:parquea2/services/garage_service.dart';
@@ -25,6 +26,8 @@ class EditGarageViewModel extends ChangeNotifier {
         referenceController = TextEditingController(text: _originalGarage.location.reference),
         detailsController = TextEditingController(text: _originalGarage.details?.join(', '));
 
+  List<AvailableTimeInDay> get availableTime => _originalGarage.availableTime;
+
   Future<void> updateGarage() async {
     _isUploading = true;
     notifyListeners();
@@ -43,7 +46,7 @@ class EditGarageViewModel extends ChangeNotifier {
       id: _originalGarage.id,
       userId: _originalGarage.userId,
       name: nameController.text,
-      imgUrl: _originalGarage.imgUrl, // You might handle image updating separately
+      imgUrl: _originalGarage.imgUrl,
       location: updatedLocation,
       details: details,
       availableTime: _originalGarage.availableTime,
@@ -55,6 +58,23 @@ class EditGarageViewModel extends ChangeNotifier {
     await _garageService.updateGarage(updatedGarage);
     _isUploading = false;
     notifyListeners();
+  }
+
+  void updateDayAvailability(String day, List<AvailableTime> newTimes) {
+    int index = _originalGarage.availableTime.indexWhere((d) => d.day == day);
+    if (index != -1) {
+      _originalGarage.availableTime[index].availableTime = newTimes ?? [];
+      notifyListeners();
+    }
+  }
+
+  void addAvailableTime(String day, AvailableTime time) {
+    int index = _originalGarage.availableTime.indexWhere((d) => d.day == day);
+    if (index != -1) {
+      _originalGarage.availableTime[index].availableTime ??= [];
+      _originalGarage.availableTime[index].availableTime!.add(time);
+      notifyListeners();
+    }
   }
 
   void showDetailsDialog(BuildContext context) {
