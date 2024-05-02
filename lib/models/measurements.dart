@@ -11,9 +11,9 @@ class Measurements {
 
   factory Measurements.fromJson(Map<String, dynamic> json) {
     return Measurements(
-      height: double.parse(json['height']),
-      width: double.parse(json['width']),
-      length: double.parse(json['length']),
+      height: (json['height'] as num).toDouble(),
+      width: (json['width'] as num).toDouble(),
+      length: (json['length'] as num).toDouble(),
     );
   }
 

@@ -12,7 +12,6 @@ class AddGarageViewModel extends ChangeNotifier {
 
   bool _isUploading = false;
 
-  String? _imgUrl = '';
   List<String>? _details;
   List<AvailableTimeInDay> _availableTime = [];
   AvailableTimeInDay monday =
@@ -496,5 +495,24 @@ class AddGarageViewModel extends ChangeNotifier {
     );
 
     await _garageService.addGarage(newGarage);
+  }
+
+  void resetData() {
+    imagePath = null;
+    nameController.clear();
+    locationController.clear();
+    coordinatesController.clear();
+    referenceController.clear();
+    detailsController.clear();
+    selectedDetails.clear();
+    _availableTime.clear();
+    monday.availableTime?.clear();
+    tuesday.availableTime?.clear();
+    wednesday.availableTime?.clear();
+    thursday.availableTime?.clear();
+    friday.availableTime?.clear();
+    saturday.availableTime?.clear();
+    sunday.availableTime?.clear();
+    notifyListeners();
   }
 }

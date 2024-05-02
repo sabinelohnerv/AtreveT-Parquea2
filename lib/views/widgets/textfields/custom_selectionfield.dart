@@ -22,6 +22,8 @@ class CustomSelectionField extends StatelessWidget {
         readOnly: true,
         decoration: InputDecoration(
             label: Text(labelText),
+            filled: true,
+            fillColor: Colors.white,
             border: const OutlineInputBorder(
                 borderRadius: BorderRadius.all(Radius.circular(15))),
             hintText: 'Toca para seleccionar',

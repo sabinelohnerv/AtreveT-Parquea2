@@ -29,13 +29,14 @@ class _AddGarageViewState extends State<AddGarageView> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "Agregar Garaje",
+          "REGISTRAR GARAJE",
           style: TextStyle(fontWeight: FontWeight.w600),
         ),
+        foregroundColor: Colors.white,
         centerTitle: true,
         backgroundColor: Theme.of(context).colorScheme.primary,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios),
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.white,),
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
@@ -176,14 +177,15 @@ class _AddGarageViewState extends State<AddGarageView> {
                           content: Text('Garaje agregado exitosamente'),
                           backgroundColor: Colors.green,
                         ));
+                        garageViewModel.resetData();
                         Navigator.pop(context);
                       }
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Theme.of(context).primaryColor,
-                      foregroundColor: Colors.black,
+                      foregroundColor: Colors.white,
                     ),
-                    child: const Text('Agregar Garaje'),
+                    child: const Text('REGISTRAR GARAJE'),
                   ),
                 )
               ],

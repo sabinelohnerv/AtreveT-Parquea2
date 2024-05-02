@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:parquea2/models/measurements.dart';
 
 class Vehicle {
@@ -41,5 +42,19 @@ class Vehicle {
       'imgUrl': imgUrl,
       'measurements': measurements.toJson(),
     };
+  }
+
+  factory Vehicle.fromSnapshot(DocumentSnapshot doc) {
+    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+    return Vehicle(
+      id: doc.id,
+      make: data['make'] ?? '',
+      model: data['model'] ?? '',
+      year:
+          data['year'] != null ? int.tryParse(data['year'].toString()) ?? 0 : 0,
+      plateNumber: data['plateNumber'] ?? '',
+      measurements:
+          Measurements.fromJson(data['measurements'] as Map<String, dynamic>),
+    );
   }
 }

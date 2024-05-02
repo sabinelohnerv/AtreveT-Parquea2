@@ -77,6 +77,16 @@ class GarageService {
             snapshot.docs.map((doc) => Garage.fromSnapshot(doc)).toList());
   }
 
+  Stream<List<GarageSpace>> garagesSpacesStreamByGarage(String garageId) {
+    return _firestore
+        .collection('garages')
+        .doc(garageId)
+        .collection('spaces')
+        .snapshots()
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => GarageSpace.fromSnapshot(doc)).toList());
+  }
+
   Stream<Garage?> getGarageByIdStream(String garageId) {
     return _firestore
         .collection('garages')

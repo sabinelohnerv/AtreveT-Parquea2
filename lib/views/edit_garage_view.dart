@@ -29,11 +29,12 @@ class _EditGarageViewState extends State<EditGarageView> {
       child: Consumer<EditGarageViewModel>(
         builder: (context, garageViewModel, child) => Scaffold(
           appBar: AppBar(
-            title: const Text("Editar Garaje"),
+            title: const Text("EDITAR GARAJE", style: TextStyle(fontWeight: FontWeight.w600),),
+            foregroundColor: Colors.white,
             centerTitle: true,
             backgroundColor: Theme.of(context).colorScheme.primary,
             leading: IconButton(
-              icon: const Icon(Icons.arrow_back_ios),
+              icon: const Icon(Icons.arrow_back_ios, color: Colors.white,),
               onPressed: () => Navigator.of(context).pop(),
             ),
           ),
@@ -177,9 +178,9 @@ class _EditGarageViewState extends State<EditGarageView> {
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Theme.of(context).primaryColor,
-                          foregroundColor: Colors.black,
+                          foregroundColor: Colors.white,
                         ),
-                        child: const Text('Actualizar Garaje'),
+                        child: const Text('ACTUALIZAR GARAJE'),
                       ),
                     )
                   ],
