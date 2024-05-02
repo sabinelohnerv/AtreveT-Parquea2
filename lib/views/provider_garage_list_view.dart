@@ -10,16 +10,17 @@ class GarageListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Garajes Registrados'),
+        title: const Text('Garajes Registrados', style: TextStyle(fontWeight: FontWeight.w600),),
+        foregroundColor: Colors.white,
         backgroundColor: Theme.of(context).primaryColor,
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios),
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.white,),
           onPressed: () => Navigator.of(context).pop(),
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.add, size: 30),
+            icon: const Icon(Icons.add, size: 30, color: Colors.white,),
             onPressed: () =>
                 Provider.of<GarageListViewModel>(context, listen: false)
                     .navigateToAddGarage(context),

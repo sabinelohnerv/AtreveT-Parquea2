@@ -25,6 +25,8 @@ class CustomSelectField<T> extends StatelessWidget {
       child: DropdownButtonFormField<T>(
         decoration: InputDecoration(
           labelText: labelText,
+          filled: true,
+          fillColor: Colors.white,
           border: const OutlineInputBorder(),
           prefixIcon: prefixIcon
         ),

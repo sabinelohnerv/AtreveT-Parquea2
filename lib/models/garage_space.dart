@@ -24,15 +24,15 @@ class GarageSpace {
   }
 
   factory GarageSpace.fromSnapshot(DocumentSnapshot snapshot) {
-    Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+    Map<String, dynamic> json = snapshot.data() as Map<String, dynamic>;
 
     return GarageSpace(
       id: snapshot.id,
-      measurements:
-          Measurements.fromJson(data['measurements'] as Map<String, dynamic>),
-      details:
-          data['details'] != null ? List<String>.from(data['details']) : null,
-      state: data['state'] as String,
+      measurements: Measurements.fromJson(json['measurements'] as Map<String, dynamic>),
+      details: json['details'] != null
+          ? List<String>.from(json['details'] as List)
+          : [],
+      state: json['state'] as String,
     );
   }
 }

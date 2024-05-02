@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:parquea2/models/garage.dart';
 import 'package:parquea2/services/garage_service.dart';
-import 'package:parquea2/views/add_garage_space_view.dart';
+import 'package:parquea2/views/garage_spaces_list_view.dart';
 
 class GarageDetailsViewModel extends ChangeNotifier {
   final GarageService _garageService = GarageService();
@@ -32,7 +32,7 @@ class GarageDetailsViewModel extends ChangeNotifier {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => AddGarageSpaceView(
+        builder: (context) => GarageSpacesListView(
           garageId: garageId,
         ),
       ),

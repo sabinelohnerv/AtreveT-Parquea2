@@ -36,6 +36,8 @@ class CustomEditFormField extends StatelessWidget {
       child: TextFormField(
         decoration: InputDecoration(
           labelText: labelText,
+          filled: true,
+          fillColor: Colors.white,
           border: const OutlineInputBorder(),
           prefixIcon: prefixIcon
         ),
