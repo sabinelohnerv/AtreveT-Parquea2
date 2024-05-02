@@ -39,7 +39,7 @@ class EditGarageViewModel extends ChangeNotifier {
     );
 
     List<String>? details = detailsController.text.isNotEmpty
-        ? detailsController.text.split(',').map((s) => s.trim()).toList()
+        ? detailsController.text.split(', ').map((s) => s.trim()).toList()
         : null;
 
     Garage updatedGarage = Garage(
@@ -63,7 +63,7 @@ class EditGarageViewModel extends ChangeNotifier {
   void updateDayAvailability(String day, List<AvailableTime> newTimes) {
     int index = _originalGarage.availableTime.indexWhere((d) => d.day == day);
     if (index != -1) {
-      _originalGarage.availableTime[index].availableTime = newTimes ?? [];
+      _originalGarage.availableTime[index].availableTime = newTimes;
       notifyListeners();
     }
   }
@@ -73,6 +73,14 @@ class EditGarageViewModel extends ChangeNotifier {
     if (index != -1) {
       _originalGarage.availableTime[index].availableTime ??= [];
       _originalGarage.availableTime[index].availableTime!.add(time);
+      notifyListeners();
+    }
+  }
+
+  void removeTime(String day, AvailableTime time) {
+    int index = _originalGarage.availableTime.indexWhere((d) => d.day == day);
+    if (index != -1) {
+      _originalGarage.availableTime[index].availableTime?.remove(time);
       notifyListeners();
     }
   }
@@ -98,6 +106,76 @@ class EditGarageViewModel extends ChangeNotifier {
         );
       },
     );
+  }
+
+  void showEditTimeDialog(BuildContext context, String day, AvailableTime time) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        TimeOfDay initialStartTime = timeOfDayFromString(time.startTime);
+        TimeOfDay initialEndTime = timeOfDayFromString(time.endTime);
+
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: Text('Editar horario para $day'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ListTile(
+                    title: Text('Hora de inicio: ${formatTimeOfDay(initialStartTime)}'),
+                    onTap: () async {
+                      TimeOfDay? newStartTime = await showTimePicker(
+                        context: context,
+                        initialTime: initialStartTime,
+                      );
+                      if (newStartTime != null) {
+                        setState(() {
+                          time.startTime = formatTimeOfDay(newStartTime);
+                        });
+                      }
+                    },
+                  ),
+                  ListTile(
+                    title: Text('Hora de fin: ${formatTimeOfDay(initialEndTime)}'),
+                    onTap: () async {
+                      TimeOfDay? newEndTime = await showTimePicker(
+                        context: context,
+                        initialTime: initialEndTime,
+                      );
+                      if (newEndTime != null) {
+                        setState(() {
+                          time.endTime = formatTimeOfDay(newEndTime);
+                        });
+                      }
+                    },
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    updateDayAvailability(day, _originalGarage.availableTime.firstWhere((x) => x.day == day).availableTime!);
+                    notifyListeners();
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('Guardar'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+  TimeOfDay timeOfDayFromString(String timeStr) {
+    List<String> parts = timeStr.split(':');
+    return TimeOfDay(hour: int.parse(parts[0]), minute: int.parse(parts[1]));
+  }
+
+  String formatTimeOfDay(TimeOfDay time) {
+    return '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
   }
 
   @override
