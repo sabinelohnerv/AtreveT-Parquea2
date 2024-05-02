@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:parquea2/views/add_garage_view.dart';
+import 'package:parquea2/views/add_vehicle_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeView extends StatelessWidget {
@@ -15,14 +16,31 @@ class HomeView extends StatelessWidget {
     _markOnboardingComplete();
     return Scaffold(
       body: Center(
-        child: ElevatedButton(
-          onPressed: () => {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const AddGarageView()),
-            )
-          },
-          child: const Text('Agregar Garaje'),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: () => {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const AddGarageView()),
+                )
+              },
+              child: const Text('Agregar Garaje'),
+            ),
+            ElevatedButton(
+              onPressed: () => {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const AddVehicleView()),
+                )
+              },
+              child: const Text('Agregar Vehiculo'),
+            ),
+          ],
         ),
       ),
     );
