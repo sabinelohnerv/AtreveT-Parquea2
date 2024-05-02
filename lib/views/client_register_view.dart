@@ -165,25 +165,6 @@ class ClientRegisterView extends StatelessWidget {
                                   const SizedBox(
                                     width: 30,
                                   ),
-                                  ElevatedButton.icon(
-                                    icon: const Icon(
-                                        Icons.app_registration_outlined),
-                                    label: const Text("Log In"),
-                                    onPressed: () async {
-                                      Navigator.of(context)
-                                          .pushReplacementNamed('/clientLogin');
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      foregroundColor: Colors.white,
-                                      backgroundColor: const Color.fromARGB(
-                                          255, 255, 211, 40),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                      ),
-                                      elevation: 5,
-                                    ),
-                                  ),
                                 ]),
                           ),
                           const SizedBox(height: 50),

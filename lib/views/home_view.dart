@@ -4,9 +4,10 @@ import 'package:parquea2/views/client_garage_list_view.dart';
 import 'package:parquea2/views/provider_garage_list_view.dart';
 import 'package:parquea2/views/user_vehicles_list_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:parquea2/views/login_view.dart';
 
 class HomeView extends StatelessWidget {
-  const HomeView({super.key});
+  const HomeView({Key? key});
 
   Future<void> _markOnboardingComplete() async {
     final prefs = await SharedPreferences.getInstance();
@@ -17,6 +18,24 @@ class HomeView extends StatelessWidget {
   Widget build(BuildContext context) {
     _markOnboardingComplete();
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 255, 188, 7),
+        title: Text(
+          'Home',
+          style: TextStyle(color: Colors.white),
+        ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => LoginView(userType: UserType.client)),
+              );
+            },
+            icon: Icon(Icons.logout, color: Colors.white),
+          ),
+        ],
+      ),
       body: Center(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -30,7 +49,13 @@ class HomeView extends StatelessWidget {
                       builder: (context) => const VehicleListView()),
                 )
               },
-              child: const Text('Vehículos'),
+              child: Text(
+                'Vehículos',
+                style: TextStyle(color: Colors.white),
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color.fromARGB(255, 255, 188, 7),
+              ),
             ),
             ElevatedButton(
               onPressed: () => {

@@ -22,6 +22,7 @@ import 'package:parquea2/views/client_register_view.dart';
 import 'package:parquea2/views/provider_register_view.dart';
 import 'package:parquea2/views/client_login_view.dart';
 import 'package:parquea2/views/provider_login_view.dart';
+import 'package:parquea2/views/login_view.dart';
 import 'firebase_options.dart';
 import 'services/onboarding_service.dart';
 
@@ -90,6 +91,7 @@ class MyApp extends StatelessWidget {
           '/providerRegister': (context) => ProviderRegisterView(),
           '/clientLogin': (context) => ClientLoginView(),
           '/providerLogin': (context) => ProviderLoginView(),
+          '/login': (context) => LoginView(userType: UserType.client),
           '/home': (context) => const HomeView(),
         },
       ),

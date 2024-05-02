@@ -124,7 +124,7 @@ class ProviderRegisterView extends StatelessWidget {
                                   phoneNumberController.text,
                                 );
                                 if (registered) {
-                                  Navigator.of(context).pushReplacementNamed('/providerLogin');
+                                  Navigator.of(context).pushReplacementNamed('/login');
                                 } else {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(content: Text('Error en el registro'))
