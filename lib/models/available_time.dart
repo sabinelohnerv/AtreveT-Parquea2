@@ -15,6 +15,17 @@ class AvailableTimeInDay {
           : [],
     };
   }
+
+  factory AvailableTimeInDay.fromJson(Map<String, dynamic> json) {
+    return AvailableTimeInDay(
+      day: json['day'] as String,
+      availableTime: json['availableTime'] != null
+          ? (json['availableTime'] as List)
+              .map((x) => AvailableTime.fromJson(x as Map<String, dynamic>))
+              .toList()
+          : [],
+    );
+  }
 }
 
 class AvailableTime {
@@ -32,4 +43,9 @@ class AvailableTime {
       'endTime': endTime,
     };
   }
+
+  factory AvailableTime.fromJson(Map<String, dynamic> json) => AvailableTime(
+        startTime: json['startTime'] as String,
+        endTime: json['endTime'] as String,
+      );
 }

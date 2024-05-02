@@ -26,12 +26,43 @@ class GarageService {
   }
 
   Future<void> updateGarage(Garage garage) async {
-    DocumentReference garageRef = _firestore.collection('garages').doc(garage.id);
+    DocumentReference garageRef =
+        _firestore.collection('garages').doc(garage.id);
     await garageRef.update(garage.toJson());
   }
 
   Future<void> deleteGarage(String garageId) async {
-    DocumentReference garageRef = _firestore.collection('garages').doc(garageId);
+    DocumentReference garageRef =
+        _firestore.collection('garages').doc(garageId);
     await garageRef.delete();
+  }
+
+  Stream<List<Garage>> garagesStream() {
+    return _firestore.collection('garages').snapshots().map((snapshot) {
+      return snapshot.docs.map((doc) => Garage.fromSnapshot(doc)).toList();
+    });
+  }
+
+  Stream<List<Garage>> garagesStreamByUserId(String userId) {
+    return _firestore
+        .collection('garages')
+        .where('userId', isEqualTo: userId)
+        .snapshots()
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => Garage.fromSnapshot(doc)).toList());
+  }
+
+  Stream<Garage?> getGarageByIdStream(String garageId) {
+    return _firestore
+        .collection('garages')
+        .doc(garageId)
+        .snapshots()
+        .map((snapshot) {
+      if (snapshot.exists && snapshot.data() != null) {
+        return Garage.fromSnapshot(snapshot);
+      } else {
+        return null;
+      }
+    });
   }
 }
