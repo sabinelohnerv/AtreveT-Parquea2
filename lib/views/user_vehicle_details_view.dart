@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:parquea2/viewmodels/user_vehicle_details_viewmodel.dart';
+import 'package:parquea2/views/edit_vehicle_view.dart';
 import 'package:provider/provider.dart';
 
 import 'widgets/vehicle/vehicle_details_card.dart';
@@ -110,6 +111,19 @@ class VehicleDetailsView extends StatelessWidget {
                 ],
               ),
             ),
+            floatingActionButton: FloatingActionButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => EditVehicleView(userId: userId, vehicle: vehicle),
+                  ),
+                );
+              },
+              child: const Icon(Icons.mode_edit),
+              backgroundColor: Theme.of(context).colorScheme.primary,
+            ),
+            floatingActionButtonLocation: FloatingActionButtonLocation.endContained,
           );
         },
       ),
