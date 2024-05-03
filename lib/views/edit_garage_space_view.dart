@@ -10,7 +10,9 @@ class EditGarageSpaceView extends StatefulWidget {
   final String garageId;
   final GarageSpace garageSpace;
 
-  const EditGarageSpaceView({Key? key, required this.garageId, required this.garageSpace}) : super(key: key);
+  const EditGarageSpaceView(
+      {Key? key, required this.garageId, required this.garageSpace})
+      : super(key: key);
 
   @override
   _EditGarageSpaceViewState createState() => _EditGarageSpaceViewState();
@@ -20,7 +22,8 @@ class _EditGarageSpaceViewState extends State<EditGarageSpaceView> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<EditGarageSpaceViewModel>(
-      create: (_) => EditGarageSpaceViewModel(widget.garageId, widget.garageSpace, GarageService()),
+      create: (_) => EditGarageSpaceViewModel(
+          widget.garageId, widget.garageSpace, GarageService()),
       child: Scaffold(
         body: NestedScrollView(
           headerSliverBuilder: (context, innerBoxIsScrolled) => [
@@ -100,7 +103,9 @@ class _EditGarageSpaceViewState extends State<EditGarageSpaceView> {
                           },
                           child: const Text('ACTUALIZAR ESPACIO'),
                           style: ElevatedButton.styleFrom(
-                            foregroundColor: Colors.white, backgroundColor: Theme.of(context).colorScheme.primary,
+                            foregroundColor: Colors.white,
+                            backgroundColor:
+                                Theme.of(context).colorScheme.primary,
                             padding: const EdgeInsets.symmetric(vertical: 12),
                             textStyle: const TextStyle(fontSize: 18),
                           ),

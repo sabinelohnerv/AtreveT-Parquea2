@@ -12,7 +12,7 @@ class GarageListView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Garajes',
+          'GARAJES',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
         ),
         backgroundColor: Theme.of(context).primaryColor,

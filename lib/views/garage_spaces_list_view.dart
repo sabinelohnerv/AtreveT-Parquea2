@@ -16,7 +16,7 @@ class GarageSpacesListView extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: const Text(
-            'Espacios de Garaje',
+            'ESPACIOS DE GARAJE',
             style: TextStyle(fontWeight: FontWeight.w600),
           ),
           backgroundColor: Theme.of(context).colorScheme.primary,
@@ -54,21 +54,12 @@ class GarageSpacesListView extends StatelessWidget {
               itemBuilder: (context, index) {
                 final garageSpace = viewModel.garageSpaces[index];
                 return GarageSpaceCard(
-                    garageSpace: garageSpace,
-                    garageNumber: index + 1,
-                    onTap: () => viewModel.navigateToGarageSpaceDetails(context, garageId, garageSpace.id),
-                    onDelete: () =>
-                        viewModel.deleteGarageSpace(garageSpace.id, garageId), onEdit: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => EditGarageSpaceView(
-                          garageId: garageId,
-                          garageSpace: garageSpace,
-                        ),
-                      ),
-                    );
-                  },
+                  garageSpace: garageSpace,
+                  garageNumber: index + 1,
+                  onTap: () => viewModel.navigateToGarageSpaceDetails(
+                      context, garageId, garageSpace.id),
+                  onDelete: () =>
+                      viewModel.deleteGarageSpace(garageSpace.id, garageId),
                 );
               },
             );

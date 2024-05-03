@@ -44,6 +44,22 @@ class VehicleDetailsView extends StatelessWidget {
                 ),
                 onPressed: () => Navigator.of(context).pop(),
               ),
+              actions: [
+                IconButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              EditVehicleView(userId: userId, vehicle: vehicle),
+                        ),
+                      );
+                    },
+                    icon: const Icon(
+                      Icons.edit,
+                      color: Colors.white,
+                    ))
+              ],
             ),
             body: SingleChildScrollView(
               child: Column(
@@ -111,19 +127,6 @@ class VehicleDetailsView extends StatelessWidget {
                 ],
               ),
             ),
-            floatingActionButton: FloatingActionButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => EditVehicleView(userId: userId, vehicle: vehicle),
-                  ),
-                );
-              },
-              child: const Icon(Icons.mode_edit),
-              backgroundColor: Theme.of(context).colorScheme.primary,
-            ),
-            floatingActionButtonLocation: FloatingActionButtonLocation.endContained,
           );
         },
       ),

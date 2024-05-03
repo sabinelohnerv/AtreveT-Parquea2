@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:parquea2/models/garage_space.dart';
 import 'package:parquea2/services/garage_service.dart';
+import 'package:parquea2/views/edit_garage_space_view.dart';
 
 class GarageSpaceDetailsViewModel extends ChangeNotifier {
   final GarageService _garageService = GarageService();
@@ -26,6 +27,22 @@ class GarageSpaceDetailsViewModel extends ChangeNotifier {
       notifyListeners();
     } catch (e) {
       print("Error deleting garagespace: $e");
+    }
+  }
+
+  void navigateToEditGarageSpace(BuildContext context, String garageId) {
+    if (_garageSpace != null) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => EditGarageSpaceView(
+            garageId: garageId,
+            garageSpace: _garageSpace!,
+          ),
+        ),
+      );
+    } else {
+      return;
     }
   }
 }

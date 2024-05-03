@@ -39,10 +39,14 @@ class EditVehicleViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> updateVehicle() async {
+  Future<bool> updateVehicle(File? newImage) async {
     _isUploading = true;
     notifyListeners();
-    
+
+    if (newImage != null) {
+      uploadImage(newImage);
+    }
+
     Measurements updatedMeasurements = Measurements(
       height: double.parse(heightController.text),
       width: double.parse(widthController.text),
@@ -76,7 +80,8 @@ class EditVehicleViewModel extends ChangeNotifier {
     _isUploading = true;
     notifyListeners();
     try {
-      String imageUrl = await _vehicleService.uploadVehicleImage(imageFile, userId, vehicle.id);
+      String imageUrl = await _vehicleService.uploadVehicleImage(
+          imageFile, userId, vehicle.id);
       _imageUrl = imageUrl;
       notifyListeners();
       return imageUrl;

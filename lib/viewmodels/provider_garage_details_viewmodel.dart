@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:parquea2/models/garage.dart';
 import 'package:parquea2/services/garage_service.dart';
+import 'package:parquea2/views/edit_garage_view.dart';
 import 'package:parquea2/views/garage_spaces_list_view.dart';
 
 class GarageDetailsViewModel extends ChangeNotifier {
@@ -37,5 +38,20 @@ class GarageDetailsViewModel extends ChangeNotifier {
         ),
       ),
     );
+  }
+
+  void navigateToEditGarage(BuildContext context) {
+    if (_garage != null) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => EditGarageView(
+            garage: _garage!,
+          ),
+        ),
+      );
+    } else {
+      return;
+    }
   }
 }

@@ -24,7 +24,6 @@ class GarageDetails extends StatelessWidget {
               child: CircularProgressIndicator(),
             );
           }
-
           return Scaffold(
             extendBodyBehindAppBar: true,
             appBar: AppBar(
@@ -37,6 +36,21 @@ class GarageDetails extends StatelessWidget {
                 ),
                 onPressed: () => Navigator.of(context).pop(),
               ),
+              actions: [
+                IconButton(
+                  icon: CircleAvatar(
+                    backgroundColor: Theme.of(context).colorScheme.primary,
+                    child: const Icon(
+                      Icons.edit,
+                      color: Colors.white,
+                      size: 20,
+                    ),
+                  ),
+                  onPressed: () => Provider.of<GarageDetailsViewModel>(context,
+                          listen: false)
+                      .navigateToEditGarage(context),
+                ),
+              ],
             ),
             body: SingleChildScrollView(
               child: Column(

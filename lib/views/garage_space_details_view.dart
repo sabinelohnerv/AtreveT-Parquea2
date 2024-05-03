@@ -24,16 +24,32 @@ class GarageSpaceDetails extends StatelessWidget {
           }
           return Scaffold(
             appBar: AppBar(
-              title: Text(
-                garageSpace.id,
-                style: const TextStyle(fontWeight: FontWeight.w600),
+              title: const Text(
+                'ESPACIOS',
+                style: TextStyle(fontWeight: FontWeight.w600),
               ),
+              foregroundColor: Colors.white,
               centerTitle: true,
               backgroundColor: Theme.of(context).colorScheme.primary,
               leading: IconButton(
-                icon: const Icon(Icons.arrow_back_ios),
+                icon: const Icon(
+                  Icons.arrow_back_ios,
+                  color: Colors.white,
+                ),
                 onPressed: () => Navigator.of(context).pop(),
               ),
+              actions: [
+                IconButton(
+                  icon: const Icon(
+                    Icons.edit,
+                    color: Colors.white,
+                  ),
+                  onPressed: () => Provider.of<GarageSpaceDetailsViewModel>(
+                          context,
+                          listen: false)
+                      .navigateToEditGarageSpace(context, garageId),
+                ),
+              ],
             ),
             body: Center(
               child: Column(
