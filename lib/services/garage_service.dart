@@ -100,4 +100,26 @@ class GarageService {
       }
     });
   }
+
+  Future<int> getAvailableSpacesCount(String garageId) async {
+    try {
+      QuerySnapshot snapshot = await _firestore
+          .collection('garages')
+          .doc(garageId)
+          .collection('spaces')
+          .where('state', isEqualTo: 'libre')
+          .get();
+
+      return snapshot.docs.length;
+    } catch (e) {
+      print('Error fetching available spaces: $e');
+      return 0;
+    }
+  }
+
+  Future<void> updateGarageImageUrl(String garageId, String newImageUrl) async {
+    DocumentReference garageRef =
+        _firestore.collection('garages').doc(garageId);
+    return garageRef.update({'imgUrl': newImageUrl});
+  }
 }

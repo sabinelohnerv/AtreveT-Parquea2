@@ -4,6 +4,8 @@ import 'package:parquea2/services/garage_service.dart';
 import 'package:parquea2/services/vehicle_service.dart';
 import 'package:parquea2/viewmodels/add_vehicle_viewmodel.dart';
 import 'package:parquea2/viewmodels/add_garage_space_viewmodel.dart';
+import 'package:parquea2/viewmodels/client_garage_list_viewmodel.dart';
+import 'package:parquea2/viewmodels/client_garage_spaces_list_viewmodel.dart';
 import 'package:parquea2/viewmodels/garage_spaces_list_viewmodel.dart';
 import 'package:parquea2/viewmodels/provider_add_garage_viewmodel.dart';
 import 'package:parquea2/viewmodels/provider_garage_list_viewmodel.dart';
@@ -20,6 +22,7 @@ import 'package:parquea2/views/client_register_view.dart';
 import 'package:parquea2/views/provider_register_view.dart';
 import 'package:parquea2/views/client_login_view.dart';
 import 'package:parquea2/views/provider_login_view.dart';
+import 'package:parquea2/views/login_view.dart';
 import 'firebase_options.dart';
 import 'services/onboarding_service.dart';
 
@@ -51,8 +54,10 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AddGarageViewModel()),
         ChangeNotifierProvider(create: (_) => AddVehicleViewModel()),
         ChangeNotifierProvider(create: (context) => GarageListViewModel()),
+        ChangeNotifierProvider(create: (context) => ClientGarageListViewModel()),
         ChangeNotifierProvider(create: (context) => VehicleListViewModel(VehicleService())),
         ChangeNotifierProvider(create: (context) => GarageSpacesListViewModel('garageId', GarageService())),
+        ChangeNotifierProvider(create: (context) => ClientGarageSpacesListViewModel('garageId', GarageService())),
         ChangeNotifierProvider(create: (context) => AddGarageSpaceViewModel()),
       ],
       child: MaterialApp(
@@ -86,6 +91,7 @@ class MyApp extends StatelessWidget {
           '/providerRegister': (context) => ProviderRegisterView(),
           '/clientLogin': (context) => ClientLoginView(),
           '/providerLogin': (context) => ProviderLoginView(),
+          '/login': (context) => LoginView(userType: UserType.client),
           '/home': (context) => const HomeView(),
         },
       ),

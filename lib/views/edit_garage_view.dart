@@ -21,6 +21,13 @@ class _EditGarageViewState extends State<EditGarageView> {
   final _formKey = GlobalKey<FormState>();
   final ImagePicker _picker = ImagePicker();
   XFile? _image;
+  String? _imageUrl;
+
+  @override
+  void initState() {
+    super.initState();
+    _imageUrl = widget.garage.imgUrl;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,12 +36,18 @@ class _EditGarageViewState extends State<EditGarageView> {
       child: Consumer<EditGarageViewModel>(
         builder: (context, garageViewModel, child) => Scaffold(
           appBar: AppBar(
-            title: const Text("EDITAR GARAJE", style: TextStyle(fontWeight: FontWeight.w600),),
+            title: const Text(
+              "EDITAR GARAJE",
+              style: TextStyle(fontWeight: FontWeight.w600),
+            ),
             foregroundColor: Colors.white,
             centerTitle: true,
             backgroundColor: Theme.of(context).colorScheme.primary,
             leading: IconButton(
-              icon: const Icon(Icons.arrow_back_ios, color: Colors.white,),
+              icon: const Icon(
+                Icons.arrow_back_ios,
+                color: Colors.white,
+              ),
               onPressed: () => Navigator.of(context).pop(),
             ),
           ),
@@ -73,12 +86,20 @@ class _EditGarageViewState extends State<EditGarageView> {
                     _image == null
                         ? Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 15),
-                            child: Container(
-                                height: 220,
-                                color: Colors.grey.shade100,
-                                child: const Center(
-                                    child: Text(
-                                        'No has seleccionado una imagen aún.'))),
+                            child: _imageUrl == null
+                                ? Container(
+                                    height: 220,
+                                    color: Colors.grey.shade100,
+                                    child: const Center(
+                                        child: Text(
+                                            'No has seleccionado una imagen aún.')),
+                                  )
+                                : SizedBox(
+                                    height: 220,
+                                    width: MediaQuery.of(context).size.width,
+                                    child: Image.network(_imageUrl!,
+                                        fit: BoxFit.cover),
+                                  ),
                           )
                         : Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -103,7 +124,14 @@ class _EditGarageViewState extends State<EditGarageView> {
                             setState(() {
                               _image = image;
                             });
-                            garageViewModel.imagePath = File(_image!.path);
+                            String newImageUrl = await garageViewModel
+                                .uploadImageToFirebase(File(_image!.path));
+                            setState(() {
+                              _imageUrl =
+                                  newImageUrl;
+                            });
+                            garageViewModel.updateImageUrl(
+                                newImageUrl);
                           }
                         },
                         icon: const Icon(Icons.image),
@@ -158,9 +186,10 @@ class _EditGarageViewState extends State<EditGarageView> {
                         (index) {
                       return dayAvailabilityWidget(
                           garageViewModel.availableTime[index].day,
-                          garageViewModel.availableTime[index].availableTime!,
-                          context,
-                          garageViewModel);
+                          garageViewModel.availableTime[index].availableTime!
+                              as List<AvailableTime>,
+                          context as BuildContext,
+                          garageViewModel as EditGarageViewModel);
                     }),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(15, 30, 15, 10),
@@ -195,53 +224,68 @@ class _EditGarageViewState extends State<EditGarageView> {
 
   void showEditDialog(BuildContext context, String day,
       List<AvailableTime> times, EditGarageViewModel viewModel) {
+    List<AvailableTime> localTimes = times
+        .map((t) => AvailableTime(startTime: t.startTime, endTime: t.endTime))
+        .toList();
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return StatefulBuilder(
-          builder: (context, setState) {
+          builder: (BuildContext innerContext, StateSetter setState) {
             return AlertDialog(
               title: Text('Editar horarios para $day'),
               content: SingleChildScrollView(
                 child: ListBody(
-                  children: times.map((time) {
+                  children: List.generate(localTimes.length, (index) {
+                    AvailableTime time = localTimes[index];
                     return Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('${time.startTime} - ${time.endTime}'),
+                        Expanded(
+                            child: Text('${time.startTime} - ${time.endTime}')),
                         IconButton(
                           icon: const Icon(Icons.edit),
                           onPressed: () async {
                             TimeOfDay? newStartTime = await showTimePicker(
-                              context: context,
+                              context: innerContext,
                               initialTime: timeOfDayFromString(time.startTime),
                             );
+                            if (newStartTime != null) {
+                              setState(() {
+                                localTimes[index] = AvailableTime(
+                                  startTime: formatTimeOfDay(newStartTime),
+                                  endTime: time.endTime,
+                                );
+                              });
+                            }
                             TimeOfDay? newEndTime = await showTimePicker(
-                              context: context,
+                              context: innerContext,
                               initialTime: timeOfDayFromString(time.endTime),
                             );
-                            if (newStartTime != null && newEndTime != null) {
-                              AvailableTime updatedTime = AvailableTime(
-                                startTime: formatTimeOfDay(newStartTime),
-                                endTime: formatTimeOfDay(newEndTime),
-                              );
-                              int timeIndex = times.indexOf(time);
-                              times[timeIndex] = updatedTime;
-                              viewModel.updateDayAvailability(day, times);
-                              setState(
-                                  () {});
+                            if (newEndTime != null) {
+                              setState(() {
+                                localTimes[index] = AvailableTime(
+                                  startTime: localTimes[index].startTime,
+                                  endTime: formatTimeOfDay(newEndTime),
+                                );
+                              });
                             }
                           },
                         ),
                       ],
                     );
-                  }).toList(),
+                  }),
                 ),
               ),
-              actions: [
+              actions: <Widget>[
                 TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: const Text('Cerrar'),
+                  onPressed: () {
+                    viewModel.updateDayAvailability(
+                        day, localTimes);
+                    Navigator.of(innerContext).pop();
+                  },
+                  child: Text('Guardar Cambios'),
                 ),
               ],
             );
@@ -343,21 +387,36 @@ class _EditGarageViewState extends State<EditGarageView> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                day,
-                style:
-                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-              IconButton(
-                icon: const Icon(Icons.edit),
-                onPressed: () => showEditDialog(context, day, times, viewModel),
-              )
+              Text(day,
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.bold)),
             ],
           ),
         ),
         ...times.map((time) {
-          return ListTile(
-            title: Text('${time.startTime} - ${time.endTime}'),
+          return Container(
+            margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey.shade300),
+              borderRadius: BorderRadius.circular(5),
+            ),
+            child: ListTile(
+              title: Text('${time.startTime} - ${time.endTime}'),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.edit),
+                    onPressed: () =>
+                        viewModel.showEditTimeDialog(context, day, time),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.delete, color: Colors.red),
+                    onPressed: () => viewModel.removeTime(day, time),
+                  ),
+                ],
+              ),
+            ),
           );
         }).toList(),
       ],

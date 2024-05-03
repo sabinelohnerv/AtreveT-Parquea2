@@ -50,6 +50,7 @@ class Vehicle {
       id: doc.id,
       make: data['make'] ?? '',
       model: data['model'] ?? '',
+      imgUrl: data['imgUrl'] ?? '',
       year:
           data['year'] != null ? int.tryParse(data['year'].toString()) ?? 0 : 0,
       plateNumber: data['plateNumber'] ?? '',

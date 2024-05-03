@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:parquea2/viewmodels/user_vehicle_details_viewmodel.dart';
 import 'package:provider/provider.dart';
 
-class VehicleDetails extends StatelessWidget {
+import 'widgets/vehicle/vehicle_details_card.dart';
+
+class VehicleDetailsView extends StatelessWidget {
   final String vehicleId;
   final String userId;
 
-  const VehicleDetails({super.key, required this.vehicleId, required this.userId});
+  const VehicleDetailsView({super.key, required this.vehicleId, required this.userId});
 
   @override
   Widget build(BuildContext context) {
@@ -33,13 +35,20 @@ class VehicleDetails extends StatelessWidget {
                 onPressed: () => Navigator.of(context).pop(),
               ),
             ),
-            body: Center(
-              child: Column(
+            body: Column(
                 mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                
                 children: [
-                  Text(vehicle.make),
+                  Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: VehicleDetailsCard(vehicle: vehicle, context: context,),
+                    ),
+                  )
                 ],
-              ),
+              
             ),
           );
         },
