@@ -5,6 +5,7 @@ import 'package:parquea2/viewmodels/provider_garage_details_viewmodel.dart';
 import 'package:parquea2/views/garage_spaces_list_view.dart';
 import 'package:provider/provider.dart';
 
+import 'widgets/buttons/footer_buttons.dart';
 import 'widgets/garages/garage_tile.dart';
 
 class GarageDetails extends StatelessWidget {
@@ -175,50 +176,25 @@ class GarageDetails extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  ElevatedButton.icon(
-                    icon: const Icon(
-                      Icons.calendar_today,
-                      color: Colors.white,
-                    ),
-                    label: const Text('Ver Horarios',
-                        style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold)),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Theme.of(context).colorScheme.primary,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 10),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                    ),
+                  CustomFooterButton(
+                    iconData: Icons.calendar_today,
+                    label: 'HORARIOS',
                     onPressed: () =>
                         _showAvailableTimes(context, garage.availableTime),
+                    color: Theme.of(context).colorScheme.primary,
                   ),
-                  ElevatedButton.icon(
-                    icon: const Icon(
-                      Icons.space_dashboard,
-                      color: Colors.white,
-                    ),
-                    label: const Text('Administrar Espacios',
-                        style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold)),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Theme.of(context).colorScheme.primary,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 10),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
+                  CustomFooterButton(
+                    iconData: Icons.space_dashboard_sharp,
+                    label: 'VER ESPACIOS',
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => GarageSpacesListView(
+                          garageId: garage.id,
+                        ),
                       ),
                     ),
-                    onPressed: () => {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => GarageSpacesListView(
-                                  garageId: garage.id,
-                                )),
-                      )
-                    },
+                    color: Theme.of(context).colorScheme.primary,
                   ),
                 ],
               ),
