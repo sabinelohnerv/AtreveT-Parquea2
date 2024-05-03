@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:parquea2/models/available_time.dart';
 import 'package:parquea2/models/garage_offer.dart';
 import 'package:parquea2/models/user_offer.dart';
@@ -13,7 +14,6 @@ class Offer {
   double payOffer;
   String date;
   AvailableTime time;
-  List<String>? warnings;
   String state;
 
   Offer({
@@ -26,7 +26,6 @@ class Offer {
     required this.payOffer,
     required this.date,
     required this.time,
-    this.warnings,
     required this.state,
   });
 
@@ -41,7 +40,6 @@ class Offer {
       'payOffer': payOffer,
       'date': date,
       'time': time.toJson(),
-      'warnings': warnings,
       'state': state,
     };
   }
@@ -54,12 +52,26 @@ class Offer {
       vehicle: Vehicle.fromJson(json['vehicle']),
       provider: UserOffer.fromJson(json['provider']),
       lastOfferBy: json['lastOfferBy'],
-      payOffer: json['payOffer'],
+      payOffer: (json['payOffer'] as num).toDouble(),
       date: json['date'],
       time: AvailableTime.fromJson(json['time']),
-      warnings: json['warnings'] != null
-          ? List<String>.from(json['warnings'] as List)
-          : [],
+      state: json['state'],
+    );
+  }
+
+  factory Offer.fromSnapshot(DocumentSnapshot snapshot) {
+    Map<String, dynamic> json = snapshot.data() as Map<String, dynamic>;
+
+    return Offer(
+      id: snapshot.id,
+      garageSpace: GarageOffer.fromJson(json['garageSpace']),
+      client: UserOffer.fromJson(json['client']),
+      vehicle: Vehicle.fromJson(json['vehicle']),
+      provider: UserOffer.fromJson(json['provider']),
+      lastOfferBy: json['lastOfferBy'],
+      payOffer: (json['payOffer'] as num).toDouble(),
+      date: json['date'],
+      time: AvailableTime.fromJson(json['time']),
       state: json['state'],
     );
   }
