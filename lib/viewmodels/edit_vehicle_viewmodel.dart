@@ -44,14 +44,9 @@ class EditVehicleViewModel extends ChangeNotifier {
     notifyListeners();
 
     if (newImage != null) {
-      uploadImage(newImage);
+      String newImageUrl = await uploadImage(newImage);
+      _imageUrl = newImageUrl;
     }
-
-    Measurements updatedMeasurements = Measurements(
-      height: double.parse(heightController.text),
-      width: double.parse(widthController.text),
-      length: double.parse(lengthController.text),
-    );
 
     Vehicle updatedVehicle = Vehicle(
       id: vehicle.id,
@@ -60,7 +55,11 @@ class EditVehicleViewModel extends ChangeNotifier {
       year: int.parse(yearController.text),
       plateNumber: plateController.text,
       imgUrl: _imageUrl,
-      measurements: updatedMeasurements,
+      measurements: Measurements(
+        height: double.parse(heightController.text),
+        width: double.parse(widthController.text),
+        length: double.parse(lengthController.text),
+      ),
     );
 
     try {

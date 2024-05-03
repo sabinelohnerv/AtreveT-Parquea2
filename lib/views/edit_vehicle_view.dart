@@ -13,8 +13,8 @@ class EditVehicleView extends StatefulWidget {
   final String userId;
   final Vehicle vehicle;
 
-  const EditVehicleView({Key? key, required this.userId, required this.vehicle})
-      : super(key: key);
+  const EditVehicleView(
+      {super.key, required this.userId, required this.vehicle});
 
   @override
   _EditVehicleViewState createState() => _EditVehicleViewState();
