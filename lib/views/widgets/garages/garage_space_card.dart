@@ -7,13 +7,13 @@ class GarageSpaceCard extends StatelessWidget {
     required this.garageSpace,
     required this.garageNumber,
     required this.onDelete,
-    required this.onTap,
+    required this.onEdit, required void Function() onTap, 
   });
 
   final GarageSpace garageSpace;
   final int garageNumber;
   final VoidCallback onDelete;
-  final VoidCallback onTap;
+  final VoidCallback onEdit;
 
   @override
   Widget build(BuildContext context) {
@@ -85,55 +85,57 @@ class GarageSpaceCard extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: const Icon(Icons.delete, color: Colors.white),
       ),
-      child: InkWell(
-        onTap: onTap,
-        child: Container(
-          padding: const EdgeInsets.fromLTRB(6, 10, 24, 10),
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey.shade200),
-          ),
-          child: Row(
-            children: [
-              Container(
-                width: MediaQuery.of(context).size.width * 0.1,
-                height: MediaQuery.of(context).size.width * 0.15,
-                decoration: BoxDecoration(
-                    color: Colors.grey.shade300,
-                    borderRadius: BorderRadius.circular(5)),
-                child: Center(
-                    child: Text(
-                  garageNumber.toString(),
-                  style: const TextStyle(
-                      fontSize: 20, fontWeight: FontWeight.w600),
-                )),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        'Espacio ${garageNumber.toString()}',
-                        style: const TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      const SizedBox(height: 5),
-                      Text(
-                        'Alto: ${garageSpace.measurements.height}m - Ancho: ${garageSpace.measurements.width}m - Largo: ${garageSpace.measurements.length}m',
-                        style:
-                            const TextStyle(fontSize: 14, color: Colors.grey),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
-                  ),
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(6, 10, 24, 10),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey.shade200),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Container(
+              width: MediaQuery.of(context).size.width * 0.1,
+              height: MediaQuery.of(context).size.width * 0.15,
+              decoration: BoxDecoration(
+                  color: Colors.grey.shade300,
+                  borderRadius: BorderRadius.circular(5)),
+              child: Center(
+                  child: Text(
+                garageNumber.toString(),
+                style:
+                    const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+              )),
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'Espacio ${garageNumber.toString()}',
+                      style: const TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.bold),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 5),
+                    Text(
+                      'Alto: ${garageSpace.measurements.height}m - Ancho: ${garageSpace.measurements.width}m - Largo: ${garageSpace.measurements.length}m',
+                      style: const TextStyle(fontSize: 14, color: Colors.grey),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
                 ),
               ),
-              determineState(),
-            ],
-          ),
+            ),
+            determineState(),
+            IconButton(
+              icon: const Icon(Icons.edit),
+              onPressed: onEdit,
+              tooltip: 'Editar espacio',
+            ),
+          ],
         ),
       ),
     );

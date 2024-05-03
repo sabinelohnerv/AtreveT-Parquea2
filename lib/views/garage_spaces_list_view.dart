@@ -58,7 +58,18 @@ class GarageSpacesListView extends StatelessWidget {
                     garageNumber: index + 1,
                     onTap: () => viewModel.navigateToGarageSpaceDetails(context, garageId, garageSpace.id),
                     onDelete: () =>
-                        viewModel.deleteGarageSpace(garageSpace.id, garageId));
+                        viewModel.deleteGarageSpace(garageSpace.id, garageId), onEdit: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EditGarageSpaceView(
+                          garageId: garageId,
+                          garageSpace: garageSpace,
+                        ),
+                      ),
+                    );
+                  },
+                );
               },
             );
           },
