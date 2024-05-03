@@ -20,7 +20,7 @@ class HomeView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 255, 188, 7),
-        title: Text(
+        title: const Text(
           'Home',
           style: TextStyle(color: Colors.white),
         ),
@@ -29,10 +29,11 @@ class HomeView extends StatelessWidget {
             onPressed: () {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => LoginView(userType: UserType.client)),
+                MaterialPageRoute(
+                    builder: (context) => LoginView(userType: UserType.client)),
               );
             },
-            icon: Icon(Icons.logout, color: Colors.white),
+            icon: const Icon(Icons.logout, color: Colors.white),
           ),
         ],
       ),
@@ -49,12 +50,12 @@ class HomeView extends StatelessWidget {
                       builder: (context) => const VehicleListView()),
                 )
               },
-              child: Text(
-                'Vehículos',
-                style: TextStyle(color: Colors.white),
-              ),
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color.fromARGB(255, 255, 188, 7),
+              ),
+              child: const Text(
+                'Vehículos',
+                style: TextStyle(color: Colors.white),
               ),
             ),
             ElevatedButton(
@@ -77,7 +78,6 @@ class HomeView extends StatelessWidget {
               },
               child: const Text('Garajes (Clientes)'),
             ),
-
           ],
         ),
       ),

@@ -14,15 +14,24 @@ class InformationTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         Icon(
           icon,
           color: Theme.of(context).colorScheme.primary,
         ),
-        Text(title),
-        Text(value, style: const TextStyle(fontWeight: FontWeight.bold)),
+        const SizedBox(
+          width: 5,
+        ),
+        Text(
+          title,
+          style: const TextStyle(fontWeight: FontWeight.w200),
+        ),
+        const SizedBox(
+          width: 10,
+        ),
+        Text(value, style: const TextStyle(fontWeight: FontWeight.w500)),
       ],
     );
   }

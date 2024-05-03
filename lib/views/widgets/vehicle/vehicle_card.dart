@@ -46,21 +46,19 @@ class VehicleCard extends StatelessWidget {
                     width: MediaQuery.of(context).size.width * 0.30,
                     height: MediaQuery.of(context).size.width * 0.25,
                     decoration: BoxDecoration(
-                      image: vehicle.imgUrl != null &&
-                              vehicle.imgUrl!.isNotEmpty
-                          ? DecorationImage(
-                              image: NetworkImage(vehicle.imgUrl!),
-                              fit: BoxFit.contain,
-                            )
-                          : null,
-                      color: vehicle.imgUrl == null ||
-                              vehicle.imgUrl!.isEmpty
+                      image:
+                          vehicle.imgUrl != null && vehicle.imgUrl!.isNotEmpty
+                              ? DecorationImage(
+                                  image: NetworkImage(vehicle.imgUrl!),
+                                  fit: BoxFit.contain,
+                                )
+                              : null,
+                      color: vehicle.imgUrl == null || vehicle.imgUrl!.isEmpty
                           ? Colors.grey.shade300
-                          : Colors.white,
+                          : Colors.transparent,
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: vehicle.imgUrl == null ||
-                            vehicle.imgUrl!.isEmpty
+                    child: vehicle.imgUrl == null || vehicle.imgUrl!.isEmpty
                         ? const Icon(Icons.business,
                             size: 40, color: Colors.white)
                         : null,
