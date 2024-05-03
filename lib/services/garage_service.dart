@@ -122,4 +122,16 @@ class GarageService {
         _firestore.collection('garages').doc(garageId);
     return garageRef.update({'imgUrl': newImageUrl});
   }
+
+  Future<void> updateGarageSpace(String garageId, GarageSpace garageSpace) async {
+  DocumentReference garageSpaceRef = _firestore
+      .collection('garages')
+      .doc(garageId)
+      .collection('spaces')
+      .doc(garageSpace.id);
+
+  await garageSpaceRef.update(garageSpace.toJson());
+}
+
+
 }

@@ -7,11 +7,13 @@ class GarageSpaceCard extends StatelessWidget {
     required this.garageSpace,
     required this.garageNumber,
     required this.onDelete,
+    required this.onEdit, 
   });
 
   final GarageSpace garageSpace;
   final int garageNumber;
   final VoidCallback onDelete;
+  final VoidCallback onEdit;
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +61,7 @@ class GarageSpaceCard extends StatelessWidget {
             return AlertDialog(
               title: const Text("Confirmar eliminación"),
               content:
-                  const Text("¿Estás seguro de querer eliminar al garaje?"),
+                  const Text("¿Estás seguro de querer eliminar este espacio de garaje?"),
               actions: <Widget>[
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(true),
@@ -89,6 +91,7 @@ class GarageSpaceCard extends StatelessWidget {
           border: Border.all(color: Colors.grey.shade200),
         ),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Container(
               width: MediaQuery.of(context).size.width * 0.1,
@@ -127,6 +130,11 @@ class GarageSpaceCard extends StatelessWidget {
               ),
             ),
             determineState(),
+            IconButton(
+              icon: const Icon(Icons.edit),
+              onPressed: onEdit,
+              tooltip: 'Editar espacio',
+            ),
           ],
         ),
       ),

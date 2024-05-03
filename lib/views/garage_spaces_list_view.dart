@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:parquea2/services/garage_service.dart';
 import 'package:parquea2/viewmodels/garage_spaces_list_viewmodel.dart';
 import 'package:parquea2/views/widgets/garages/garage_space_card.dart';
+import 'package:parquea2/views/edit_garage_space_view.dart'; // Asegúrate de importar la vista de edición
 import 'package:provider/provider.dart';
 
 class GarageSpacesListView extends StatelessWidget {
@@ -14,20 +15,19 @@ class GarageSpacesListView extends StatelessWidget {
       create: (_) => GarageSpacesListViewModel(garageId, GarageService()),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Espacios de Garaje', style: TextStyle(fontWeight: FontWeight.w600),),
+          title: const Text('Espacios de Garaje', style: TextStyle(fontWeight: FontWeight.w600)),
           backgroundColor: Theme.of(context).colorScheme.primary,
           foregroundColor: Colors.white,
           centerTitle: true,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios, color: Colors.white,),
+            icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
             onPressed: () => Navigator.of(context).pop(),
           ),
           actions: [
             IconButton(
-              icon: const Icon(Icons.add, color: Colors.white,),
-              onPressed: () =>
-                  Provider.of<GarageSpacesListViewModel>(context, listen: false)
-                      .navigateToAddGarageSpace(context, garageId),
+              icon: const Icon(Icons.add, color: Colors.white),
+              onPressed: () => Provider.of<GarageSpacesListViewModel>(context, listen: false)
+                  .navigateToAddGarageSpace(context, garageId),
             ),
           ],
         ),
@@ -44,9 +44,23 @@ class GarageSpacesListView extends StatelessWidget {
               itemBuilder: (context, index) {
                 final garageSpace = viewModel.garageSpaces[index];
                 return GarageSpaceCard(
-                    garageSpace: garageSpace,
-                    garageNumber: index + 1,
-                    onDelete: () {});
+                  garageSpace: garageSpace,
+                  garageNumber: index + 1,
+                  onDelete: () {
+                    // TODO: Lógica para eliminar un espacio de garaje
+                  },
+                  onEdit: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EditGarageSpaceView(
+                          garageId: garageId,
+                          garageSpace: garageSpace,
+                        ),
+                      ),
+                    );
+                  },
+                );
               },
             );
           },

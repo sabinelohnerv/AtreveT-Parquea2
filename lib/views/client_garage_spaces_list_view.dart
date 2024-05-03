@@ -44,7 +44,7 @@ class ClientGarageSpacesListView extends StatelessWidget {
                 return GarageSpaceCard(
                     garageSpace: garageSpace,
                     garageNumber: index + 1,
-                    onDelete: () {});
+                    onDelete: () {}, onEdit: () {  },);
               },
             );
           },
