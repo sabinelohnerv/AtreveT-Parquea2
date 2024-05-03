@@ -2,12 +2,14 @@ import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:parquea2/models/available_time.dart';
 import 'package:parquea2/models/garage.dart';
 import 'package:parquea2/models/location.dart';
 import 'package:parquea2/models/provider.dart';
 import 'package:parquea2/services/garage_service.dart';
 import 'package:parquea2/services/provider_service.dart';
+import 'package:parquea2/views/select_location_view.dart';
 
 class AddGarageViewModel extends ChangeNotifier {
   final GarageService _garageService = GarageService();
@@ -534,5 +536,17 @@ class AddGarageViewModel extends ChangeNotifier {
     saturday.availableTime?.clear();
     sunday.availableTime?.clear();
     notifyListeners();
+  }
+
+  void selectLocation(BuildContext context) async {
+    LatLng? location = await Navigator.push<LatLng>(
+      context,
+      MaterialPageRoute(builder: (context) => SelectLocationView()),
+    );
+
+    if (location != null) {
+      coordinatesController.text = "${location.latitude},${location.longitude}";
+      notifyListeners();
+    }
   }
 }

@@ -10,6 +10,7 @@ import 'package:parquea2/viewmodels/garage_spaces_list_viewmodel.dart';
 import 'package:parquea2/viewmodels/provider_add_garage_viewmodel.dart';
 import 'package:parquea2/viewmodels/provider_garage_list_viewmodel.dart';
 import 'package:parquea2/viewmodels/user_vehicles_list_viewmodel.dart';
+import 'package:parquea2/views/map_view.dart';
 import 'package:provider/provider.dart';
 import 'package:parquea2/viewmodels/onboarding.viewmodel.dart';
 import 'package:parquea2/viewmodels/client_register_viewmodel.dart';
@@ -87,6 +88,7 @@ class MyApp extends StatelessWidget {
                   return const Center(child: CircularProgressIndicator());
                 },
               ),
+          '/mapScreen': (context) => MapScreen(),
           '/clientRegister': (context) => ClientRegisterView(),
           '/providerRegister': (context) => ProviderRegisterView(),
           '/clientLogin': (context) => ClientLoginView(),
