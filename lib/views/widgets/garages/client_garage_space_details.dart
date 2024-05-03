@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:parquea2/models/garage.dart';
 import 'package:parquea2/models/garage_space.dart';
+import 'package:parquea2/views/make_offer_view.dart';
 
 class ClientGarageSpaceDetails extends StatelessWidget {
   final GarageSpace garageSpace;
@@ -93,9 +94,7 @@ class ClientGarageSpaceDetails extends StatelessWidget {
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
               ),
             ),
-            Text(
-                '- ${garageSpace.details?.join("\n- ")}' ??
-                    "No se proveyeron detalles para este espacio",
+            Text('- ${garageSpace.details?.join("\n- ")}',
                 style:
                     const TextStyle(fontSize: 16, fontWeight: FontWeight.w400)),
             Padding(
@@ -103,7 +102,15 @@ class ClientGarageSpaceDetails extends StatelessWidget {
               child: FilledButton(
                 child: const Text('REALIZAR OFERTA'),
                 onPressed: () {
-                  //TODO: Ir a pantalla de oferta
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MakeOfferView(
+                        garage: garage,
+                        garageSpace: garageSpace,
+                      ),
+                    ),
+                  );
                 },
               ),
             ),

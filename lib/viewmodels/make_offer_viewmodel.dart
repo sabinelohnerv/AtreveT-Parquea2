@@ -18,14 +18,13 @@ class MakeOfferViewModel extends ChangeNotifier {
   final VehicleService _vehicleService = VehicleService();
   final ClientService _clientService = ClientService();
 
-  UserOffer? client;
   Vehicle? vehicle;
   double payOffer = 0.0;
   String? date;
   String? start;
   String? end;
   List<String> warnings = [];
-  String state = 'pending';
+  String state = 'active';
 
   bool _isSubmitting = false;
   bool get isSubmitting => _isSubmitting;
@@ -37,13 +36,14 @@ class MakeOfferViewModel extends ChangeNotifier {
   TextEditingController dateController = TextEditingController();
   TextEditingController startTimeController = TextEditingController();
   TextEditingController endTimeController = TextEditingController();
+  TextEditingController payOfferController = TextEditingController();
 
   void selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(const Duration(days: 365)),
+      lastDate: DateTime.now().add(const Duration(days: 1)),
     );
     if (picked != null && picked != DateTime.now()) {
       final String formattedDate = DateFormat('dd-MM-yyyy').format(picked);
@@ -95,13 +95,22 @@ class MakeOfferViewModel extends ChangeNotifier {
     return false;
   }
 
-  Future<void> fetchVehicles(String userId) async {
+  void updatePayOffer(double value) {
+    payOffer = value;
+    payOfferController.text = value.toString();
+    notifyListeners();
+  }
+
+  Future<void> fetchVehicles() async {
+    String userId = await getUserId();
     vehicles = await _vehicleService.fetchVehicles(userId);
     notifyListeners();
   }
 
-  void selectVehicle(Vehicle selectedVehicle) {
+  void selectVehicle(Vehicle selectedVehicle, GarageSpace garageSpace) {
     vehicle = selectedVehicle;
+    warnings.clear();
+    validateMeasurements(garageSpace);
     notifyListeners();
   }
 
@@ -131,40 +140,150 @@ class MakeOfferViewModel extends ChangeNotifier {
     return fullName;
   }
 
-  Future<void> submitOffer(Garage garage, GarageSpace garageSpace) async {
+  void validateMeasurements(GarageSpace garageSpace) {
+    if (vehicle != null) {
+      if (vehicle!.measurements.height > garageSpace.measurements.height ||
+          vehicle!.measurements.width > garageSpace.measurements.width ||
+          vehicle!.measurements.length > garageSpace.measurements.length) {
+        warnings.add('Las medidas del vehículo son mayores a las del espacio');
+        notifyListeners();
+      }
+    }
+  }
+
+  bool isGarageAvailableAtSelectedTime(Garage garage) {
+    if (date == null || start == null || end == null) {
+      return false;
+    }
+
+    DateTime selectedDate = DateFormat('dd-MM-yyyy').parse(date!);
+    String selectedDayOfWeek =
+        DateFormat('EEEE').format(selectedDate).toLowerCase();
+
+    AvailableTimeInDay? dayAvailability =
+        garage.availableTime.firstWhere((day) => day.day == selectedDayOfWeek);
+
+    if (dayAvailability == null) {
+      warnings.add("El garaje no tiene disponibilidad el día seleccionado.");
+      notifyListeners();
+      return false;
+    }
+
+    bool isAvailable = false;
+    for (var slot in dayAvailability.availableTime!) {
+      if (_isTimeInRange(start!, end!, slot.startTime, slot.endTime)) {
+        isAvailable = true;
+        break;
+      }
+    }
+
+    if (!isAvailable) {
+      warnings.add("No hay tiempos disponibles en el tiempo seleccionado.");
+      notifyListeners();
+    }
+
+    return isAvailable;
+  }
+
+  bool _isTimeInRange(
+      String startTime, String endTime, String slotStart, String slotEnd) {
+    TimeOfDay startTOD = _timeOfDayFromString(startTime);
+    TimeOfDay endTOD = _timeOfDayFromString(endTime);
+    TimeOfDay slotStartTOD = _timeOfDayFromString(slotStart);
+    TimeOfDay slotEndTOD = _timeOfDayFromString(slotEnd);
+
+    final startMinutes = startTOD.hour * 60 + startTOD.minute;
+    final endMinutes = endTOD.hour * 60 + endTOD.minute;
+    final slotStartMinutes = slotStartTOD.hour * 60 + slotStartTOD.minute;
+    final slotEndMinutes = slotEndTOD.hour * 60 + slotEndTOD.minute;
+
+    return startMinutes < slotEndMinutes && endMinutes > slotStartMinutes;
+  }
+
+  TimeOfDay _timeOfDayFromString(String timeString) {
+    final timeParts = timeString.split(':');
+    return TimeOfDay(
+        hour: int.parse(timeParts[0]), minute: int.parse(timeParts[1]));
+  }
+
+  bool validateInputs() {
+    return date != null && start != null && end != null;
+  }
+
+  Future<bool> submitOffer(Garage garage, GarageSpace garageSpace) async {
     _isSubmitting = true;
     notifyListeners();
+    warnings.clear();
+    notifyListeners();
+
+    validateMeasurements(garageSpace);
+    isGarageAvailableAtSelectedTime(garage);
+
+    if (warnings.isNotEmpty) {
+      _isSubmitting = false;
+      notifyListeners();
+      return false;
+    }
 
     String currentUser = await getUserId();
     if (currentUser == '') {
       _isSubmitting = false;
       notifyListeners();
-      return;
+      return false;
     }
     String userName = await getClientDetails(currentUser);
-
+    UserOffer client = UserOffer(id: currentUser, fullName: userName);
     try {
       Offer newOffer = Offer(
         id: 'Offer_${DateTime.now().millisecondsSinceEpoch.toString()}',
         garageSpace: GarageOffer(garageId: garage.id, spaceId: garageSpace.id),
-        client: UserOffer(id: currentUser, fullName: userName),
+        client: client,
         vehicle: vehicle!,
         provider: UserOffer(id: garage.userId, fullName: garage.userId),
-        lastOfferBy: client!.id,
+        lastOfferBy: client.id,
         payOffer: payOffer,
         date: date!,
         time: AvailableTime(startTime: start!, endTime: end!),
-        warnings: warnings,
         state: state,
       );
-
       await _offerService.createOffer(newOffer);
+      return true;
     } catch (e) {
+      print(garage.id);
+      print(garageSpace.id);
+      print(vehicle!.id);
+      print(date);
       print('Error creating offer: $e');
+      return false;
       // Handle errors
     } finally {
       _isSubmitting = false;
       notifyListeners();
     }
+  }
+
+  void resetData() {
+    date = null;
+    start = null;
+    end = null;
+    vehicle = null;
+    vehicles.clear();
+    startTime = null;
+    endTime = null;
+    payOffer = 0.0;
+    dateController.clear();
+    startTimeController.clear();
+    endTimeController.clear();
+    payOfferController.clear();
+    notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    dateController.dispose();
+    startTimeController.dispose();
+    endTimeController.dispose();
+    payOfferController.dispose();
+    super.dispose();
   }
 }
