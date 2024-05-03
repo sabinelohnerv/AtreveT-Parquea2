@@ -13,7 +13,6 @@ class Offer {
   double payOffer;
   String date;
   AvailableTime time;
-  List<String>? warnings;
   String state;
 
   Offer({
@@ -26,7 +25,6 @@ class Offer {
     required this.payOffer,
     required this.date,
     required this.time,
-    this.warnings,
     required this.state,
   });
 
@@ -41,7 +39,6 @@ class Offer {
       'payOffer': payOffer,
       'date': date,
       'time': time.toJson(),
-      'warnings': warnings,
       'state': state,
     };
   }
@@ -57,9 +54,6 @@ class Offer {
       payOffer: json['payOffer'],
       date: json['date'],
       time: AvailableTime.fromJson(json['time']),
-      warnings: json['warnings'] != null
-          ? List<String>.from(json['warnings'] as List)
-          : [],
       state: json['state'],
     );
   }
