@@ -1,5 +1,6 @@
 import 'package:parquea2/models/available_time.dart';
 import 'package:parquea2/models/garage_offer.dart';
+import 'package:parquea2/models/reservation_rating.dart';
 import 'package:parquea2/models/user_offer.dart';
 
 class Reservation {
@@ -10,6 +11,7 @@ class Reservation {
   double payAmount;
   String date;
   AvailableTime time;
+  ReservationRating? rating;
   String state;
 
   Reservation({
@@ -20,6 +22,7 @@ class Reservation {
     required this.payAmount,
     required this.date,
     required this.time,
+    this.rating,
     required this.state,
   });
 }

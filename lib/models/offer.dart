@@ -1,27 +1,66 @@
 import 'package:parquea2/models/available_time.dart';
 import 'package:parquea2/models/garage_offer.dart';
 import 'package:parquea2/models/user_offer.dart';
+import 'package:parquea2/models/vehicle.dart';
 
 class Offer {
   String id;
   GarageOffer garageSpace;
   UserOffer client;
+  Vehicle vehicle;
   UserOffer provider;
   String lastOfferBy;
   double payOffer;
   String date;
   AvailableTime time;
+  List<String>? warnings;
   String state;
 
   Offer({
     required this.id,
     required this.garageSpace,
     required this.client,
+    required this.vehicle,
     required this.provider,
     required this.lastOfferBy,
     required this.payOffer,
     required this.date,
     required this.time,
+    this.warnings,
     required this.state,
   });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'garageSpace': garageSpace.toJson(),
+      'client': client.toJson(),
+      'vehicle': vehicle.toJson(),
+      'provider': provider.toJson(),
+      'lastOfferBy': lastOfferBy,
+      'payOffer': payOffer,
+      'date': date,
+      'time': time.toJson(),
+      'warnings': warnings,
+      'state': state,
+    };
+  }
+
+  factory Offer.fromJson(Map<String, dynamic> json) {
+    return Offer(
+      id: json['id'],
+      garageSpace: GarageOffer.fromJson(json['garageSpace']),
+      client: UserOffer.fromJson(json['client']),
+      vehicle: Vehicle.fromJson(json['vehicle']),
+      provider: UserOffer.fromJson(json['provider']),
+      lastOfferBy: json['lastOfferBy'],
+      payOffer: json['payOffer'],
+      date: json['date'],
+      time: AvailableTime.fromJson(json['time']),
+      warnings: json['warnings'] != null
+          ? List<String>.from(json['warnings'] as List)
+          : [],
+      state: json['state'],
+    );
+  }
 }

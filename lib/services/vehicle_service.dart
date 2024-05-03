@@ -71,4 +71,21 @@ class VehicleService {
       }
     });
   }
+
+  Future<List<Vehicle>> fetchVehicles(String userId) async {
+    try {
+      QuerySnapshot snapshot = await _firestore
+          .collection('clients')
+          .doc(userId)
+          .collection('vehicles')
+          .get();
+      List<Vehicle> vehicles = snapshot.docs.map((doc) {
+        return Vehicle.fromSnapshot(doc);
+      }).toList();
+      return vehicles;
+    } catch (e) {
+      print(e);
+      return [];
+    }
+  }
 }

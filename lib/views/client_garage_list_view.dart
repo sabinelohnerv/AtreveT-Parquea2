@@ -12,7 +12,7 @@ class ClientGarageListView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Garajes',
+          'GARAJES',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
         ),
         backgroundColor: Theme.of(context).primaryColor,
@@ -46,7 +46,7 @@ class ClientGarageListView extends StatelessWidget {
                   garage: garage,
                   garageService: GarageService(),
                   onTap: () {
-                    viewModel.navigateToGarageSpaces(context, garage.id);
+                    viewModel.navigateToGarageDetails(context, garage);
                   },
                 );
               },

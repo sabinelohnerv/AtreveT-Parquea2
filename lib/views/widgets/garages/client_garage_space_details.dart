@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:parquea2/models/garage.dart';
 import 'package:parquea2/models/garage_space.dart';
 
 class ClientGarageSpaceDetails extends StatelessWidget {
   final GarageSpace garageSpace;
+  final Garage garage;
   final int spaceNumber;
 
   const ClientGarageSpaceDetails(
-      {super.key, required this.garageSpace, required this.spaceNumber});
+      {super.key,
+      required this.garageSpace,
+      required this.garage,
+      required this.spaceNumber});
 
   @override
   Widget build(BuildContext context) {

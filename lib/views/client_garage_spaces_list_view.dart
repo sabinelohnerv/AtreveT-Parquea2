@@ -1,24 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:parquea2/models/garage_space.dart';
+import 'package:parquea2/models/garage.dart';
 import 'package:parquea2/services/garage_service.dart';
 import 'package:parquea2/viewmodels/client_garage_spaces_list_viewmodel.dart';
 import 'package:parquea2/views/widgets/garages/client_garage_space_card.dart';
 import 'package:parquea2/views/widgets/garages/client_garage_space_details.dart';
-import 'package:parquea2/views/widgets/garages/garage_space_card.dart';
 import 'package:provider/provider.dart';
 
 class ClientGarageSpacesListView extends StatelessWidget {
-  final String garageId;
-  const ClientGarageSpacesListView({super.key, required this.garageId});
+  final Garage garage;
+  const ClientGarageSpacesListView({super.key, required this.garage});
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<ClientGarageSpacesListViewModel>(
-      create: (_) => ClientGarageSpacesListViewModel(garageId, GarageService()),
+      create: (_) => ClientGarageSpacesListViewModel(garage.id, GarageService()),
       child: Scaffold(
         appBar: AppBar(
           title: const Text(
-            'Espacios de Garaje',
+            'ESPACIOS DE GARAJE',
             style: TextStyle(fontWeight: FontWeight.w600),
           ),
           backgroundColor: Theme.of(context).colorScheme.primary,
@@ -53,6 +52,7 @@ class ClientGarageSpacesListView extends StatelessWidget {
                         builder: (BuildContext context) {
                           return ClientGarageSpaceDetails(
                             garageSpace: garageSpace,
+                            garage: garage,
                             spaceNumber: index + 1,
                           );
                         },
