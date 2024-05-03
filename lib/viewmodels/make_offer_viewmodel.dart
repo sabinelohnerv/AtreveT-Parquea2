@@ -164,7 +164,7 @@ class MakeOfferViewModel extends ChangeNotifier {
         garage.availableTime.firstWhere((day) => day.day == selectedDayOfWeek);
 
     if (dayAvailability == null) {
-      warnings.add("El garaje no tiene disponibilidad el día seleccionado.");
+      warnings.add("No hay disponibilidad en el día seleccionado.");
       notifyListeners();
       return false;
     }
@@ -178,7 +178,7 @@ class MakeOfferViewModel extends ChangeNotifier {
     }
 
     if (!isAvailable) {
-      warnings.add("No hay tiempos disponibles en el tiempo seleccionado.");
+      warnings.add("No hay disponibilidad en el tiempo seleccionado.");
       notifyListeners();
     }
 
@@ -239,7 +239,7 @@ class MakeOfferViewModel extends ChangeNotifier {
         garageSpace: GarageOffer(garageId: garage.id, spaceId: garageSpace.id),
         client: client,
         vehicle: vehicle!,
-        provider: UserOffer(id: garage.userId, fullName: garage.userId),
+        provider: UserOffer(id: garage.userId, fullName: garage.userName!),
         lastOfferBy: client.id,
         payOffer: payOffer,
         date: date!,
@@ -249,11 +249,6 @@ class MakeOfferViewModel extends ChangeNotifier {
       await _offerService.createOffer(newOffer);
       return true;
     } catch (e) {
-      print(garage.id);
-      print(garageSpace.id);
-      print(vehicle!.id);
-      print(date);
-      print('Error creating offer: $e');
       return false;
       // Handle errors
     } finally {
