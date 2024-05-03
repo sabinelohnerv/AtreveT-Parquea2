@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:parquea2/services/garage_service.dart';
 import 'package:parquea2/viewmodels/garage_spaces_list_viewmodel.dart';
 import 'package:parquea2/views/widgets/garages/garage_space_card.dart';
-import 'package:parquea2/views/edit_garage_space_view.dart';
 import 'package:provider/provider.dart';
 
 class GarageSpacesListView extends StatelessWidget {

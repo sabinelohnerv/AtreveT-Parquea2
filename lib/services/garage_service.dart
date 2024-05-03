@@ -132,7 +132,8 @@ class GarageService {
     });
   }
 
-  Stream<GarageSpace?> getGarageSpaceByIdStream(String garageId, String spaceId) {
+  Stream<GarageSpace?> getGarageSpaceByIdStream(
+      String garageId, String spaceId) {
     return _firestore
         .collection('garages')
         .doc(garageId)
@@ -170,15 +171,25 @@ class GarageService {
     return garageRef.update({'imgUrl': newImageUrl});
   }
 
-  Future<void> updateGarageSpace(String garageId, GarageSpace garageSpace) async {
-  DocumentReference garageSpaceRef = _firestore
-      .collection('garages')
-      .doc(garageId)
-      .collection('spaces')
-      .doc(garageSpace.id);
+  Future<void> updateGarageSpace(
+      String garageId, GarageSpace garageSpace) async {
+    DocumentReference garageSpaceRef = _firestore
+        .collection('garages')
+        .doc(garageId)
+        .collection('spaces')
+        .doc(garageSpace.id);
 
-  await garageSpaceRef.update(garageSpace.toJson());
-}
+    await garageSpaceRef.update(garageSpace.toJson());
+  }
 
+  Future<void> updateGarageSpaceState(
+      String garageId, String spaceId, String newState) async {
+    DocumentReference garageSpaceRef = _firestore
+        .collection('garages')
+        .doc(garageId)
+        .collection('spaces')
+        .doc(spaceId);
 
+    await garageSpaceRef.update({'state': newState});
+  }
 }
