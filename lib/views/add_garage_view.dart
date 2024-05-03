@@ -36,7 +36,10 @@ class _AddGarageViewState extends State<AddGarageView> {
         centerTitle: true,
         backgroundColor: Theme.of(context).colorScheme.primary,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.white,),
+          icon: const Icon(
+            Icons.arrow_back_ios,
+            color: Colors.white,
+          ),
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
@@ -136,6 +139,11 @@ class _AddGarageViewState extends State<AddGarageView> {
                       return 'Por favor ingrese la ubicación del garaje.';
                     }
                     return null;
+                  },
+                  onTap: () {
+                    FocusScope.of(context).requestFocus(
+                        new FocusNode());
+                    garageViewModel.selectLocation(context);
                   },
                 ),
                 CustomTextFormField(

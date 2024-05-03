@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:parquea2/views/add_vehicle_view.dart';
 import 'package:parquea2/views/client_garage_list_view.dart';
+import 'package:parquea2/views/map_view.dart';
 import 'package:parquea2/views/provider_garage_list_view.dart';
 import 'package:parquea2/views/user_vehicles_list_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -78,6 +79,12 @@ class HomeView extends StatelessWidget {
               },
               child: const Text('Garajes (Clientes)'),
             ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pushNamed('/mapScreen');
+              },
+              child: Text('Mapa de Garajes (Clientes)'),
+            )
           ],
         ),
       ),
