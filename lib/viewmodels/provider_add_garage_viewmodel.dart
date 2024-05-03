@@ -5,10 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:parquea2/models/available_time.dart';
 import 'package:parquea2/models/garage.dart';
 import 'package:parquea2/models/location.dart';
+import 'package:parquea2/models/provider.dart';
 import 'package:parquea2/services/garage_service.dart';
+import 'package:parquea2/services/provider_service.dart';
 
 class AddGarageViewModel extends ChangeNotifier {
   final GarageService _garageService = GarageService();
+  final ProviderService _providerService = ProviderService();
 
   bool _isUploading = false;
 
@@ -464,6 +467,21 @@ class AddGarageViewModel extends ChangeNotifier {
     return userId;
   }
 
+  Future<String> getProviderDetails(String userId) async {
+    String fullName = "Unknown";
+    try {
+      Provider? provider = await _providerService.fetchProviderById(userId);
+      if (provider != null && provider.fullName != null) {
+        fullName = provider.fullName;
+      } else {
+        print("No provider found or missing fullName for user ID: $userId");
+      }
+    } catch (e) {
+      print("Error fetching provider details: $e");
+    }
+    return fullName;
+  }
+
   Future<void> addGarage() async {
     _isUploading = true;
     notifyListeners();
@@ -474,6 +492,7 @@ class AddGarageViewModel extends ChangeNotifier {
       notifyListeners();
       return;
     }
+    String userName = await getProviderDetails(currentUser);
 
     Location fullLocation = Location(
         location: location, coordinates: coordinates, reference: reference);
@@ -484,6 +503,7 @@ class AddGarageViewModel extends ChangeNotifier {
     Garage newGarage = Garage(
       id: garageId,
       userId: currentUser,
+      userName: userName,
       name: name,
       imgUrl: imageUrl,
       location: fullLocation,

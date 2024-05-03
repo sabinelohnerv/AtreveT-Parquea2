@@ -50,6 +50,37 @@ class GarageService {
     });
   }
 
+  Future<void> deleteGarageSpaceAndUpdateSpacesCount(
+      String garageSpaceId, String garageId) async {
+    DocumentReference garageRef =
+        _firestore.collection('garages').doc(garageId);
+    DocumentReference spaceRef =
+        garageRef.collection('spaces').doc(garageSpaceId);
+
+    await _firestore.runTransaction((transaction) async {
+      DocumentSnapshot garageSnapshot = await transaction.get(garageRef);
+
+      if (!garageSnapshot.exists) {
+        throw Exception("Garage does not exist!");
+      }
+
+      Garage garage = Garage.fromSnapshot(garageSnapshot);
+
+      DocumentSnapshot spaceSnapshot = await transaction.get(spaceRef);
+      if (!spaceSnapshot.exists) {
+        throw Exception("Garage space does not exist!");
+      }
+
+      int updatedNumberOfSpaces = garage.numberOfSpaces - 1;
+      updatedNumberOfSpaces =
+          updatedNumberOfSpaces < 0 ? 0 : updatedNumberOfSpaces;
+
+      transaction.update(garageRef, {'numberOfSpaces': updatedNumberOfSpaces});
+
+      transaction.delete(spaceRef);
+    });
+  }
+
   Future<void> updateGarage(Garage garage) async {
     DocumentReference garageRef =
         _firestore.collection('garages').doc(garage.id);
@@ -95,6 +126,22 @@ class GarageService {
         .map((snapshot) {
       if (snapshot.exists && snapshot.data() != null) {
         return Garage.fromSnapshot(snapshot);
+      } else {
+        return null;
+      }
+    });
+  }
+
+  Stream<GarageSpace?> getGarageSpaceByIdStream(String garageId, String spaceId) {
+    return _firestore
+        .collection('garages')
+        .doc(garageId)
+        .collection('spaces')
+        .doc(spaceId)
+        .snapshots()
+        .map((snapshot) {
+      if (snapshot.exists && snapshot.data() != null) {
+        return GarageSpace.fromSnapshot(snapshot);
       } else {
         return null;
       }

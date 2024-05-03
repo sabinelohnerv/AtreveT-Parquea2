@@ -5,6 +5,7 @@ import 'package:parquea2/models/location.dart';
 class Garage {
   String id;
   String userId;
+  String? userName;
   String name;
   String? imgUrl;
   Location location;
@@ -18,6 +19,7 @@ class Garage {
     required this.id,
     required this.userId,
     required this.name,
+    this.userName,
     this.imgUrl,
     required this.location,
     this.details,
@@ -31,6 +33,7 @@ class Garage {
     return {
       'id': id,
       'userId': userId,
+      'userName': userName,
       'name': name,
       'imgUrl': imgUrl,
       'location': location.toJson(),
@@ -47,6 +50,7 @@ class Garage {
     return Garage(
       id: snapshot.id,
       userId: data['userId'] as String,
+      userName: data['userName'] as String? ?? '',
       name: data['name'] as String,
       imgUrl: data['imgUrl'] as String? ?? '',
       location: Location.fromJson(data['location'] as Map<String, dynamic>),

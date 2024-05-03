@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:parquea2/models/garage_space.dart';
 import 'package:parquea2/services/garage_service.dart';
 import 'package:parquea2/views/add_garage_space_view.dart';
+import 'package:parquea2/views/garage_space_details_view.dart';
 
 class GarageSpacesListViewModel extends ChangeNotifier {
   final GarageService _garageService;
@@ -44,12 +45,40 @@ class GarageSpacesListViewModel extends ChangeNotifier {
     );
   }
 
+  Future<void> deleteGarageSpace(String spaceId, String garageId) async {
+    _isLoading = true;
+    notifyListeners();
+    try {
+      await _garageService.deleteGarageSpaceAndUpdateSpacesCount(
+          spaceId, garageId);
+      _garageSpaces.removeWhere((space) => space.id == spaceId);
+      notifyListeners();
+    } catch (e) {
+      print('Error deleting garage space: $e');
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
   void navigateToAddGarageSpace(BuildContext context, String garageId) {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => AddGarageSpaceView(
           garageId: garageId,
+        ),
+      ),
+    );
+  }
+
+  void navigateToGarageSpaceDetails(BuildContext context, String garageId, String spaceId) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => GarageSpaceDetails(
+          garageId: garageId,
+          spaceId: spaceId,
         ),
       ),
     );

@@ -14,17 +14,26 @@ class GarageSpacesListView extends StatelessWidget {
       create: (_) => GarageSpacesListViewModel(garageId, GarageService()),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Espacios de Garaje', style: TextStyle(fontWeight: FontWeight.w600),),
+          title: const Text(
+            'Espacios de Garaje',
+            style: TextStyle(fontWeight: FontWeight.w600),
+          ),
           backgroundColor: Theme.of(context).colorScheme.primary,
           foregroundColor: Colors.white,
           centerTitle: true,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios, color: Colors.white,),
+            icon: const Icon(
+              Icons.arrow_back_ios,
+              color: Colors.white,
+            ),
             onPressed: () => Navigator.of(context).pop(),
           ),
           actions: [
             IconButton(
-              icon: const Icon(Icons.add, color: Colors.white,),
+              icon: const Icon(
+                Icons.add,
+                color: Colors.white,
+              ),
               onPressed: () =>
                   Provider.of<GarageSpacesListViewModel>(context, listen: false)
                       .navigateToAddGarageSpace(context, garageId),
@@ -46,7 +55,9 @@ class GarageSpacesListView extends StatelessWidget {
                 return GarageSpaceCard(
                     garageSpace: garageSpace,
                     garageNumber: index + 1,
-                    onDelete: () {});
+                    onTap: () => viewModel.navigateToGarageSpaceDetails(context, garageId, garageSpace.id),
+                    onDelete: () =>
+                        viewModel.deleteGarageSpace(garageSpace.id, garageId));
               },
             );
           },
