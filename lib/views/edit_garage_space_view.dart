@@ -100,7 +100,7 @@ class _EditGarageSpaceViewState extends State<EditGarageSpaceView> {
                           },
                           child: const Text('ACTUALIZAR ESPACIO'),
                           style: ElevatedButton.styleFrom(
-                            foregroundColor: Colors.white, backgroundColor: Theme.of(context).colorScheme.primary, // Text color
+                            foregroundColor: Colors.white, backgroundColor: Theme.of(context).colorScheme.primary,
                             padding: const EdgeInsets.symmetric(vertical: 12),
                             textStyle: const TextStyle(fontSize: 18),
                           ),
