@@ -61,7 +61,7 @@ class GarageSpaceCard extends StatelessWidget {
             return AlertDialog(
               title: const Text("Confirmar eliminación"),
               content:
-                  const Text("¿Estás seguro de querer eliminar al garaje?"),
+                  const Text("¿Estás seguro de querer eliminar este espacio de garaje?"),
               actions: <Widget>[
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(true),
