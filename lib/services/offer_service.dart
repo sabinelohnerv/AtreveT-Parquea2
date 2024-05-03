@@ -4,7 +4,6 @@ import 'package:parquea2/models/offer.dart';
 class OfferService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  // Method to create a new offer in the database
   Future<void> createOffer(Offer offer) async {
     try {
       DocumentReference ref = _firestore.collection('offers').doc(offer.id);
@@ -14,7 +13,6 @@ class OfferService {
     }
   }
 
-  // Method to update an existing offer
   Future<void> updateOffer(Offer offer) async {
     try {
       DocumentReference ref = _firestore.collection('offers').doc(offer.id);
@@ -24,29 +22,37 @@ class OfferService {
     }
   }
 
-  
-  Future<Offer?> fetchOfferById(String offerId) async {
-    try {
-      DocumentSnapshot snapshot = await _firestore.collection('offers').doc(offerId).get();
-      if (snapshot.exists) {
-        return Offer.fromJson(snapshot.data() as Map<String, dynamic>);
+  Stream<Offer?> getOfferById(String offerId) {
+    return _firestore
+        .collection('offers')
+        .doc(offerId)
+        .snapshots()
+        .map((snapshot) {
+      if (snapshot.exists && snapshot.data() != null) {
+        return Offer.fromSnapshot(snapshot);
+      } else {
+        return null;
       }
-      return null;
-    } catch (e) {
-      throw Exception('Failed to fetch offer: $e');
-    }
+    });
   }
 
-  Future<List<Offer>> fetchOffersByClientId(String clientId) async {
-    try {
-      QuerySnapshot snapshot = await _firestore.collection('offers')
-          .where('client.id', isEqualTo: clientId)
-          .get();
-      return snapshot.docs
-          .map((doc) => Offer.fromJson(doc.data() as Map<String, dynamic>))
-          .toList();
-    } catch (e) {
-      throw Exception('Failed to fetch offers: $e');
-    }
+  Stream<List<Offer>> offerStreamForClient(String userId) {
+    return _firestore
+        .collection('offers')
+        .where('client.id', isEqualTo: userId)
+        .where('state', isEqualTo: 'active')
+        .snapshots()
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => Offer.fromSnapshot(doc)).toList());
+  }
+
+  Stream<List<Offer>> offerStreamForProvider(String userId) {
+    return _firestore
+        .collection('offers')
+        .where('provider.id', isEqualTo: userId)
+        .where('state', isEqualTo: 'active')
+        .snapshots()
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => Offer.fromSnapshot(doc)).toList());
   }
 }
