@@ -6,10 +6,12 @@ import 'package:parquea2/viewmodels/add_vehicle_viewmodel.dart';
 import 'package:parquea2/viewmodels/add_garage_space_viewmodel.dart';
 import 'package:parquea2/viewmodels/client_garage_list_viewmodel.dart';
 import 'package:parquea2/viewmodels/client_garage_spaces_list_viewmodel.dart';
+import 'package:parquea2/viewmodels/client_offer_list_viewmodel.dart';
 import 'package:parquea2/viewmodels/garage_spaces_list_viewmodel.dart';
 import 'package:parquea2/viewmodels/make_offer_viewmodel.dart';
 import 'package:parquea2/viewmodels/provider_add_garage_viewmodel.dart';
 import 'package:parquea2/viewmodels/provider_garage_list_viewmodel.dart';
+import 'package:parquea2/viewmodels/provider_offer_list_viewmodel.dart';
 import 'package:parquea2/viewmodels/user_vehicles_list_viewmodel.dart';
 import 'package:parquea2/views/map_view.dart';
 import 'package:provider/provider.dart';
@@ -62,6 +64,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => ClientGarageSpacesListViewModel('garageId', GarageService())),
         ChangeNotifierProvider(create: (context) => AddGarageSpaceViewModel()),
         ChangeNotifierProvider(create: (context) => MakeOfferViewModel()),
+        ChangeNotifierProvider(create: (context) => ProviderOfferListViewModel()),
+        ChangeNotifierProvider(create: (context) => ClientOfferListViewModel()),
       ],
       child: MaterialApp(
         title: 'Parquea2',

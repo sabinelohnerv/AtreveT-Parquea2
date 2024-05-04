@@ -44,35 +44,24 @@ class Offer {
     };
   }
 
-  factory Offer.fromJson(Map<String, dynamic> json) {
-    return Offer(
-      id: json['id'],
-      garageSpace: GarageOffer.fromJson(json['garageSpace']),
-      client: UserOffer.fromJson(json['client']),
-      vehicle: Vehicle.fromJson(json['vehicle']),
-      provider: UserOffer.fromJson(json['provider']),
-      lastOfferBy: json['lastOfferBy'],
-      payOffer: (json['payOffer'] as num).toDouble(),
-      date: json['date'],
-      time: AvailableTime.fromJson(json['time']),
-      state: json['state'],
-    );
-  }
-
   factory Offer.fromSnapshot(DocumentSnapshot snapshot) {
     Map<String, dynamic> json = snapshot.data() as Map<String, dynamic>;
-
-    return Offer(
-      id: snapshot.id,
-      garageSpace: GarageOffer.fromJson(json['garageSpace']),
-      client: UserOffer.fromJson(json['client']),
-      vehicle: Vehicle.fromJson(json['vehicle']),
-      provider: UserOffer.fromJson(json['provider']),
-      lastOfferBy: json['lastOfferBy'],
-      payOffer: (json['payOffer'] as num).toDouble(),
-      date: json['date'],
-      time: AvailableTime.fromJson(json['time']),
-      state: json['state'],
-    );
+    try {
+      return Offer(
+        id: snapshot.id,
+        garageSpace:
+            GarageOffer.fromJson(json['garageSpace'] as Map<String, dynamic>),
+        client: UserOffer.fromJson(json['client'] as Map<String, dynamic>),
+        vehicle: Vehicle.fromJson(json['vehicle'] as Map<String, dynamic>),
+        provider: UserOffer.fromJson(json['provider'] as Map<String, dynamic>),
+        lastOfferBy: json['lastOfferBy'] as String,
+        payOffer: (json['payOffer'] as num).toDouble(),
+        date: json['date'] as String,
+        time: AvailableTime.fromJson(json['time'] as Map<String, dynamic>),
+        state: json['state'] as String,
+      );
+    } catch (e) {
+      rethrow;
+    }
   }
 }
