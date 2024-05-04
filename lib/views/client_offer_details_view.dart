@@ -65,7 +65,7 @@ class ClientOfferDetailsView extends StatelessWidget {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            padding: const EdgeInsets.symmetric(horizontal: 5),
                             child: Text(
                               'BOB ${viewModel.localOfferAmount.toStringAsFixed(1)}',
                               style: TextStyle(
