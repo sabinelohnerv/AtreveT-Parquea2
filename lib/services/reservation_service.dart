@@ -11,10 +11,6 @@ class ReservationService {
           _firestore.collection('reservations').doc(reservation.id);
       await ref.set(reservation.toJson());
     } catch (e) {
-      print('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA');
-      print('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA');
-      print('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA');
-      print('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA');
       throw Exception('Failed to create reservation: $e');
     }
   }
@@ -58,6 +54,19 @@ class ReservationService {
     return _firestore
         .collection('reservations')
         .where('client.id', isEqualTo: clientId)
+        .where('state', isNotEqualTo: 'finalized')
+        .snapshots()
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => Reservation.fromSnapshot(doc)).toList());
+  }
+
+  Stream<List<Reservation>> reservationsStreamByGarageForProvider(
+      String providerId, String garageId) {
+    return _firestore
+        .collection('reservations')
+        .where('provider.id', isEqualTo: providerId)
+        .where('garageSpace.garageId', isEqualTo: garageId)
+        .where('state', isNotEqualTo: 'finalized')
         .snapshots()
         .map((snapshot) =>
             snapshot.docs.map((doc) => Reservation.fromSnapshot(doc)).toList());
@@ -67,6 +76,7 @@ class ReservationService {
     return _firestore
         .collection('reservations')
         .where('provider.id', isEqualTo: providerId)
+        .where('state', isNotEqualTo: 'finalized')
         .snapshots()
         .map((snapshot) =>
             snapshot.docs.map((doc) => Reservation.fromSnapshot(doc)).toList());

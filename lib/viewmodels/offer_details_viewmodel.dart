@@ -148,7 +148,7 @@ class OfferDetailsViewModel extends ChangeNotifier {
       date: _offer!.date,
       time: _offer!.time,
       rating: ReservationRating(clientRating: 0, garageRating: 0),
-      state: 'active',
+      state: 'reserved',
     );
 
     try {

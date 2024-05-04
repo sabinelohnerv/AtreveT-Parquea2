@@ -179,7 +179,6 @@ class MakeOfferViewModel extends ChangeNotifier {
     TimeOfDay startTimeTOD = _timeOfDayFromString(start!);
     TimeOfDay endTimeTOD = _timeOfDayFromString(end!);
 
-    // Check if the selected date is today and time is past
     if (startDate.isAtSameMomentAs(endDate) && !_isTimeFuture(startTimeTOD)) {
       warnings.add("La hora de inicio seleccionada está en el pasado.");
       notifyListeners();

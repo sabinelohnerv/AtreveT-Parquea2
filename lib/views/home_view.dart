@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:parquea2/views/add_vehicle_view.dart';
 import 'package:parquea2/views/client_garage_list_view.dart';
 import 'package:parquea2/views/client_offer_list_view.dart';
+import 'package:parquea2/views/client_reservation_list_view.dart';
 import 'package:parquea2/views/map_view.dart';
 import 'package:parquea2/views/provider_garage_list_view.dart';
 import 'package:parquea2/views/provider_garage_offer_list_view.dart';
+import 'package:parquea2/views/provider_reservation_garage_list_view.dart';
 import 'package:parquea2/views/user_vehicles_list_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:parquea2/views/login_view.dart';
@@ -103,6 +105,26 @@ class HomeView extends StatelessWidget {
                 )
               },
               child: const Text('Ofertas (Clientes)'),
+            ),
+            ElevatedButton(
+              onPressed: () => {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const ClientReservationListView()),
+                )
+              },
+              child: const Text('Reservas (Clientes)'),
+            ),
+             ElevatedButton(
+              onPressed: () => {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const OfferGarageListView()),
+                )
+              },
+              child: const Text('Reservas (Proveedores)'),
             ),
             ElevatedButton(
               onPressed: () {
