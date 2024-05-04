@@ -1,12 +1,10 @@
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:parquea2/models/available_time.dart';
 import 'package:parquea2/models/garage.dart';
 import 'package:parquea2/models/location.dart';
 import 'package:parquea2/services/garage_service.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class EditGarageViewModel extends ChangeNotifier {
   final GarageService _garageService = GarageService();

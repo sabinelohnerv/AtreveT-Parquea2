@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:parquea2/models/offer.dart';
 import 'package:parquea2/services/offer_service.dart';
+import 'package:parquea2/views/client_offer_details_view.dart';
 
 class ClientOfferListViewModel extends ChangeNotifier {
   final OfferService _offerService = OfferService();
@@ -37,5 +38,16 @@ class ClientOfferListViewModel extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  void navigateToOfferDetails(BuildContext context, String offerId) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ClientOfferDetailsView(
+          offerId: offerId,
+        ),
+      ),
+    );
   }
 }

@@ -22,6 +22,29 @@ class OfferService {
     }
   }
 
+  Future<void> updateOfferState(String offerId, String newState) async {
+    try {
+      DocumentReference ref = _firestore.collection('offers').doc(offerId);
+      await ref.update({'state': newState});
+    } catch (e) {
+      throw Exception('Failed to update offer state: $e');
+    }
+  }
+
+  Future<void> updateOfferPaymentDetails(
+      String offerId, double newPayOffer, String newLastOfferBy) async {
+    try {
+      DocumentReference ref = _firestore.collection('offers').doc(offerId);
+      Map<String, dynamic> updates = {
+        'payOffer': newPayOffer,
+        'lastOfferBy': newLastOfferBy
+      };
+      await ref.update(updates);
+    } catch (e) {
+      throw Exception('Failed to update offer payment details: $e');
+    }
+  }
+
   Stream<Offer?> getOfferById(String offerId) {
     return _firestore
         .collection('offers')

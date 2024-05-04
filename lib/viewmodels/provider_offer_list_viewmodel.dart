@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:parquea2/models/offer.dart';
 import 'package:parquea2/services/offer_service.dart';
+import 'package:parquea2/views/provider_offer_details_view.dart';
 
 class ProviderOfferListViewModel extends ChangeNotifier {
   final OfferService _offerService = OfferService();
@@ -28,10 +29,21 @@ class ProviderOfferListViewModel extends ChangeNotifier {
         _isLoading = false;
         notifyListeners();
       }, onError: (error) {
-        print("Error listening to offer stream: $error");
         _isLoading = false;
+        print(error);
         notifyListeners();
       });
     }
+  }
+
+  void navigateToOfferDetails(BuildContext context, String offerId) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ProviderOfferDetailsView(
+          offerId: offerId,
+        ),
+      ),
+    );
   }
 }

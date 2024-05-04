@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:parquea2/viewmodels/provider_offer_list_viewmodel.dart';
+import 'package:parquea2/views/widgets/offers/offer_card.dart';
 import 'package:provider/provider.dart';
 
 class ProviderOfferListView extends StatelessWidget {
@@ -40,7 +41,12 @@ class ProviderOfferListView extends StatelessWidget {
               itemCount: viewModel.offers.length,
               itemBuilder: (context, index) {
                 final offer = viewModel.offers[index];
-                return Text(offer.id);
+                return OfferCard(
+                  offer: offer,
+                  offerNumber: index + 1,
+                  onTap: () =>
+                      viewModel.navigateToOfferDetails(context, offer.id),
+                );
               },
             );
           },

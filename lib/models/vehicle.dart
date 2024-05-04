@@ -26,7 +26,7 @@ class Vehicle {
       make: json['make'],
       model: json['model'],
       imgUrl: json['imgUrl'],
-      year: int.parse(json['year']),
+      year: (json['year'] as num).toInt(),
       plateNumber: json['plateNumber'],
       measurements: Measurements.fromJson(json['measurements']),
     );
@@ -51,8 +51,7 @@ class Vehicle {
       make: data['make'] ?? '',
       model: data['model'] ?? '',
       imgUrl: data['imgUrl'] ?? '',
-      year:
-          data['year'] != null ? int.tryParse(data['year'].toString()) ?? 0 : 0,
+      year: (data['year'] as num).toInt(),
       plateNumber: data['plateNumber'] ?? '',
       measurements:
           Measurements.fromJson(data['measurements'] as Map<String, dynamic>),

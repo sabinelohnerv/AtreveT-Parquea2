@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:parquea2/views/add_vehicle_view.dart';
 import 'package:parquea2/views/client_garage_list_view.dart';
+import 'package:parquea2/views/client_offer_list_view.dart';
 import 'package:parquea2/views/map_view.dart';
 import 'package:parquea2/views/provider_garage_list_view.dart';
 import 'package:parquea2/views/provider_offer_list_view.dart';
@@ -89,6 +90,16 @@ class HomeView extends StatelessWidget {
                 )
               },
               child: const Text('Ofertas (Proveedores)'),
+            ),
+            ElevatedButton(
+              onPressed: () => {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const ClientOfferListView()),
+                )
+              },
+              child: const Text('Ofertas (Clientes)'),
             ),
             ElevatedButton(
               onPressed: () {

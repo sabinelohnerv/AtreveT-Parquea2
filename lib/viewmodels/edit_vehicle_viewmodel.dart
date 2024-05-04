@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:parquea2/models/measurements.dart';
 import 'package:parquea2/models/vehicle.dart';
 import 'package:parquea2/services/vehicle_service.dart';
-import 'package:image_picker/image_picker.dart';
 
 class EditVehicleViewModel extends ChangeNotifier {
   final VehicleService _vehicleService;

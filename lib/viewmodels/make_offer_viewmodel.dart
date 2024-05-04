@@ -236,7 +236,7 @@ class MakeOfferViewModel extends ChangeNotifier {
     try {
       Offer newOffer = Offer(
         id: 'Offer_${DateTime.now().millisecondsSinceEpoch.toString()}',
-        garageSpace: GarageOffer(garageId: garage.id, spaceId: garageSpace.id),
+        garageSpace: GarageOffer(garageId: garage.id, spaceId: garageSpace.id, garageName: garage.name),
         client: client,
         vehicle: vehicle!,
         provider: UserOffer(id: garage.userId, fullName: garage.userName!),
@@ -250,7 +250,6 @@ class MakeOfferViewModel extends ChangeNotifier {
       return true;
     } catch (e) {
       return false;
-      // Handle errors
     } finally {
       _isSubmitting = false;
       notifyListeners();
