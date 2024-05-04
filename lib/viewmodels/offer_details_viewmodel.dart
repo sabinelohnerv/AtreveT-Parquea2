@@ -46,7 +46,11 @@ class OfferDetailsViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> acceptCounterOffer(String offerId, String newLastOfferBy, double offerAmount,) async {
+  Future<void> acceptCounterOffer(
+    String offerId,
+    String newLastOfferBy,
+    double offerAmount,
+  ) async {
     if (_offer != null) {
       await updatePaymentDetails(offerId, offerAmount, newLastOfferBy);
       notifyListeners();
@@ -103,7 +107,7 @@ class OfferDetailsViewModel extends ChangeNotifier {
       date: _offer!.date,
       time: _offer!.time,
       rating: ReservationRating(clientRating: 0, garageRating: 0),
-      state: 'active',
+      state: 'reserved',
     );
 
     try {
