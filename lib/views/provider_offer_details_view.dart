@@ -173,37 +173,58 @@ class ProviderOfferDetailsView extends StatelessWidget {
   }
 
   void _onAccept(BuildContext context, OfferDetailsViewModel viewModel) async {
-    bool? confirm = await showDialog<bool>(
-      context: context,
-      builder: (BuildContext dialogContext) {
-        return AlertDialog(
-          title: const Text('Confirmar Acción'),
-          content: const Text(
-              '¿Estás seguro de que quieres aceptar esta oferta y crear una reserva?'),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.of(dialogContext).pop(false),
-              child: const Text('Cancelar'),
-            ),
-            TextButton(
-              onPressed: () => Navigator.of(dialogContext).pop(true),
-              child: const Text('Confirmar'),
-            ),
-          ],
-        );
-      },
-    );
-
-    if (confirm == true) {
-      bool result = await viewModel.createReservation();
-      if (result) {
-        viewModel.showSnackbar(context, 'Reserva creada exitosamente', Colors.green);
-        Navigator.of(context).pop();
-      } else {
-        viewModel.showSnackbar(context, 'Error al crear la reserva.', Colors.red);
-      }
+    if (viewModel.offer!.lastOfferBy == viewModel.offer!.provider.id) {
+      showDialog(
+          context: context,
+          builder: (BuildContext dialogContext) {
+            return AlertDialog(
+              title: const Text('Acción Denegada'),
+              content: const Text(
+                  'No puedes aceptar una oferta que no ha sido aceptada por el cliente.'),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () => Navigator.of(dialogContext).pop(),
+                  child: const Text('Entendido'),
+                ),
+              ],
+            );
+          });
     } else {
-      viewModel.showSnackbar(context, 'Creación de reserva cancelada.', Colors.grey.shade700);
+      bool? confirm = await showDialog<bool>(
+        context: context,
+        builder: (BuildContext dialogContext) {
+          return AlertDialog(
+            title: const Text('Confirmar Acción'),
+            content: const Text(
+                '¿Estás seguro de que quieres aceptar esta oferta y crear una reserva?'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () => Navigator.of(dialogContext).pop(false),
+                child: const Text('Cancelar'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(dialogContext).pop(true),
+                child: const Text('Confirmar'),
+              ),
+            ],
+          );
+        },
+      );
+
+      if (confirm == true) {
+        bool result = await viewModel.createReservation();
+        if (result) {
+          viewModel.showSnackbar(
+              context, 'Reserva creada exitosamente', Colors.green);
+          Navigator.of(context).pop();
+        } else {
+          viewModel.showSnackbar(
+              context, 'Error al crear la reserva.', Colors.red);
+        }
+      } else {
+        viewModel.showSnackbar(
+            context, 'Creación de reserva cancelada.', Colors.grey.shade700);
+      }
     }
   }
 

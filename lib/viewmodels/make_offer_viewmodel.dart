@@ -127,19 +127,23 @@ class MakeOfferViewModel extends ChangeNotifier {
     return userId;
   }
 
-  Future<String> getClientDetails(String userId) async {
-    String fullName = "Unknown";
+  Future<Client> getClientDetails(String userId) async {
+    Client? client = Client(
+        id: '',
+        fullName: 'Desconocido',
+        phoneNumber: 'phoneNumber',
+        email: 'email');
     try {
-      Client? client = await _clientService.fetchClientById(userId);
+      client = await _clientService.fetchClientById(userId);
       if (client != null && client.fullName != null) {
-        fullName = client.fullName;
+        return client;
       } else {
         print("No provider found or missing fullName for user ID: $userId");
       }
     } catch (e) {
       print("Error fetching provider details: $e");
     }
-    return fullName;
+    return client!;
   }
 
   void validateMeasurements(GarageSpace garageSpace) {
@@ -260,8 +264,11 @@ class MakeOfferViewModel extends ChangeNotifier {
       notifyListeners();
       return false;
     }
-    String userName = await getClientDetails(currentUser);
-    UserOffer client = UserOffer(id: currentUser, fullName: userName);
+    Client fetchedClient = await getClientDetails(currentUser);
+    UserOffer client = UserOffer(
+        id: currentUser,
+        fullName: fetchedClient.fullName,
+        rating: fetchedClient.averageRating);
     id = 'Offer_${DateTime.now().millisecondsSinceEpoch.toString()}';
     notifyListeners();
 

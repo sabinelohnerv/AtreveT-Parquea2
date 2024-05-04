@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:parquea2/models/offer.dart';
 import 'package:parquea2/models/reservation.dart';
 import 'package:parquea2/models/reservation_rating.dart';
+import 'package:parquea2/services/garage_service.dart';
 import 'package:parquea2/services/offer_service.dart';
 import 'package:parquea2/services/reservation_service.dart';
 
 class OfferDetailsViewModel extends ChangeNotifier {
   final OfferService _offerService = OfferService();
   final ReservationService _reservationService = ReservationService();
+  final GarageService _garageService = GarageService();
   Offer? _offer;
   double? _localOfferAmount = 0;
 
@@ -40,6 +42,13 @@ class OfferDetailsViewModel extends ChangeNotifier {
   Future<void> submitCounterOffer(String offerId, String newLastOfferBy) async {
     if (_offer != null) {
       await updatePaymentDetails(offerId, _localOfferAmount!, newLastOfferBy);
+      notifyListeners();
+    }
+  }
+
+  Future<void> acceptCounterOffer(String offerId, String newLastOfferBy, double offerAmount,) async {
+    if (_offer != null) {
+      await updatePaymentDetails(offerId, offerAmount, newLastOfferBy);
       notifyListeners();
     }
   }
@@ -100,6 +109,8 @@ class OfferDetailsViewModel extends ChangeNotifier {
     try {
       await _reservationService.createReservation(newReservation);
       await _offerService.updateOfferState(_offer!.id, 'accepted');
+      await _garageService.updateGarageSpaceState(_offer!.garageSpace.garageId,
+          _offer!.garageSpace.spaceId, 'reservado');
       notifyListeners();
       return true;
     } catch (error) {

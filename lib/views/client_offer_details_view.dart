@@ -65,7 +65,7 @@ class ClientOfferDetailsView extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 10),
                             child: Text(
-                              '\BOB ${viewModel.localOfferAmount.toStringAsFixed(1)}',
+                              'BOB ${viewModel.localOfferAmount.toStringAsFixed(1)}',
                               style: TextStyle(
                                   color: Colors.grey[700],
                                   fontSize: 40,
@@ -90,15 +90,54 @@ class ClientOfferDetailsView extends StatelessWidget {
                       ),
                     ),
                     (offer.client.id != offer.lastOfferBy)
-                        ? ElevatedButton(
-                            onPressed: () => viewModel.submitCounterOffer(
-                              offer.id,
-                              offer.client.id,
-                            ),
-                            child: const Text('CONTRAOFERTA',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                )),
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              ElevatedButton.icon(
+                                onPressed: () => viewModel.acceptCounterOffer(
+                                    offer.id, offer.client.id, offer.payOffer),
+                                label: const Text(
+                                  'ACEPTAR',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                icon: const Icon(
+                                  Icons.check_sharp,
+                                  color: Colors.white,
+                                ),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.green,
+                                  foregroundColor: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                ),
+                              ),
+                              ElevatedButton.icon(
+                                onPressed: () => viewModel.submitCounterOffer(
+                                  offer.id,
+                                  offer.client.id,
+                                ),
+                                label: const Text(
+                                  'CONTRAOFERTA',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                icon: const Icon(
+                                  Icons.monetization_on,
+                                  color: Colors.white,
+                                ),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.blueAccent,
+                                  foregroundColor: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                ),
+                              ),
+                            ],
                           )
                         : const Padding(
                             padding: EdgeInsets.symmetric(vertical: 10),
@@ -155,7 +194,7 @@ class ClientOfferDetailsView extends StatelessWidget {
                     label: const Text(
                       'CANCELAR',
                       style: TextStyle(fontWeight: FontWeight.bold),
-                    ), 
+                    ),
                     onPressed: () {
                       _onReject(context, viewModel);
                     },
