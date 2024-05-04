@@ -65,7 +65,7 @@ class ClientOfferDetailsView extends StatelessWidget {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            padding: const EdgeInsets.symmetric(horizontal: 5),
                             child: Text(
                               'BOB ${viewModel.localOfferAmount.toStringAsFixed(1)}',
                               style: TextStyle(
@@ -149,9 +149,9 @@ class ClientOfferDetailsView extends StatelessWidget {
                     const SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: () {
-                        if (viewModel.clientPhoneNumber != null) {
+                        if (viewModel.providerPhoneNumber != null) {
                           WhatsAppService().sendMessage(
-                              viewModel.clientPhoneNumber!,
+                              viewModel.providerPhoneNumber!,
                               "Quisiera discutir la negociación del garaje ${offer.garageSpace.garageName}");
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -163,8 +163,8 @@ class ClientOfferDetailsView extends StatelessWidget {
                         }
                       },
                       style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        backgroundColor: Colors.green,
+                        backgroundColor: Colors.white,
+                        foregroundColor: Colors.green,
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
@@ -175,7 +175,7 @@ class ClientOfferDetailsView extends StatelessWidget {
                             height: 24,
                           ),
                           const SizedBox(width: 8),
-                          const Text('Contactar'),
+                          const Text('CONTACTAR'),
                         ],
                       ),
                     ),

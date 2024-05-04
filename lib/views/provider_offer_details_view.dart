@@ -65,7 +65,7 @@ class ProviderOfferDetailsView extends StatelessWidget {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            padding: const EdgeInsets.symmetric(horizontal: 5),
                             child: Text(
                               'BOB ${viewModel.localOfferAmount.toStringAsFixed(1)}',
                               style: TextStyle(
@@ -92,15 +92,56 @@ class ProviderOfferDetailsView extends StatelessWidget {
                       ),
                     ),
                     (offer.provider.id != offer.lastOfferBy)
-                        ? ElevatedButton(
-                            onPressed: () => viewModel.submitCounterOffer(
-                              offer.id,
-                              offer.provider.id,
-                            ),
-                            child: const Text('CONTRAOFERTA',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                )),
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              ElevatedButton.icon(
+                                onPressed: () => viewModel.acceptCounterOffer(
+                                    offer.id,
+                                    offer.provider.id,
+                                    offer.payOffer),
+                                label: const Text(
+                                  'ACEPTAR',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                icon: const Icon(
+                                  Icons.check_sharp,
+                                  color: Colors.white,
+                                ),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.green,
+                                  foregroundColor: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                ),
+                              ),
+                              ElevatedButton.icon(
+                                onPressed: () => viewModel.submitCounterOffer(
+                                  offer.id,
+                                  offer.provider.id,
+                                ),
+                                label: const Text(
+                                  'CONTRAOFERTA',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                icon: const Icon(
+                                  Icons.monetization_on,
+                                  color: Colors.white,
+                                ),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.blueAccent,
+                                  foregroundColor: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                ),
+                              ),
+                            ],
                           )
                         : const Padding(
                             padding: EdgeInsets.symmetric(vertical: 10),
@@ -123,8 +164,8 @@ class ProviderOfferDetailsView extends StatelessWidget {
                         }
                       },
                       style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        backgroundColor: Colors.green,
+                        backgroundColor: Colors.white,
+                        foregroundColor: Colors.green,
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
@@ -135,7 +176,10 @@ class ProviderOfferDetailsView extends StatelessWidget {
                             height: 24,
                           ),
                           const SizedBox(width: 8),
-                          const Text('Contactar'),
+                          const Text(
+                            'CONTACTAR',
+                            style: TextStyle(fontWeight: FontWeight.w600),
+                          ),
                         ],
                       ),
                     ),
