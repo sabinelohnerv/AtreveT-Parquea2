@@ -170,6 +170,7 @@ class GarageService {
       QuerySnapshot snapshot = await _firestore
           .collection('offers')
           .where('garageSpace.garageId', isEqualTo: garageId)
+          .where('state', isEqualTo: 'active')
           .get();
       return snapshot.docs.length;
     } catch (e) {

@@ -65,6 +65,7 @@ class OfferService {
     return _firestore
         .collection('offers')
         .where('garageSpace.garageId', isEqualTo: garageId)
+        .where('state', isEqualTo: 'active')
         .snapshots()
         .map((snapshot) =>
             snapshot.docs.map((doc) => Offer.fromSnapshot(doc)).toList());
