@@ -6,6 +6,8 @@ import 'package:parquea2/views/widgets/vehicle/vehicle_information_item.dart';
 
 import 'package:provider/provider.dart';
 
+import '../services/whatsapp_service.dart';
+
 class ClientOfferDetailsView extends StatelessWidget {
   final String offerId;
 
@@ -144,6 +146,39 @@ class ClientOfferDetailsView extends StatelessWidget {
                             child:
                                 Text('Espera una respuesta del proveedor...'),
                           ),
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () {
+                        if (viewModel.clientPhoneNumber != null) {
+                          WhatsAppService().sendMessage(
+                              viewModel.clientPhoneNumber!,
+                              "Quisiera discutir la negociación del garaje ${offer.garageSpace.garageName}");
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("Numero no disponible actualmente"),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: Colors.green,
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Image.asset(
+                            'assets/images/wpp.png',
+                            width: 24,
+                            height: 24,
+                          ),
+                          const SizedBox(width: 8),
+                          const Text('Contactar'),
+                        ],
+                      ),
+                    ),
                     const SizedBox(
                       height: 30,
                     ),

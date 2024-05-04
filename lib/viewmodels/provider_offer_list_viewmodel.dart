@@ -1,8 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:parquea2/models/offer.dart';
 import 'package:parquea2/services/offer_service.dart';
-import 'package:parquea2/views/provider_offer_details_view.dart';
+
+import '../views/provider_offer_details_view.dart';
 
 class ProviderOfferListViewModel extends ChangeNotifier {
   final OfferService _offerService = OfferService();
@@ -14,35 +14,29 @@ class ProviderOfferListViewModel extends ChangeNotifier {
   bool get isLoading => _isLoading;
   bool get knownUserId => _knownUserId;
 
-  ProviderOfferListViewModel() {
-    fetchUserAndListenToOffers();
+  ProviderOfferListViewModel(String garageId) {
+    fetchOffersForGarage(garageId);
   }
 
-  Future<void> fetchUserAndListenToOffers() async {
+  Future<void> fetchOffersForGarage(String garageId) async {
     _isLoading = true;
     notifyListeners();
-    String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
-    if (userId.isNotEmpty) {
-      _knownUserId = true;
-      _offerService.offerStreamForProvider(userId).listen((offerData) {
-        _offers = offerData;
-        _isLoading = false;
-        notifyListeners();
-      }, onError: (error) {
-        _isLoading = false;
-        print(error);
-        notifyListeners();
-      });
-    }
+    _offerService.offerStreamForGarage(garageId).listen((offerData) {
+      _offers = offerData;
+      _isLoading = false;
+      notifyListeners();
+    }, onError: (error) {
+      _isLoading = false;
+      print("Error listening to offer stream: $error");
+      notifyListeners();
+    });
   }
 
   void navigateToOfferDetails(BuildContext context, String offerId) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ProviderOfferDetailsView(
-          offerId: offerId,
-        ),
+        builder: (context) => ProviderOfferDetailsView(offerId: offerId),
       ),
     );
   }

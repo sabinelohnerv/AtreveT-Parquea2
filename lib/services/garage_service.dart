@@ -165,6 +165,19 @@ class GarageService {
     }
   }
 
+  Future<int> getOffersCount(String garageId) async {
+    try {
+      QuerySnapshot snapshot = await _firestore
+          .collection('offers')
+          .where('garageSpace.garageId', isEqualTo: garageId)
+          .get();
+      return snapshot.docs.length;
+    } catch (e) {
+      print('Error fetching offers count: $e');
+      return 0;
+    }
+  }
+
   Future<void> updateGarageImageUrl(String garageId, String newImageUrl) async {
     DocumentReference garageRef =
         _firestore.collection('garages').doc(garageId);
