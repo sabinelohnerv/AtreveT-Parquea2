@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:parquea2/models/garage.dart';
 import 'package:parquea2/services/garage_service.dart';
+import 'package:parquea2/views/widgets/garages/garage_detail_panel.dart';
 
 class MapScreen extends StatefulWidget {
   @override
@@ -11,6 +12,8 @@ class MapScreen extends StatefulWidget {
 class _MapScreenState extends State<MapScreen> {
   GoogleMapController? mapController;
   Set<Marker> markers = {};
+  Garage? selectedGarage;
+  DraggableScrollableController draggableController = DraggableScrollableController();
 
   @override
   void initState() {
@@ -30,10 +33,12 @@ class _MapScreenState extends State<MapScreen> {
               return Marker(
                 markerId: MarkerId(garage.id),
                 position: LatLng(latitude, longitude),
-                infoWindow: InfoWindow(
-                  title: garage.name,
-                  snippet: 'Espacios: ${garage.numberOfSpaces}',
-                ),
+                onTap: () {
+                  setState(() {
+                    selectedGarage = garage;
+                    draggableController.animateTo(0.3, duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
+                  });
+                },
                 icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
               );
             } catch (e) {
@@ -61,10 +66,15 @@ class _MapScreenState extends State<MapScreen> {
           GoogleMap(
             onMapCreated: _onMapCreated,
             initialCameraPosition: CameraPosition(
-              target: LatLng(-17.7833, -63.1821), // Santa Cruz, Bolivia
+              target: LatLng(-17.7833, -63.1821),
               zoom: 12,
             ),
             markers: markers,
+            onTap: (_) {
+              setState(() {
+                draggableController.animateTo(0.0, duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
+              });
+            },
             myLocationButtonEnabled: false,
           ),
           Positioned(
@@ -80,6 +90,8 @@ class _MapScreenState extends State<MapScreen> {
               ),
             ),
           ),
+          if (selectedGarage != null)
+            GarageDetailPanel(garage: selectedGarage!, controller: draggableController)
         ],
       ),
     );
