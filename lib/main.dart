@@ -13,6 +13,7 @@ import 'package:parquea2/viewmodels/provider_add_garage_viewmodel.dart';
 import 'package:parquea2/viewmodels/provider_garage_list_viewmodel.dart';
 import 'package:parquea2/viewmodels/provider_offer_list_viewmodel.dart';
 import 'package:parquea2/viewmodels/user_vehicles_list_viewmodel.dart';
+import 'package:parquea2/views/client_offer_list_view.dart';
 import 'package:parquea2/views/map_view.dart';
 import 'package:provider/provider.dart';
 import 'package:parquea2/viewmodels/onboarding.viewmodel.dart';
@@ -101,6 +102,7 @@ class MyApp extends StatelessWidget {
           '/providerLogin': (context) => ProviderLoginView(),
           '/login': (context) => LoginView(userType: UserType.client),
           '/home': (context) => const HomeView(),
+          '/clientOfferList': (context) => const ClientOfferListView(),
         },
       ),
     );

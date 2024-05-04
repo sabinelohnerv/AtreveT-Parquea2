@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:parquea2/viewmodels/offer_details_viewmodel.dart';
-import 'package:parquea2/views/widgets/buttons/footer_buttons.dart';
+
 import 'package:parquea2/views/widgets/vehicle/vehicle_information_group.dart';
 import 'package:parquea2/views/widgets/vehicle/vehicle_information_item.dart';
 
@@ -89,16 +89,22 @@ class ClientOfferDetailsView extends StatelessWidget {
                         ],
                       ),
                     ),
-                    ElevatedButton(
-                      onPressed: () => viewModel.submitCounterOffer(
-                        offer.id,
-                        offer.client.id,
-                      ),
-                      child: const Text('CONTRAOFERTA',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                          )),
-                    ),
+                    (offer.client.id != offer.lastOfferBy)
+                        ? ElevatedButton(
+                            onPressed: () => viewModel.submitCounterOffer(
+                              offer.id,
+                              offer.client.id,
+                            ),
+                            child: const Text('CONTRAOFERTA',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                )),
+                          )
+                        : const Padding(
+                            padding: EdgeInsets.symmetric(vertical: 10),
+                            child:
+                                Text('Espera una respuesta del proveedor...'),
+                          ),
                     const SizedBox(
                       height: 30,
                     ),
@@ -144,17 +150,24 @@ class ClientOfferDetailsView extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  CustomFooterButton(
-                    iconData: Icons.close_sharp,
-                    label: 'CANCELAR',
+                  ElevatedButton.icon(
+                    icon: const Icon(Icons.close_sharp),
+                    label: const Text(
+                      'CANCELAR',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ), 
                     onPressed: () {
-                      viewModel.updateOfferState(
-                        offerId,
-                        'rejected-by-client',
-                      );
-                      Navigator.of(context).pop();
+                      _onReject(context, viewModel);
                     },
-                    color: Colors.red,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 60, vertical: 10),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -163,5 +176,35 @@ class ClientOfferDetailsView extends StatelessWidget {
         },
       ),
     );
+  }
+
+  void _onReject(BuildContext context, OfferDetailsViewModel viewModel) async {
+    bool? confirm = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: const Text('Confirmar Cancelación'),
+          content:
+              const Text('¿Estás seguro de que quieres cancelar esta oferta?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(false),
+              child: const Text('Cancelar'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(true),
+              child: const Text('Confirmar'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirm == true) {
+      await viewModel.updateOfferState(
+          viewModel.offer!.id, 'rejected-by-client');
+      viewModel.showSnackbar(context, 'Oferta cancelada.', Colors.red);
+      Navigator.of(context).pop();
+    }
   }
 }

@@ -7,7 +7,6 @@ import 'package:parquea2/views/widgets/textfields/custom_numberinput.dart';
 import 'package:parquea2/views/widgets/textfields/custom_textfield.dart';
 import 'package:provider/provider.dart';
 
-
 class MakeOfferView extends StatefulWidget {
   final Garage garage;
   final GarageSpace garageSpace;
@@ -190,7 +189,8 @@ class _MakeOfferViewState extends State<MakeOfferView> {
                                   );
                                   Future.delayed(const Duration(seconds: 2),
                                       () {
-                                    Navigator.of(context).pop();
+                                    viewModel.navigateToOfferDetails(
+                                        context, viewModel.id!);
                                   });
                                 } else {
                                   ScaffoldMessenger.of(context).showSnackBar(

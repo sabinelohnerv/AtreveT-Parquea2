@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:parquea2/models/offer.dart';
+import 'package:parquea2/models/reservation.dart';
+import 'package:parquea2/models/reservation_rating.dart';
 import 'package:parquea2/services/offer_service.dart';
+import 'package:parquea2/services/reservation_service.dart';
 
 class OfferDetailsViewModel extends ChangeNotifier {
   final OfferService _offerService = OfferService();
+  final ReservationService _reservationService = ReservationService();
   Offer? _offer;
   double? _localOfferAmount = 0;
 
@@ -61,5 +65,58 @@ class OfferDetailsViewModel extends ChangeNotifier {
     } catch (error) {
       print("Error updating offer state: $error");
     }
+  }
+
+  Future<bool> createReservation() async {
+    if (_offer == null) {
+      print("Offer is null, cannot create reservation.");
+      return false;
+    }
+
+    final conflictingOffers = await _offerService.findConflictingOffers(
+        _offer!.garageSpace.garageId,
+        _offer!.garageSpace.spaceId,
+        _offer!.date,
+        _offer!.time);
+
+    for (var conflictingOffer in conflictingOffers) {
+      await _offerService.updateOfferState(
+          conflictingOffer.id, 'other-offer-accepted');
+    }
+
+    Reservation newReservation = Reservation(
+      id: 'Res_${DateTime.now().millisecondsSinceEpoch}',
+      garageSpace: _offer!.garageSpace,
+      client: _offer!.client,
+      vehicle: _offer!.vehicle,
+      provider: _offer!.provider,
+      payAmount: _offer!.payOffer,
+      date: _offer!.date,
+      time: _offer!.time,
+      rating: ReservationRating(clientRating: 0, garageRating: 0),
+      state: 'active',
+    );
+
+    try {
+      await _reservationService.createReservation(newReservation);
+      await _offerService.updateOfferState(_offer!.id, 'accepted');
+      notifyListeners();
+      return true;
+    } catch (error) {
+      print("Error creating reservation: $error");
+      return false;
+    }
+  }
+
+  void showSnackbar(BuildContext context, String message, Color color,
+      {SnackBarAction? action}) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: const Duration(seconds: 2),
+        action: action,
+        backgroundColor: color,
+      ),
+    );
   }
 }

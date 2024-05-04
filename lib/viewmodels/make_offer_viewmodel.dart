@@ -12,6 +12,7 @@ import 'package:parquea2/services/client_service.dart';
 import 'package:parquea2/services/offer_service.dart';
 import 'package:intl/intl.dart';
 import 'package:parquea2/services/vehicle_service.dart';
+import 'package:parquea2/views/client_offer_details_view.dart';
 
 class MakeOfferViewModel extends ChangeNotifier {
   final OfferService _offerService = OfferService();
@@ -23,6 +24,7 @@ class MakeOfferViewModel extends ChangeNotifier {
   String? date;
   String? start;
   String? end;
+  String? id;
   List<String> warnings = [];
   String state = 'active';
 
@@ -153,29 +155,46 @@ class MakeOfferViewModel extends ChangeNotifier {
 
   bool isGarageAvailableAtSelectedTime(Garage garage) {
     if (date == null || start == null || end == null) {
+      warnings.add("Fecha y hora deben ser seleccionadas.");
+      notifyListeners();
       return false;
     }
 
     DateTime selectedDate = DateFormat('dd-MM-yyyy').parse(date!);
+    DateTime now = DateTime.now();
+    DateTime startDate =
+        DateTime(selectedDate.year, selectedDate.month, selectedDate.day);
+    DateTime endDate = DateTime(now.year, now.month, now.day);
+
+    if (startDate.isBefore(endDate)) {
+      warnings.add("La fecha seleccionada no puede ser en el pasado.");
+      notifyListeners();
+      return false;
+    }
+
+    TimeOfDay startTimeTOD = _timeOfDayFromString(start!);
+    TimeOfDay endTimeTOD = _timeOfDayFromString(end!);
+
+    // Check if the selected date is today and time is past
+    if (startDate.isAtSameMomentAs(endDate) && !_isTimeFuture(startTimeTOD)) {
+      warnings.add("La hora de inicio seleccionada está en el pasado.");
+      notifyListeners();
+      return false;
+    }
+
     String selectedDayOfWeek =
         DateFormat('EEEE').format(selectedDate).toLowerCase();
-
     AvailableTimeInDay? dayAvailability =
         garage.availableTime.firstWhere((day) => day.day == selectedDayOfWeek);
 
-    if (dayAvailability == null) {
+    if (dayAvailability == null || dayAvailability.availableTime!.isEmpty) {
       warnings.add("No hay disponibilidad en el día seleccionado.");
       notifyListeners();
       return false;
     }
 
-    bool isAvailable = false;
-    for (var slot in dayAvailability.availableTime!) {
-      if (_isTimeInRange(start!, end!, slot.startTime, slot.endTime)) {
-        isAvailable = true;
-        break;
-      }
-    }
+    bool isAvailable = dayAvailability.availableTime!.any(
+        (slot) => _isTimeInRange(start!, end!, slot.startTime, slot.endTime));
 
     if (!isAvailable) {
       warnings.add("No hay disponibilidad en el tiempo seleccionado.");
@@ -197,7 +216,17 @@ class MakeOfferViewModel extends ChangeNotifier {
     final slotStartMinutes = slotStartTOD.hour * 60 + slotStartTOD.minute;
     final slotEndMinutes = slotEndTOD.hour * 60 + slotEndTOD.minute;
 
-    return startMinutes < slotEndMinutes && endMinutes > slotStartMinutes;
+    return startMinutes <= slotEndMinutes &&
+        endMinutes >= slotStartMinutes &&
+        startMinutes >= slotStartMinutes &&
+        endMinutes <= slotEndMinutes;
+  }
+
+  bool _isTimeFuture(TimeOfDay time) {
+    final now = DateTime.now();
+    final nowTime = TimeOfDay(hour: now.hour, minute: now.minute);
+    return time.hour > nowTime.hour ||
+        (time.hour == nowTime.hour && time.minute >= nowTime.minute);
   }
 
   TimeOfDay _timeOfDayFromString(String timeString) {
@@ -233,10 +262,16 @@ class MakeOfferViewModel extends ChangeNotifier {
     }
     String userName = await getClientDetails(currentUser);
     UserOffer client = UserOffer(id: currentUser, fullName: userName);
+    id = 'Offer_${DateTime.now().millisecondsSinceEpoch.toString()}';
+    notifyListeners();
+
     try {
       Offer newOffer = Offer(
-        id: 'Offer_${DateTime.now().millisecondsSinceEpoch.toString()}',
-        garageSpace: GarageOffer(garageId: garage.id, spaceId: garageSpace.id, garageName: garage.name),
+        id: id!,
+        garageSpace: GarageOffer(
+            garageId: garage.id,
+            spaceId: garageSpace.id,
+            garageName: garage.name),
         client: client,
         vehicle: vehicle!,
         provider: UserOffer(id: garage.userId, fullName: garage.userName!),
@@ -254,6 +289,17 @@ class MakeOfferViewModel extends ChangeNotifier {
       _isSubmitting = false;
       notifyListeners();
     }
+  }
+
+  void navigateToOfferDetails(BuildContext context, String offerId) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ClientOfferDetailsView(
+          offerId: offerId,
+        ),
+      ),
+    );
   }
 
   void resetData() {

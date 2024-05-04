@@ -20,6 +20,7 @@ class ProviderOfferDetailsView extends StatelessWidget {
           if (offer == null) {
             return const Center(child: CircularProgressIndicator());
           }
+
           return Scaffold(
             appBar: AppBar(
               title: const Text('OFERTA',
@@ -64,7 +65,7 @@ class ProviderOfferDetailsView extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 10),
                             child: Text(
-                              '\BOB ${viewModel.localOfferAmount.toStringAsFixed(1)}',
+                              'BOB ${viewModel.localOfferAmount.toStringAsFixed(1)}',
                               style: TextStyle(
                                   color: Colors.grey[700],
                                   fontSize: 40,
@@ -88,16 +89,21 @@ class ProviderOfferDetailsView extends StatelessWidget {
                         ],
                       ),
                     ),
-                    ElevatedButton(
-                      onPressed: () => viewModel.submitCounterOffer(
-                        offer.id,
-                        offer.provider.id,
-                      ),
-                      child: const Text('CONTRAOFERTA',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                          )),
-                    ),
+                    (offer.provider.id != offer.lastOfferBy)
+                        ? ElevatedButton(
+                            onPressed: () => viewModel.submitCounterOffer(
+                              offer.id,
+                              offer.provider.id,
+                            ),
+                            child: const Text('CONTRAOFERTA',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                )),
+                          )
+                        : const Padding(
+                            padding: EdgeInsets.symmetric(vertical: 10),
+                            child: Text('Espera una respuesta del cliente...'),
+                          ),
                     const SizedBox(
                       height: 30,
                     ),
@@ -146,14 +152,16 @@ class ProviderOfferDetailsView extends StatelessWidget {
                   CustomFooterButton(
                       iconData: Icons.close_sharp,
                       label: 'RECHAZAR',
-                      onPressed: () => viewModel.updateOfferState(
-                          offer.id, 'rejected-by-provider'),
+                      onPressed: () {
+                        _onReject(context, viewModel);
+                      },
                       color: Colors.red),
                   CustomFooterButton(
                       iconData: Icons.check_sharp,
                       label: 'ACEPTAR',
-                      onPressed: () =>
-                          viewModel.updateOfferState(offer.id, 'accepted'),
+                      onPressed: () {
+                        _onAccept(context, viewModel);
+                      },
                       color: Colors.green),
                 ],
               ),
@@ -162,5 +170,70 @@ class ProviderOfferDetailsView extends StatelessWidget {
         },
       ),
     );
+  }
+
+  void _onAccept(BuildContext context, OfferDetailsViewModel viewModel) async {
+    bool? confirm = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: const Text('Confirmar Acción'),
+          content: const Text(
+              '¿Estás seguro de que quieres aceptar esta oferta y crear una reserva?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(false),
+              child: const Text('Cancelar'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(true),
+              child: const Text('Confirmar'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirm == true) {
+      bool result = await viewModel.createReservation();
+      if (result) {
+        viewModel.showSnackbar(context, 'Reserva creada exitosamente', Colors.green);
+        Navigator.of(context).pop();
+      } else {
+        viewModel.showSnackbar(context, 'Error al crear la reserva.', Colors.red);
+      }
+    } else {
+      viewModel.showSnackbar(context, 'Creación de reserva cancelada.', Colors.grey.shade700);
+    }
+  }
+
+  void _onReject(BuildContext context, OfferDetailsViewModel viewModel) async {
+    bool? confirm = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: const Text('Confirmar Rechazo'),
+          content:
+              const Text('¿Estás seguro de que quieres rechazar esta oferta?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(false),
+              child: const Text('Cancelar'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(true),
+              child: const Text('Confirmar'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirm == true) {
+      await viewModel.updateOfferState(
+          viewModel.offer!.id, 'rejected-by-provider');
+      viewModel.showSnackbar(context, 'Oferta rechazada.', Colors.red);
+      Navigator.of(context).pop();
+    }
   }
 }

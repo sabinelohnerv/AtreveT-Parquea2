@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:parquea2/models/available_time.dart';
 import 'package:parquea2/models/offer.dart';
 
 class OfferService {
@@ -77,5 +79,50 @@ class OfferService {
         .snapshots()
         .map((snapshot) =>
             snapshot.docs.map((doc) => Offer.fromSnapshot(doc)).toList());
+  }
+
+  Future<List<Offer>> findConflictingOffers(
+      String garageId, String spaceId, String date, AvailableTime time) async {
+    try {
+      TimeOfDay startTime = TimeOfDay(
+          hour: int.parse(time.startTime.split(':')[0]),
+          minute: int.parse(time.startTime.split(':')[1]));
+      TimeOfDay endTime = TimeOfDay(
+          hour: int.parse(time.endTime.split(':')[0]),
+          minute: int.parse(time.endTime.split(':')[1]));
+
+      List<Offer> conflictingOffers = [];
+      final querySnapshot = await _firestore
+          .collection('offers')
+          .where('garageSpace.garageId', isEqualTo: garageId)
+          .where('garageSpace.spaceId', isEqualTo: spaceId)
+          .where('date', isEqualTo: date)
+          .where('state', isEqualTo: 'active')
+          .get();
+
+      for (var doc in querySnapshot.docs) {
+        var offer = Offer.fromSnapshot(doc);
+        TimeOfDay offerStartTime = TimeOfDay(
+            hour: int.parse(offer.time.startTime.split(':')[0]),
+            minute: int.parse(offer.time.startTime.split(':')[1]));
+        TimeOfDay offerEndTime = TimeOfDay(
+            hour: int.parse(offer.time.endTime.split(':')[0]),
+            minute: int.parse(offer.time.endTime.split(':')[1]));
+
+        if (startTime.hour < offerEndTime.hour ||
+            (startTime.hour == offerEndTime.hour &&
+                startTime.minute < offerEndTime.minute)) {
+          if (endTime.hour > offerStartTime.hour ||
+              (endTime.hour == offerStartTime.hour &&
+                  endTime.minute > offerStartTime.minute)) {
+            conflictingOffers.add(offer);
+          }
+        }
+      }
+      return conflictingOffers;
+    } catch (e) {
+      print("Error fetching conflicting offers: $e");
+      return [];
+    }
   }
 }
