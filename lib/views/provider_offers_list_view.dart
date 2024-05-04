@@ -3,8 +3,10 @@ import 'package:parquea2/viewmodels/provider_offer_list_viewmodel.dart';
 import 'package:parquea2/views/widgets/offers/offer_card.dart';
 import 'package:provider/provider.dart';
 
-class ProviderOfferListView extends StatelessWidget {
-  const ProviderOfferListView({super.key});
+class ProviderOffersListView extends StatelessWidget {
+  final String garageId;
+
+  const ProviderOffersListView({super.key, required this.garageId});
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +29,7 @@ class ProviderOfferListView extends StatelessWidget {
         ),
       ),
       body: ChangeNotifierProvider<ProviderOfferListViewModel>(
-        create: (context) => ProviderOfferListViewModel(),
+        create: (context) => ProviderOfferListViewModel(garageId),
         child: Consumer<ProviderOfferListViewModel>(
           builder: (context, viewModel, child) {
             if (viewModel.isLoading) {
@@ -42,8 +44,8 @@ class ProviderOfferListView extends StatelessWidget {
               itemBuilder: (context, index) {
                 final offer = viewModel.offers[index];
                 return OfferCard(
-                  offer: offer,
                   offerNumber: index + 1,
+                  offer: offer,
                   onTap: () =>
                       viewModel.navigateToOfferDetails(context, offer.id),
                 );

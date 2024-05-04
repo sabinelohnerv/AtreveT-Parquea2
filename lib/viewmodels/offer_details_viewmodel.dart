@@ -1,3 +1,5 @@
+// ignore_for_file: unused_field
+
 import 'package:flutter/material.dart';
 import 'package:parquea2/models/offer.dart';
 import 'package:parquea2/models/reservation.dart';
@@ -6,20 +8,59 @@ import 'package:parquea2/services/garage_service.dart';
 import 'package:parquea2/services/offer_service.dart';
 import 'package:parquea2/services/reservation_service.dart';
 
+import '../models/client.dart';
+import '../models/provider.dart';
+import '../services/client_service.dart';
+import '../services/provider_service.dart';
+
 class OfferDetailsViewModel extends ChangeNotifier {
   final OfferService _offerService = OfferService();
   final ReservationService _reservationService = ReservationService();
   final GarageService _garageService = GarageService();
+
+  final ClientService _clientService = ClientService();
+  final ProviderService _providerService = ProviderService();
+  String? _clientPhoneNumber;
+  String? _providerPhoneNumber;
+
   Offer? _offer;
   double? _localOfferAmount = 0;
 
+  String? get clientPhoneNumber => _clientPhoneNumber;
+  String? get providerPhoneNumber => _providerPhoneNumber;
+
   Offer? get offer => _offer;
   double get localOfferAmount => _localOfferAmount ?? _offer?.payOffer ?? 0;
+
+  Future<void> fetchClientPhoneNumber(String clientId) async {
+    try {
+      Client? client = await _clientService.fetchClientById(clientId);
+      _clientPhoneNumber = client?.phoneNumber;
+      notifyListeners();
+    } catch (e) {
+      print('Error fetching client phone number: $e');
+    }
+  }
+
+  Future<void> fetchProviderPhoneNumber(String providerId) async {
+    try {
+      Provider? provider = await _providerService.fetchProviderById(providerId);
+      _providerPhoneNumber = provider?.phoneNumber;
+      notifyListeners();
+    } catch (e) {
+      print('Error fetching provider phone number: $e');
+    }
+  }
 
   void loadOffer(String offerId) {
     _offerService.getOfferById(offerId).listen((offerData) {
       _offer = offerData;
       _localOfferAmount = _offer?.payOffer ?? 0;
+
+      if (_offer != null) {
+        fetchClientPhoneNumber(_offer!.client.id);
+        fetchProviderPhoneNumber(_offer!.provider.id);
+      }
       notifyListeners();
     }, onError: (error) {
       print("Error fetching offer details: $error");
@@ -46,7 +87,11 @@ class OfferDetailsViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> acceptCounterOffer(String offerId, String newLastOfferBy, double offerAmount,) async {
+  Future<void> acceptCounterOffer(
+    String offerId,
+    String newLastOfferBy,
+    double offerAmount,
+  ) async {
     if (_offer != null) {
       await updatePaymentDetails(offerId, offerAmount, newLastOfferBy);
       notifyListeners();

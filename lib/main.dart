@@ -59,13 +59,20 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AddGarageViewModel()),
         ChangeNotifierProvider(create: (_) => AddVehicleViewModel()),
         ChangeNotifierProvider(create: (context) => GarageListViewModel()),
-        ChangeNotifierProvider(create: (context) => ClientGarageListViewModel()),
-        ChangeNotifierProvider(create: (context) => VehicleListViewModel(VehicleService())),
-        ChangeNotifierProvider(create: (context) => GarageSpacesListViewModel('garageId', GarageService())),
-        ChangeNotifierProvider(create: (context) => ClientGarageSpacesListViewModel('garageId', GarageService())),
+        ChangeNotifierProvider(
+            create: (context) => ClientGarageListViewModel()),
+        ChangeNotifierProvider(
+            create: (context) => VehicleListViewModel(VehicleService())),
+        ChangeNotifierProvider(
+            create: (context) =>
+                GarageSpacesListViewModel('garageId', GarageService())),
+        ChangeNotifierProvider(
+            create: (context) =>
+                ClientGarageSpacesListViewModel('garageId', GarageService())),
         ChangeNotifierProvider(create: (context) => AddGarageSpaceViewModel()),
         ChangeNotifierProvider(create: (context) => MakeOfferViewModel()),
-        ChangeNotifierProvider(create: (context) => ProviderOfferListViewModel()),
+        ChangeNotifierProvider(
+            create: (context) => ProviderOfferListViewModel('garageId')),
         ChangeNotifierProvider(create: (context) => ClientOfferListViewModel()),
       ],
       child: MaterialApp(

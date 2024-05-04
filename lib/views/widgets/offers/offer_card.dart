@@ -64,9 +64,8 @@ class OfferCard extends StatelessWidget {
               child: Text(
                 '\$${offer.payOffer.toString()}',
                 style: TextStyle(
-                  color: Theme.of(context).colorScheme.tertiary,
-                  fontSize: 20
-                ),
+                    color: Theme.of(context).colorScheme.tertiary,
+                    fontSize: 20),
               ),
             )
           ],

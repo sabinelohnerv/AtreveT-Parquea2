@@ -61,6 +61,15 @@ class OfferService {
     });
   }
 
+  Stream<List<Offer>> offerStreamForGarage(String garageId) {
+    return _firestore
+        .collection('offers')
+        .where('garageSpace.garageId', isEqualTo: garageId)
+        .snapshots()
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => Offer.fromSnapshot(doc)).toList());
+  }
+
   Stream<List<Offer>> offerStreamForClient(String userId) {
     return _firestore
         .collection('offers')
