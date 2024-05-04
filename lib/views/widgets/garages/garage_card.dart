@@ -97,7 +97,7 @@ class _GarageCardState extends State<GarageCard> {
                     width: MediaQuery.of(context).size.width * 0.07,
                     height: MediaQuery.of(context).size.width * 0.07,
                     decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.tertiary,
+                      color: Colors.green,
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Center(

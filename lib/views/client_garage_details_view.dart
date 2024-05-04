@@ -6,18 +6,21 @@ import 'package:parquea2/viewmodels/client_garage_details_viewmodel.dart';
 import 'package:parquea2/views/client_garage_spaces_list_view.dart';
 import 'package:provider/provider.dart';
 
+import '../services/whatsapp_service.dart';
 import 'widgets/buttons/footer_buttons.dart';
 import 'widgets/garages/garage_tile.dart';
 
 class ClientGarageDetailsView extends StatelessWidget {
   final Garage garage;
 
-  const ClientGarageDetailsView({super.key, required this.garage});
+  ClientGarageDetailsView({super.key, required this.garage});
+  final WhatsAppService _whatsAppService = WhatsAppService();
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => ClientGarageDetailsViewModel()..loadGarage(garage.id),
+      create: (_) =>
+          ClientGarageDetailsViewModel()..loadGarageAndProvider(garage.id),
       child: Consumer<ClientGarageDetailsViewModel>(
         builder: (context, viewModel, child) {
           var garage = viewModel.garage;
@@ -94,6 +97,43 @@ class ClientGarageDetailsView extends StatelessWidget {
                           ],
                         ),
                         const SizedBox(height: 15),
+                        Row(
+                          children: [
+                            InformationTile(
+                              title: "Host",
+                              value: viewModel.provider?.fullName ?? "Cargando",
+                              icon: Icons.person_pin_rounded,
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20.0),
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  WhatsAppService().sendMessage(
+                                      viewModel.provider!.phoneNumber,
+                                      'Estoy interesado en su espacio de garaje!');
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  foregroundColor: Colors.white,
+                                  backgroundColor: Colors.green,
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Image.asset(
+                                      'assets/images/wpp.png', // URL of your WhatsApp icon image
+                                      width: 24,
+                                      height: 24,
+                                    ),
+                                    const SizedBox(width: 8),
+                                    const Text('Contactar'),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 5),
                         const Divider(),
                         const SizedBox(height: 15),
                         Row(
