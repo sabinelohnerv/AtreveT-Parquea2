@@ -83,6 +83,7 @@ class GarageOfferCardState extends State<GarageOfferCard> {
               future: offersCountFuture,
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
+                  String offerText = snapshot.data == 1 ? 'OFERTA' : 'OFERTAS';
                   return Container(
                     padding:
                         const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -91,7 +92,7 @@ class GarageOfferCardState extends State<GarageOfferCard> {
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
-                      '${snapshot.data} OFERTA',
+                      '${snapshot.data} $offerText',
                       style: const TextStyle(color: Colors.white),
                     ),
                   );
