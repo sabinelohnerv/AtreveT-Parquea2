@@ -19,28 +19,20 @@ class ClientOfferDetailsView extends StatelessWidget {
         builder: (context, viewModel, child) {
           var offer = viewModel.offer;
           if (offer == null) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return const Center(child: CircularProgressIndicator());
           }
           return Scaffold(
             appBar: AppBar(
-              title: const Text(
-                'OFERTA',
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    fontSize: 24),
-              ),
+              title: const Text('OFERTA',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      fontSize: 24)),
               centerTitle: true,
               backgroundColor: Theme.of(context).colorScheme.primary,
               leading: IconButton(
-                icon: const Icon(
-                  Icons.arrow_back_ios,
-                  color: Colors.white,
-                ),
-                onPressed: () => Navigator.of(context).pop(),
-              ),
+                  icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+                  onPressed: () => Navigator.of(context).pop()),
             ),
             body: SingleChildScrollView(
               child: Padding(
@@ -49,67 +41,99 @@ class ClientOfferDetailsView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 60, 20, 50),
+                      padding: const EdgeInsets.fromLTRB(20, 60, 20, 20),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(
-                            '\$${offer.payOffer.toString()}',
-                            style: TextStyle(
-                                color: Theme.of(context).colorScheme.tertiary,
-                                fontSize: 40,
-                                fontWeight: FontWeight.w500),
-                          ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          ElevatedButton(
-                            onPressed: () {},
-                            style: ElevatedButton.styleFrom(
-                              foregroundColor:
-                                  Theme.of(context).colorScheme.tertiary,
+                          Material(
+                            child: InkWell(
+                              onTap: () => viewModel.decrementOfferAmount(1),
+                              onLongPress: () =>
+                                  viewModel.decrementOfferAmount(5),
+                              child: Ink(
+                                child: const RotatedBox(
+                                  quarterTurns: 2,
+                                  child: Icon(
+                                    Icons.play_arrow_rounded,
+                                    color: Colors.red,
+                                    size: 45,
+                                  ),
+                                ),
+                              ),
                             ),
-                            child: const Text(
-                              'CONTRAOFERTA',
-                              style: TextStyle(fontWeight: FontWeight.w600),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: Text(
+                              '\BOB ${viewModel.localOfferAmount.toStringAsFixed(1)}',
+                              style: TextStyle(
+                                  color: Colors.grey[700],
+                                  fontSize: 40,
+                                  fontWeight: FontWeight.w500),
                             ),
-                          )
+                          ),
+                          Material(
+                            child: InkWell(
+                              onTap: () => viewModel.incrementOfferAmount(1),
+                              onLongPress: () =>
+                                  viewModel.incrementOfferAmount(5),
+                              child: Ink(
+                                child: const Icon(
+                                  Icons.play_arrow_rounded,
+                                  color: Colors.green,
+                                  size: 45,
+                                ),
+                              ),
+                            ),
+                          ),
                         ],
                       ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () => viewModel.submitCounterOffer(
+                        offer.id,
+                        offer.client.id,
+                      ),
+                      child: const Text('CONTRAOFERTA',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                          )),
+                    ),
+                    const SizedBox(
+                      height: 30,
                     ),
                     InformationGroup(
                       title: 'GARAJE',
                       items: [
                         InformationItem(
-                          label: 'Nombre:',
-                          value: offer.client.fullName.toUpperCase(),
-                          leadingIcon: Icons.business,
-                        ),
+                            label: 'Garaje:',
+                            value: offer.garageSpace.garageName.toUpperCase(),
+                            leadingIcon: Icons.garage),
                         InformationItem(
-                          label: 'Dirección:',
-                          value: offer.client.rating.toString(),
-                          leadingIcon: Icons.map,
-                        ),
+                            label: 'Host:',
+                            value: offer.provider.fullName.toString(),
+                            leadingIcon: Icons.star),
+                        InformationItem(
+                            label: 'Placa:',
+                            value: offer.vehicle.plateNumber.toUpperCase(),
+                            leadingIcon: Icons.numbers),
                       ],
                     ),
                     InformationGroup(
                       title: 'TIEMPO',
                       items: [
                         InformationItem(
-                          label: 'Comienzo:',
-                          value: offer.time.startTime,
-                          leadingIcon: Icons.access_time,
-                        ),
+                            label: 'Comienzo:',
+                            value: offer.time.startTime,
+                            leadingIcon: Icons.access_time),
                         InformationItem(
-                          label: 'Fin:',
-                          value: offer.time.endTime,
-                          leadingIcon: Icons.hourglass_bottom,
-                        ),
+                            label: 'Fin:',
+                            value: offer.time.endTime,
+                            leadingIcon: Icons.hourglass_bottom),
                         InformationItem(
-                          label: 'Fecha:',
-                          value: offer.date,
-                          leadingIcon: Icons.calendar_month,
-                        ),
+                            label: 'Fecha:',
+                            value: offer.date,
+                            leadingIcon: Icons.calendar_month),
                       ],
                     ),
                   ],
