@@ -87,6 +87,21 @@ class ReservationDetailsViewModel extends ChangeNotifier {
     await _clientService.updateClientRating(clientId, rating);
   }
 
+  Future<void> updateReservationClientRating(
+      String reservationId, double rating) async {
+    await _reservationService.updateReservationClientRating(
+        reservationId, rating);
+  }
+
+  Future<void> updateReservationGarageRating(
+      String garageId, double rating) async {
+    await _reservationService.updateReservationClientRating(garageId, rating);
+  }
+
+  Future<void> updateGarageRating(String garageId, double rating) async {
+    await _garageService.updateGarageRating(garageId, rating);
+  }
+
   Future<void> updateGarageReservationsCompleted(String garageId) async {
     try {
       await _garageService.updateGarageReservationsCompleted(garageId);
@@ -108,75 +123,34 @@ class ReservationDetailsViewModel extends ChangeNotifier {
     );
   }
 
-  void showRatingDialog(
+  Future<void> finalizeReservation(
       BuildContext context,
-      ReservationDetailsViewModel viewModel,
       String clientId,
       String reservationId,
       String garageId,
-      String spaceId) {
-    final TextEditingController ratingController = TextEditingController();
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Califica al Cliente'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text('Por favor califique al cliente de 1 a 5 estrellas.'),
-              TextField(
-                controller: ratingController,
-                decoration: const InputDecoration(
-                  labelText: 'Rating (1-5)',
-                  hintText: 'Introduce un número entre 1 y 5',
-                ),
-                keyboardType: TextInputType.number,
-                inputFormatters: [
-                  FilteringTextInputFormatter.allow(RegExp(r'[1-5]')),
-                ],
-              ),
-            ],
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Cancelar'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: const Text('Enviar'),
-              onPressed: () {
-                final double rating =
-                    double.tryParse(ratingController.text) ?? 0;
-                if (rating >= 1 && rating <= 5) {
-                  Navigator.of(context).pop();
-                  viewModel.finalizeReservation(
-                      context, clientId, reservationId, garageId, spaceId, rating);
-                } else {
-                  viewModel.showSnackbar(
-                      context,
-                      'Por favor ingresa una calificación válida entre 1 y 5.',
-                      Colors.red);
-                }
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  Future<void> finalizeReservation(BuildContext context, String clientId, String reservationId,
-      String garageId, String spaceId, double rating) async {
+      String spaceId,
+      double rating) async {
     try {
       await updateReservationState(reservationId, 'needs-rating');
       await updateGarageReservationsCompleted(garageId);
       await updateGarageSpaceState(garageId, spaceId, 'libre');
       await updateClientRating(clientId, rating);
+      await updateReservationClientRating(clientId, rating);
       showSnackbar(context, 'Reserva finalizada y cliente calificado con éxito',
+          Colors.green);
+    } catch (error) {
+      showSnackbar(
+          context, 'No se pudo finalizar la reserva: $error', Colors.red);
+    }
+  }
+
+  Future<void> finalizeReservationClient(BuildContext context,
+      String reservationId, String garageId, double rating) async {
+    try {
+      await updateReservationState(reservationId, 'finalized');
+      await updateGarageRating(garageId, rating);
+      await updateReservationGarageRating(garageId, rating);
+      showSnackbar(context, 'Reserva finalizada y garaje calificado con éxito',
           Colors.green);
     } catch (error) {
       showSnackbar(
