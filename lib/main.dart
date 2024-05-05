@@ -18,6 +18,7 @@ import 'package:parquea2/viewmodels/provider/provider_garage_list_viewmodel.dart
 import 'package:parquea2/viewmodels/provider/provider_login_viewmodel.dart';
 import 'package:parquea2/viewmodels/provider/provider_offer_list_viewmodel.dart';
 import 'package:parquea2/viewmodels/client/client_vehicles_list_viewmodel.dart';
+import 'package:parquea2/viewmodels/provider/provider_viewmodel.dart';
 import 'package:parquea2/views/client/client_offer_list_view.dart';
 import 'package:parquea2/views/map_view.dart';
 import 'package:parquea2/views/provider/provider_home_view.dart';
@@ -121,6 +122,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
             create: (context) => ClientGarageListViewModel()),
         ChangeNotifierProvider(create: (context) => ClientViewModel()),
+        ChangeNotifierProvider(create: (context) => ProviderViewModel()),
         ChangeNotifierProvider(
             create: (context) => VehicleListViewModel(VehicleService())),
         ChangeNotifierProvider(

@@ -3,8 +3,8 @@ import 'package:parquea2/viewmodels/provider/provider_reservation_garage_list_vi
 import 'package:parquea2/views/widgets/reservations/provider_reservation_garage_card.dart';
 import 'package:provider/provider.dart';
 
-class OfferGarageListView extends StatelessWidget {
-  const OfferGarageListView({super.key});
+class ReservationGarageListView extends StatelessWidget {
+  const ReservationGarageListView({super.key});
 
   @override
   Widget build(BuildContext context) {
