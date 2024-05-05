@@ -2,9 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
 import 'package:parquea2/models/available_time.dart';
-import 'package:parquea2/viewmodels/provider/edit_garage_viewmodel.dart';
 import 'package:parquea2/viewmodels/provider/provider_add_garage_viewmodel.dart';
 import 'package:parquea2/views/widgets/textfields/custom_selectionfield.dart';
 import 'package:parquea2/views/widgets/textfields/custom_textfield.dart';
@@ -23,22 +21,6 @@ class _AddGarageViewState extends State<AddGarageView> {
   final _formKey = GlobalKey<FormState>();
   final ImagePicker _picker = ImagePicker();
   XFile? _image;
-
-  String getDayInSpanish(String englishDayName) {
-  // Mapping of English day names to Spanish day names
-  Map<String, String> dayNameMap = {
-    'Monday': 'Lunes',
-    'Tuesday': 'Martes',
-    'Wednesday': 'Miércoles',
-    'Thursday': 'Jueves',
-    'Friday': 'Viernes',
-    'Saturday': 'Sábado',
-    'Sunday': 'Domingo',
-  };
-
-  // Return the Spanish day name corresponding to the given English day name
-  return dayNameMap[englishDayName] ?? 'Día desconocido';
-}
 
   @override
   Widget build(BuildContext context) {
@@ -162,7 +144,8 @@ class _AddGarageViewState extends State<AddGarageView> {
                     return null;
                   },
                   onTap: () {
-                    FocusScope.of(context).requestFocus(new FocusNode());
+                    FocusScope.of(context).requestFocus(
+                        new FocusNode());
                     garageViewModel.selectLocation(context);
                   },
                 ),
@@ -181,7 +164,20 @@ class _AddGarageViewState extends State<AddGarageView> {
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
                   ),
                 ),
-          
+                dayAvailabilityWidget('Lunes', 'monday',
+                    garageViewModel.monday.availableTime!, context),
+                dayAvailabilityWidget('Martes', 'tuesday',
+                    garageViewModel.tuesday.availableTime!, context),
+                dayAvailabilityWidget('Miércoles', 'wednesday',
+                    garageViewModel.wednesday.availableTime!, context),
+                dayAvailabilityWidget('Jueves', 'thursday',
+                    garageViewModel.thursday.availableTime!, context),
+                dayAvailabilityWidget('Viernes', 'friday',
+                    garageViewModel.friday.availableTime!, context),
+                dayAvailabilityWidget('Sábado', 'saturday',
+                    garageViewModel.saturday.availableTime!, context),
+                dayAvailabilityWidget('Domingo', 'sunday',
+                    garageViewModel.sunday.availableTime!, context),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(15, 30, 15, 10),
                   child: ElevatedButton(
@@ -212,51 +208,72 @@ class _AddGarageViewState extends State<AddGarageView> {
     );
   }
 
-  Widget dayAvailabilityWidget(String englishDayName, List<AvailableTime> times, BuildContext context, EditGarageViewModel viewModel) {
-  String dayInSpanish = getDayInSpanish(englishDayName);  // Get the Spanish name for the day
-
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 15),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(dayInSpanish, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-            IconButton(
-              icon: Icon(Icons.add),
-              onPressed: () => viewModel.showAddTimeDialog(context, englishDayName),
-            ),
-          ],
+  Widget dayAvailabilityWidget(String dayName, String day,
+      List<AvailableTime> times, BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 15),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                dayName,
+                style:
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              IconButton(
+                icon: const Icon(Icons.add),
+                onPressed: () =>
+                    Provider.of<AddGarageViewModel>(context, listen: false)
+                        .showTimePickerDialog(context, day),
+              )
+            ],
+          ),
         ),
-      ),
-      ...times.map((AvailableTime time) {
-        return Container(
-          margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey.shade300),
-            borderRadius: BorderRadius.circular(5),
+        Consumer<AddGarageViewModel>(
+          builder: (_, vm, __) => Column(
+            children: vm.findDay(day)?.availableTime?.map((time) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey.shade200),
+                      ),
+                      child: ListTile(
+                        title: Text('${time.startTime} - ${time.endTime}',
+                            style: const TextStyle(fontSize: 16)),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.edit, color: Colors.grey),
+                              onPressed: () =>
+                                  vm.showEditTimeDialog(context, day, time),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.delete, color: Colors.red),
+                              onPressed: () => vm.removeTime(day, time),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                }).toList() ??
+                [],
           ),
-          child: ListTile(
-            title: Text('${time.startTime} - ${time.endTime}'),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.edit),
-                  onPressed: () => viewModel.showEditTimeDialog(context, englishDayName, time),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.delete, color: Colors.red),
-                  onPressed: () => viewModel.removeTime(englishDayName, time),
-                ),
-              ],
+        ),
+        if (times.isEmpty)
+          const Center(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+              child: Text('No hay tiempos seleccionados',
+                  style: TextStyle(color: Colors.grey)),
             ),
           ),
-        );
-      }).toList(),
-    ],
-  );
-}
+      ],
+    );
+  }
 }

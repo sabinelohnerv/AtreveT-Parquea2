@@ -267,69 +267,79 @@ class _EditGarageViewState extends State<EditGarageView> {
     );
   }
 
-  void showEditDialog(BuildContext context, String day,
-      List<AvailableTime> times, EditGarageViewModel viewModel) {
-    List<AvailableTime> localTimes = times
-        .map((t) => AvailableTime(startTime: t.startTime, endTime: t.endTime))
-        .toList();
-
+  void showAddTimeDialog(BuildContext context, String day) {
     showDialog(
       context: context,
-      builder: (BuildContext context) {
+      builder: (BuildContext dialogContext) {
+        TimeOfDay? startTime;
+        TimeOfDay? endTime;
+
         return StatefulBuilder(
-          builder: (BuildContext innerContext, StateSetter setState) {
+          builder: (BuildContext context, StateSetter setState) {
             return AlertDialog(
-              title: Text('Editar horarios para $day'),
-              content: SingleChildScrollView(
-                child: ListBody(
-                  children: List.generate(localTimes.length, (index) {
-                    AvailableTime time = localTimes[index];
-                    return Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                            child: Text('${time.startTime} - ${time.endTime}')),
-                        IconButton(
-                          icon: const Icon(Icons.edit),
-                          onPressed: () async {
-                            TimeOfDay? newStartTime = await showTimePicker(
-                              context: innerContext,
-                              initialTime: timeOfDayFromString(time.startTime),
-                            );
-                            if (newStartTime != null) {
-                              setState(() {
-                                localTimes[index] = AvailableTime(
-                                  startTime: formatTimeOfDay(newStartTime),
-                                  endTime: time.endTime,
-                                );
-                              });
-                            }
-                            TimeOfDay? newEndTime = await showTimePicker(
-                              context: innerContext,
-                              initialTime: timeOfDayFromString(time.endTime),
-                            );
-                            if (newEndTime != null) {
-                              setState(() {
-                                localTimes[index] = AvailableTime(
-                                  startTime: localTimes[index].startTime,
-                                  endTime: formatTimeOfDay(newEndTime),
-                                );
-                              });
-                            }
-                          },
-                        ),
-                      ],
-                    );
-                  }),
-                ),
+              title: const Text(
+                'Agregar nuevo rango de disponibilidad',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
               ),
-              actions: <Widget>[
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  ListTile(
+                    title: Text(startTime == null
+                        ? 'Selecciona la Hora de Inicio'
+                        : 'Hora de Inicio: ${formatTimeOfDay(startTime!)}'),
+                    onTap: () async {
+                      TimeOfDay? pickedStartTime = await showTimePicker(
+                        context: context,
+                        initialTime: TimeOfDay.now(),
+                      );
+                      if (pickedStartTime != null) {
+                        setState(() {
+                          startTime = pickedStartTime;
+                        });
+                      }
+                    },
+                  ),
+                  ListTile(
+                    title: Text(endTime == null
+                        ? 'Selecciona la Hora de Fin'
+                        : 'Hora de Fin: ${formatTimeOfDay(endTime!)}'),
+                    onTap: () async {
+                      TimeOfDay? pickedEndTime = await showTimePicker(
+                        context: context,
+                        initialTime: TimeOfDay.now().replacing(hour: TimeOfDay.now().hour + 1),
+                      );
+                      if (pickedEndTime != null) {
+                        setState(() {
+                          endTime = pickedEndTime;
+                        });
+                      }
+                    },
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      if (startTime != null && endTime != null) {
+                        AvailableTime newTime = AvailableTime(
+                          startTime: formatTimeOfDay(startTime!),
+                          endTime: formatTimeOfDay(endTime!),
+                        );
+                        Provider.of<EditGarageViewModel>(context, listen: false).addAvailableTime(day, newTime);
+                      }
+                      Navigator.of(dialogContext).pop();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Theme.of(context).primaryColor,
+                      foregroundColor: Colors.white,
+                    ),
+                    child: const Text('Guardar Todo el Día'),
+                  ),
+                ],
+              ),
+              actions: [
                 TextButton(
-                  onPressed: () {
-                    viewModel.updateDayAvailability(day, localTimes);
-                    Navigator.of(innerContext).pop();
-                  },
-                  child: Text('Guardar Cambios'),
+                  onPressed: () => Navigator.of(dialogContext).pop(),
+                  child: const Text('Cancelar'),
                 ),
               ],
             );
@@ -338,6 +348,8 @@ class _EditGarageViewState extends State<EditGarageView> {
       },
     );
   }
+}
+
 
   TimeOfDay timeOfDayFromString(String timeStr) {
     List<String> parts = timeStr.split(':');
@@ -348,129 +360,141 @@ class _EditGarageViewState extends State<EditGarageView> {
     return '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
   }
 
-  void showAddTimeDialog(
-      BuildContext context, String day, EditGarageViewModel viewModel) {
-    TimeOfDay? startTime;
-    TimeOfDay? endTime;
-
+ void showAddTimeDialog(BuildContext context, String day) {
     showDialog(
       context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Añadir nuevo horario para $day'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ListTile(
-                title: Text(
-                    'Hora de inicio: ${startTime?.format(context) ?? 'Seleccione'}'),
-                onTap: () async {
-                  final TimeOfDay? pickedStartTime = await showTimePicker(
-                    context: context,
-                    initialTime: TimeOfDay.now(),
-                  );
-                  if (pickedStartTime != null) {
-                    startTime = pickedStartTime;
-                    (context as Element).markNeedsBuild();
-                  }
-                },
+      builder: (BuildContext dialogContext) {
+        TimeOfDay? startTime;
+        TimeOfDay? endTime;
+
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return AlertDialog(
+              title: const Text(
+                'Agregar nuevo rango de disponibilidad',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
               ),
-              ListTile(
-                title: Text(
-                    'Hora de fin: ${endTime?.format(context) ?? 'Seleccione'}'),
-                onTap: () async {
-                  final TimeOfDay? pickedEndTime = await showTimePicker(
-                    context: context,
-                    initialTime: TimeOfDay.now()
-                        .replacing(hour: TimeOfDay.now().hour + 1),
-                  );
-                  if (pickedEndTime != null) {
-                    endTime = pickedEndTime;
-                    (context as Element).markNeedsBuild();
-                  }
-                },
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  ListTile(
+                    title: Text(startTime == null
+                        ? 'Selecciona la Hora de Inicio'
+                        : 'Hora de Inicio: ${formatTimeOfDay(startTime!)}'),
+                    onTap: () async {
+                      TimeOfDay? pickedStartTime = await showTimePicker(
+                        context: context,
+                        initialTime: TimeOfDay.now(),
+                      );
+                      if (pickedStartTime != null) {
+                        setState(() {
+                          startTime = pickedStartTime;
+                        });
+                      }
+                    },
+                  ),
+                  ListTile(
+                    title: Text(endTime == null
+                        ? 'Selecciona la Hora de Fin'
+                        : 'Hora de Fin: ${formatTimeOfDay(endTime!)}'),
+                    onTap: () async {
+                      TimeOfDay? pickedEndTime = await showTimePicker(
+                        context: context,
+                        initialTime: TimeOfDay.now().replacing(hour: TimeOfDay.now().hour + 1),
+                      );
+                      if (pickedEndTime != null) {
+                        setState(() {
+                          endTime = pickedEndTime;
+                        });
+                      }
+                    },
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      if (startTime != null && endTime != null) {
+                        AvailableTime newTime = AvailableTime(
+                          startTime: formatTimeOfDay(startTime!),
+                          endTime: formatTimeOfDay(endTime!),
+                        );
+                        Provider.of<EditGarageViewModel>(context, listen: false).addAvailableTime(day, newTime);
+                      }
+                      Navigator.of(dialogContext).pop();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Theme.of(context).primaryColor,
+                      foregroundColor: Colors.white,
+                    ),
+                    child: const Text('Guardar Todo el Día'),
+                  ),
+                ],
               ),
-            ],
-          ),
-          actions: [
-            TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: Text('Cancelar')),
-            TextButton(
-                onPressed: () {
-                  if (startTime != null && endTime != null) {
-                    AvailableTime newTime = AvailableTime(
-                        startTime:
-                            '${startTime?.hour}:${startTime?.minute.toString().padLeft(2, '0')}',
-                        endTime:
-                            '${endTime?.hour}:${endTime?.minute.toString().padLeft(2, '0')}');
-                    viewModel.addAvailableTime(day, newTime);
-                    Navigator.of(context).pop();
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text(
-                          "Por favor seleccione ambas horas de inicio y fin."),
-                      duration: Duration(seconds: 2),
-                    ));
-                  }
-                },
-                child: Text('Añadir')),
-          ],
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(dialogContext).pop(),
+                  child: const Text('Cancelar'),
+                ),
+              ],
+            );
+          },
         );
       },
     );
   }
 
-  Widget dayAvailabilityWidget(String englishDayName, List<AvailableTime> times,
-      BuildContext context, EditGarageViewModel viewModel) {
-    String dayInSpanish = translateDay(englishDayName.toLowerCase());
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 15),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(dayInSpanish,
-                  style: const TextStyle(
-                      fontSize: 16, fontWeight: FontWeight.bold)),
-              IconButton(
-                icon: Icon(Icons.add),
-                onPressed: () =>
-                    viewModel.showAddTimeDialog(context, englishDayName),
-              ),
-            ],
+
+  Widget dayAvailabilityWidget(String englishDayName, List<AvailableTime> times, BuildContext context, EditGarageViewModel viewModel) {
+  String dayInSpanish = translateDay(englishDayName.toLowerCase()); // Utiliza la función utilitaria para traducir el día.
+
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Padding(
+        padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 15),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(dayInSpanish, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            IconButton(
+              icon: Icon(Icons.add),
+              onPressed: () => viewModel.showAddTimeDialog(context, englishDayName),
+            ),
+          ],
+        ),
+      ),
+      if (times.isEmpty)
+        Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+            child: Text('No hay tiempos seleccionados', style: TextStyle(color: Colors.grey, fontStyle: FontStyle.italic)),
           ),
         ),
-        ...times.map((AvailableTime time) {
-          return Container(
-            margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey.shade300),
-              borderRadius: BorderRadius.circular(5),
+      ...times.map((AvailableTime time) {
+        return Container(
+          margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey.shade300),
+            borderRadius: BorderRadius.circular(5),
+          ),
+          child: ListTile(
+            title: Text('${time.startTime} - ${time.endTime}'),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.edit),
+                  onPressed: () => viewModel.showEditTimeDialog(context, englishDayName, time),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.delete, color: Colors.red),
+                  onPressed: () => viewModel.removeTime(englishDayName, time),
+                ),
+              ],
             ),
-            child: ListTile(
-              title: Text('${time.startTime} - ${time.endTime}'),
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.edit),
-                    onPressed: () => viewModel.showEditTimeDialog(
-                        context, englishDayName, time),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.delete, color: Colors.red),
-                    onPressed: () => viewModel.removeTime(englishDayName, time),
-                  ),
-                ],
-              ),
-            ),
-          );
-        }).toList(),
-      ],
-    );
-  }
+          ),
+        );
+      }).toList(),
+    ],
+  );
 }
