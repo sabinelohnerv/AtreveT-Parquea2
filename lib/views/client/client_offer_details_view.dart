@@ -91,60 +91,76 @@ class ClientOfferDetailsView extends StatelessWidget {
                         ],
                       ),
                     ),
-                    (offer.client.id != offer.lastOfferBy)
-                        ? Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              ElevatedButton.icon(
-                                onPressed: () => viewModel.acceptCounterOffer(
-                                    offer.id, offer.client.id, offer.payOffer),
-                                label: const Text(
-                                  'ACEPTAR',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w600,
+                    (offer.state != 'rejected-by-provider')
+                        ? (offer.client.id != offer.lastOfferBy)
+                            ? Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  ElevatedButton.icon(
+                                    onPressed: () =>
+                                        viewModel.acceptCounterOffer(offer.id,
+                                            offer.client.id, offer.payOffer),
+                                    label: const Text(
+                                      'ACEPTAR',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                    icon: const Icon(
+                                      Icons.check_sharp,
+                                      color: Colors.white,
+                                    ),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.green,
+                                      foregroundColor: Colors.white,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(30),
+                                      ),
+                                    ),
                                   ),
-                                ),
-                                icon: const Icon(
-                                  Icons.check_sharp,
-                                  color: Colors.white,
-                                ),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.green,
-                                  foregroundColor: Colors.white,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30),
+                                  ElevatedButton.icon(
+                                    onPressed: () =>
+                                        viewModel.submitCounterOffer(
+                                      offer.id,
+                                      offer.client.id,
+                                    ),
+                                    label: const Text(
+                                      'CONTRAOFERTA',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                    icon: const Icon(
+                                      Icons.monetization_on,
+                                      color: Colors.white,
+                                    ),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.blueAccent,
+                                      foregroundColor: Colors.white,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(30),
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ),
-                              ElevatedButton.icon(
-                                onPressed: () => viewModel.submitCounterOffer(
-                                  offer.id,
-                                  offer.client.id,
-                                ),
-                                label: const Text(
-                                  'CONTRAOFERTA',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                icon: const Icon(
-                                  Icons.monetization_on,
-                                  color: Colors.white,
-                                ),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.blueAccent,
-                                  foregroundColor: Colors.white,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          )
+                                ],
+                              )
+                            : const Padding(
+                                padding: EdgeInsets.symmetric(vertical: 10),
+                                child: Text(
+                                    'Espera una respuesta del proveedor...'),
+                              )
                         : const Padding(
-                            padding: EdgeInsets.symmetric(vertical: 10),
-                            child:
-                                Text('Espera una respuesta del proveedor...'),
+                            padding: EdgeInsets.symmetric(
+                                vertical: 10, horizontal: 4),
+                            child: Text(
+                              'OFERTA RECHAZADA',
+                              style: TextStyle(
+                                  color: Colors.red,
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.w500),
+                              maxLines: 3,
+                            ),
                           ),
                     const SizedBox(height: 20),
                     ElevatedButton(
@@ -221,30 +237,31 @@ class ClientOfferDetailsView extends StatelessWidget {
               ),
             ),
             persistentFooterButtons: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  ElevatedButton.icon(
-                    icon: const Icon(Icons.close_sharp),
-                    label: const Text(
-                      'CANCELAR',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    onPressed: () {
-                      _onReject(context, viewModel);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 60, vertical: 10),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
+              if (offer.state != 'rejected-by-provider')
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton.icon(
+                      icon: const Icon(Icons.close_sharp),
+                      label: const Text(
+                        'CANCELAR',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      onPressed: () {
+                        _onReject(context, viewModel);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 60, vertical: 10),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
+                  ],
+                ),
             ],
           );
         },

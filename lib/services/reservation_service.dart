@@ -36,6 +36,28 @@ class ReservationService {
     }
   }
 
+  Future<void> updateReservationClientRating(
+      String reservationId, double newRating) async {
+    try {
+      DocumentReference ref =
+          _firestore.collection('reservations').doc(reservationId);
+      await ref.update({'rating.clientRating': newRating});
+    } catch (e) {
+      throw Exception('Failed to update client rating: $e');
+    }
+  }
+
+  Future<void> updateReservationGarageRating(
+      String reservationId, double newRating) async {
+    try {
+      DocumentReference ref =
+          _firestore.collection('reservations').doc(reservationId);
+      await ref.update({'rating.garageRating': newRating});
+    } catch (e) {
+      throw Exception('Failed to update garage rating: $e');
+    }
+  }
+
   Stream<Reservation?> getReservationById(String reservationId) {
     return _firestore
         .collection('reservations')
@@ -54,7 +76,12 @@ class ReservationService {
     return _firestore
         .collection('reservations')
         .where('client.id', isEqualTo: clientId)
-        .where('state', whereIn: ["active", "reserved", "needs-rating"])
+        .where('state', whereIn: [
+          "active",
+          "reserved",
+          "needs-rating",
+          "cancelled-by-provider"
+        ])
         .snapshots()
         .map((snapshot) =>
             snapshot.docs.map((doc) => Reservation.fromSnapshot(doc)).toList());

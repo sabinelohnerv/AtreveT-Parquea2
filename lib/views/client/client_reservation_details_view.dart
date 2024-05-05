@@ -9,11 +9,10 @@ import 'package:provider/provider.dart';
 
 import '../../services/whatsapp_service.dart';
 
-class ProviderReservationDetailsView extends StatelessWidget {
+class ClientReservationDetailsView extends StatelessWidget {
   final String reservationId;
 
-  const ProviderReservationDetailsView(
-      {super.key, required this.reservationId});
+  const ClientReservationDetailsView({super.key, required this.reservationId});
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +37,7 @@ class ProviderReservationDetailsView extends StatelessWidget {
           break;
         case 'finalized':
           textColor = Colors.blue;
-          stateText = 'FINALIZADA';
+          stateText = 'GARAJE CALIFICADO';
           break;
         case 'needs-rating':
           textColor = Colors.green;
@@ -92,6 +91,35 @@ class ProviderReservationDetailsView extends StatelessWidget {
                     const SizedBox(
                       height: 20,
                     ),
+                    ClientInformationGroup(
+                      title: 'GARAJE',
+                      onTap: () {
+                        if (viewModel.providerPhoneNumber != null) {
+                          WhatsAppService().sendMessage(
+                              viewModel.providerPhoneNumber!,
+                              "Quisiera discutir sobre la reserva del garaje ${reservation.garageSpace.garageName}");
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("Numero no disponible actualmente"),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                        }
+                      },
+                      items: [
+                        InformationItem(
+                            label: 'Nombre:',
+                            value: reservation.garageSpace.garageName,
+                            leadingIcon: Icons.business),
+                        InformationItem(
+                            label: 'Número:',
+                            value: viewModel.providerPhoneNumber != null
+                                ? viewModel.providerPhoneNumber!
+                                : '',
+                            leadingIcon: Icons.phone),
+                      ],
+                    ),
                     InformationGroup(
                       title: 'DETALLES',
                       items: [
@@ -125,35 +153,6 @@ class ProviderReservationDetailsView extends StatelessWidget {
                             leadingIcon: Icons.numbers),
                       ],
                     ),
-                    ClientInformationGroup(
-                      title: 'CLIENTE',
-                      onTap: () {
-                        if (viewModel.clientPhoneNumber != null) {
-                          WhatsAppService().sendMessage(
-                              viewModel.clientPhoneNumber!,
-                              "Quisiera discutir sobre la reserva del garaje ${reservation.garageSpace.garageName}");
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text("Numero no disponible actualmente"),
-                              backgroundColor: Colors.red,
-                            ),
-                          );
-                        }
-                      },
-                      items: [
-                        InformationItem(
-                            label: 'Nombre:',
-                            value: reservation.client.fullName,
-                            leadingIcon: Icons.person),
-                        InformationItem(
-                            label: 'Número:',
-                            value: viewModel.clientPhoneNumber != null
-                                ? viewModel.clientPhoneNumber!
-                                : '',
-                            leadingIcon: Icons.phone),
-                      ],
-                    ),
                   ],
                 ),
               ),
@@ -169,7 +168,7 @@ class ProviderReservationDetailsView extends StatelessWidget {
                           label: 'CANCELAR',
                           onPressed: () {
                             viewModel.updateReservationState(
-                                reservationId, 'cancelled-by-provider');
+                                reservationId, 'cancelled-by-client');
                             viewModel.updateGarageSpaceState(
                               viewModel.reservation!.garageSpace.garageId,
                               viewModel.reservation!.garageSpace.spaceId,
@@ -178,42 +177,30 @@ class ProviderReservationDetailsView extends StatelessWidget {
                             Navigator.of(context).pop();
                           },
                           color: Colors.red),
-                    if (viewModel.reservation!.state == 'reserved')
+                    if (viewModel.reservation!.state == 'cancelled-by-provider')
                       CustomFooterButton(
-                          iconData: Icons.local_parking,
-                          label: 'EN USO',
+                          iconData: Icons.check_sharp,
+                          label: 'ENTENDIDO',
                           onPressed: () {
                             viewModel.updateReservationState(
-                                reservationId, 'active');
-                            viewModel.updateGarageSpaceState(
-                              viewModel.reservation!.garageSpace.garageId,
-                              viewModel.reservation!.garageSpace.spaceId,
-                              'ocupado',
-                            );
+                                reservationId, 'cancelled');
                             Navigator.of(context).pop();
                           },
                           color: Colors.blue),
-                    if (viewModel.reservation!.state == 'active')
+                    if (viewModel.reservation!.state == 'needs-rating')
                       CustomFooterButton(
-                        iconData: Icons.check_sharp,
-                        label: 'FINALIZAR',
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            barrierDismissible: false,
-                            builder: (BuildContext dialogContext) {
-                              return _buildRatingDialog(
-                                  dialogContext,
-                                  viewModel,
-                                  reservation.client.id,
-                                  reservation.id,
-                                  reservation.garageSpace.garageId,
-                                  reservation.garageSpace.spaceId);
-                            },
-                          );
-                        },
-                        color: Colors.green,
-                      ),
+                          iconData: Icons.star,
+                          label: 'CALIFICAR',
+                          onPressed: () {
+                            showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (BuildContext dialogContext) {
+                                  return _buildRatingDialog(
+                                      context, viewModel, reservationId);
+                                });
+                          },
+                          color: Colors.amber),
                   ],
                 ),
             ],
@@ -223,20 +210,16 @@ class ProviderReservationDetailsView extends StatelessWidget {
     );
   }
 
-  Widget _buildRatingDialog(
-      BuildContext context,
-      ReservationDetailsViewModel viewModel,
-      String clientId,
-      String reservationId,
-      String garageId,
-      String spaceId) {
+  Widget _buildRatingDialog(BuildContext context,
+      ReservationDetailsViewModel viewModel, String reservationId) {
     final TextEditingController ratingController = TextEditingController();
+
     return AlertDialog(
-      title: const Text('Califica al Cliente'),
+      title: const Text('Califica al Garaje'),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Text('Por favor califique al cliente de 1 a 5 estrellas.'),
+          const Text('Por favor califique al garaje de 1 a 5 estrellas.'),
           TextField(
             controller: ratingController,
             decoration: const InputDecoration(
@@ -245,6 +228,7 @@ class ProviderReservationDetailsView extends StatelessWidget {
             ),
             keyboardType: TextInputType.number,
             inputFormatters: [
+              FilteringTextInputFormatter.digitsOnly,
               FilteringTextInputFormatter.allow(RegExp(r'[1-5]')),
             ],
           ),
@@ -260,9 +244,9 @@ class ProviderReservationDetailsView extends StatelessWidget {
           onPressed: () {
             final double rating = double.tryParse(ratingController.text) ?? 0;
             if (rating >= 1 && rating <= 5) {
+              viewModel.finalizeReservationClient(context, reservationId,
+                  viewModel.reservation!.garageSpace.garageId, rating);
               Navigator.of(context).pop();
-              viewModel.finalizeReservation(
-                  context, clientId, reservationId, garageId, spaceId, rating);
             } else {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(

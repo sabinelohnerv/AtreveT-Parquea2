@@ -120,8 +120,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => GarageListViewModel()),
         ChangeNotifierProvider(
             create: (context) => ClientGarageListViewModel()),
-        ChangeNotifierProvider(
-            create: (context) => ClientViewModel()),
+        ChangeNotifierProvider(create: (context) => ClientViewModel()),
         ChangeNotifierProvider(
             create: (context) => VehicleListViewModel(VehicleService())),
         ChangeNotifierProvider(

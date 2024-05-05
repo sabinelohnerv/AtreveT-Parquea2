@@ -419,6 +419,10 @@ class _EditGarageViewState extends State<EditGarageView> {
               Text(day,
                   style: const TextStyle(
                       fontSize: 16, fontWeight: FontWeight.bold)),
+              IconButton(
+                icon: Icon(Icons.add),
+                onPressed: () => showAddTimeDialog(context, day, viewModel),
+              ),
             ],
           ),
         ),
@@ -437,7 +441,7 @@ class _EditGarageViewState extends State<EditGarageView> {
                   IconButton(
                     icon: const Icon(Icons.edit),
                     onPressed: () =>
-                        viewModel.showEditTimeDialog(context, day, time),
+                        showEditDialog(context, day, times, viewModel),
                   ),
                   IconButton(
                     icon: const Icon(Icons.delete, color: Colors.red),
