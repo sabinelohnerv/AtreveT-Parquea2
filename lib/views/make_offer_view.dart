@@ -73,6 +73,7 @@ class _MakeOfferViewState extends State<MakeOfferView> {
                       children: <Widget>[
                         CustomTextFormField(
                           labelText: 'Fecha de la Reserva',
+                          enabled: true,
                           prefixIcon: const Icon(Icons.calendar_month),
                           readOnly: true,
                           onTap: () => viewModel.selectDate(context),
@@ -86,6 +87,7 @@ class _MakeOfferViewState extends State<MakeOfferView> {
                             Expanded(
                               child: CustomTextFormField(
                                 labelText: 'Hora de Inicio',
+                                enabled: true,
                                 prefixIcon: const Icon(Icons.access_time),
                                 readOnly: true,
                                 onTap: () => viewModel.selectStartTime(context),
@@ -98,6 +100,7 @@ class _MakeOfferViewState extends State<MakeOfferView> {
                             Expanded(
                               child: CustomTextFormField(
                                 labelText: 'Hora de Finalización',
+                                enabled: true,
                                 prefixIcon: const Icon(Icons.hourglass_bottom),
                                 readOnly: true,
                                 onTap: () => viewModel.selectEndTime(context),
