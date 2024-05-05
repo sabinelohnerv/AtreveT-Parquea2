@@ -141,44 +141,23 @@ class OnboardingSlide extends StatelessWidget {
                   ElevatedButton(
                     onPressed: () =>
                         Navigator.pushNamed(context, '/clientRegister'),
-                    child: const Text('Registrarse como Cliente'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Theme.of(context).colorScheme.primary,
                       foregroundColor: Colors.white,
                       minimumSize: const Size(double.infinity, 50),
                     ),
+                    child: const Text('Registrarse como Cliente'),
                   ),
                   const SizedBox(height: 10),
                   ElevatedButton(
                     onPressed: () =>
                         Navigator.pushNamed(context, '/providerRegister'),
-                    child: const Text('Registrarse como Ofertante'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Theme.of(context).colorScheme.secondary,
                       foregroundColor: Colors.white,
                       minimumSize: const Size(double.infinity, 50),
                     ),
-                  ),
-                  const SizedBox(height: 10),
-                  ElevatedButton(
-                    onPressed: () =>
-                        Navigator.pushNamed(context, '/login'),
-                    child: const Text('Iniciar Sesion'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Theme.of(context).colorScheme.tertiary,
-                      foregroundColor: Colors.white,
-                      minimumSize: const Size(double.infinity, 50),
-                    ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () =>
-                        Navigator.pushNamed(context, '/providerLogin'),
-                    child: const Text('Iniciar Sesion'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Theme.of(context).colorScheme.tertiary,
-                      foregroundColor: Colors.white,
-                      minimumSize: const Size(double.infinity, 50),
-                    ),
+                    child: const Text('Registrarse como Ofertante'),
                   ),
                 ],
               ],

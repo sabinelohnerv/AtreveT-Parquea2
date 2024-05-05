@@ -1,4 +1,7 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
+import 'package:parquea2/views/login_view.dart';
 import 'package:provider/provider.dart';
 import 'package:parquea2/viewmodels/provider_register_viewmodel.dart';
 import '/views/widgets/decorative_shape_widget.dart';
@@ -45,7 +48,8 @@ class ProviderRegisterView extends StatelessWidget {
                   child: Align(
                     alignment: Alignment.topLeft,
                     child: IconButton(
-                      icon: Icon(Icons.arrow_back, color: Color.fromARGB(255, 255, 211, 40)),
+                      icon: const Icon(Icons.arrow_back,
+                          color: Color.fromARGB(255, 255, 211, 40)),
                       onPressed: () => Navigator.of(context).pop(),
                     ),
                   ),
@@ -60,7 +64,13 @@ class ProviderRegisterView extends StatelessWidget {
                             delay: 100,
                             child: Text(
                               "Registro de Ofertante",
-                              style: Theme.of(context).textTheme.headline5?.copyWith(fontWeight: FontWeight.bold) ?? TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+                              style: Theme.of(context)
+                                      .textTheme
+                                      .headlineSmall
+                                      ?.copyWith(fontWeight: FontWeight.bold) ??
+                                  const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 24),
                             ),
                           ),
                           const SizedBox(height: 20),
@@ -68,9 +78,10 @@ class ProviderRegisterView extends StatelessWidget {
                             delay: 200,
                             child: TextField(
                               controller: fullNameController,
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 labelText: "Nombre Completo",
-                                prefixIcon: Icon(Icons.person, color: Colors.grey),
+                                prefixIcon:
+                                    Icon(Icons.person, color: Colors.grey),
                               ),
                             ),
                           ),
@@ -80,9 +91,10 @@ class ProviderRegisterView extends StatelessWidget {
                             child: TextField(
                               controller: phoneNumberController,
                               keyboardType: TextInputType.phone,
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 labelText: "Número de Teléfono",
-                                prefixIcon: Icon(Icons.phone, color: Colors.grey),
+                                prefixIcon:
+                                    Icon(Icons.phone, color: Colors.grey),
                               ),
                             ),
                           ),
@@ -92,9 +104,10 @@ class ProviderRegisterView extends StatelessWidget {
                             child: TextField(
                               controller: emailController,
                               keyboardType: TextInputType.emailAddress,
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 labelText: "Email",
-                                prefixIcon: Icon(Icons.email, color: Colors.grey),
+                                prefixIcon:
+                                    Icon(Icons.email, color: Colors.grey),
                               ),
                             ),
                           ),
@@ -104,9 +117,10 @@ class ProviderRegisterView extends StatelessWidget {
                             child: TextField(
                               controller: passwordController,
                               obscureText: true,
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 labelText: "Contraseña",
-                                prefixIcon: Icon(Icons.lock, color: Colors.grey),
+                                prefixIcon:
+                                    Icon(Icons.lock, color: Colors.grey),
                               ),
                             ),
                           ),
@@ -114,26 +128,29 @@ class ProviderRegisterView extends StatelessWidget {
                           FadeInAnimation(
                             delay: 600,
                             child: ElevatedButton.icon(
-                              icon: Icon(Icons.app_registration_outlined),
-                              label: Text("Registrarse"),
+                              icon: const Icon(Icons.app_registration_outlined),
+                              label: const Text("Registrarse"),
                               onPressed: () async {
-                                bool registered = await viewModel.registerProvider(
+                                bool registered =
+                                    await viewModel.registerProvider(
                                   emailController.text,
                                   passwordController.text,
                                   fullNameController.text,
                                   phoneNumberController.text,
                                 );
                                 if (registered) {
-                                  Navigator.of(context).pushReplacementNamed('/login');
-                                } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(content: Text('Error en el registro'))
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const LoginView()),
                                   );
                                 }
                               },
                               style: ElevatedButton.styleFrom(
-                                foregroundColor: Colors.white, 
-                                backgroundColor: Color.fromARGB(255, 255, 211, 40),
+                                foregroundColor: Colors.white,
+                                backgroundColor:
+                                    const Color.fromARGB(255, 255, 211, 40),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10.0),
                                 ),

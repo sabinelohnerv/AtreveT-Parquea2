@@ -6,9 +6,11 @@ class ClientRegisterViewModel extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<bool> registerClient(String email, String password, String fullName, String phoneNumber) async {
+  Future<bool> registerClient(String email, String password, String fullName,
+      String phoneNumber) async {
     try {
-      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+      UserCredential userCredential =
+          await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -18,9 +20,10 @@ class ClientRegisterViewModel extends ChangeNotifier {
         'email': email,
         'averageRating': 0.0,
         'completedReservations': 0,
+        'role': 'client',
       });
       return true;
-    } on FirebaseAuthException catch (e) {
+    } on FirebaseAuthException {
       return false;
     }
   }
