@@ -244,7 +244,7 @@ class GarageService {
         }
 
         double currentRating = snapshot['rating'] as double? ?? 0.0;
-        int ratingsCount = snapshot['ratingsCount'] as int? ?? 0;
+        int ratingsCount = snapshot['ratingsCompleted'] as int? ?? 0;
 
         double totalRating = currentRating * ratingsCount;
         totalRating += newRating;
@@ -252,7 +252,7 @@ class GarageService {
         double newAverageRating = totalRating / ratingsCount;
 
         transaction.update(garageRef,
-            {'rating': newAverageRating, 'ratingsCount': ratingsCount});
+            {'rating': newAverageRating, 'ratingsCompleted': ratingsCount});
       });
     } catch (e) {
       print('Error updating garage rating: $e');

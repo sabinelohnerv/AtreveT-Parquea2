@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:parquea2/models/reservation.dart';
 import 'package:parquea2/services/reservation_service.dart';
+import 'package:parquea2/views/client/client_reservation_details_view.dart';
 
 class ClientReservationListViewModel extends ChangeNotifier {
   final ReservationService _reservationService = ReservationService();
@@ -38,5 +39,16 @@ class ClientReservationListViewModel extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  void navigateToReservationDetails(
+      BuildContext context, String reservationId) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) =>
+            ClientReservationDetailsView(reservationId: reservationId),
+      ),
+    );
   }
 }

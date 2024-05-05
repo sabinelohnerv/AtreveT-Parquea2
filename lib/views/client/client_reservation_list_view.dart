@@ -44,7 +44,8 @@ class ClientReservationListView extends StatelessWidget {
                 return ReservationCard(
                   reservation: reservation,
                   reservationNumber: index + 1,
-                  onTap: () {},
+                  onTap: () => viewModel.navigateToReservationDetails(
+                      context, reservation.id),
                 );
               },
             );
