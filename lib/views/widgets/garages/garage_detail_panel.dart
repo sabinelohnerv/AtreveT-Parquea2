@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:parquea2/models/garage.dart';
+import 'package:parquea2/views/client/client_garage_details_view.dart';
 
 class GarageDetailPanel extends StatefulWidget {
   final Garage garage;
   final DraggableScrollableController controller;
+  final VoidCallback onPanelClosed;
 
-  const GarageDetailPanel(
-      {super.key, required this.garage, required this.controller});
+  const GarageDetailPanel({
+    super.key,
+    required this.garage,
+    required this.controller,
+    required this.onPanelClosed,
+  });
 
   @override
   _GarageDetailPanelState createState() => _GarageDetailPanelState();
@@ -24,6 +30,7 @@ class _GarageDetailPanelState extends State<GarageDetailPanel> {
   @override
   void dispose() {
     widget.controller.removeListener(_handleDrag);
+    widget.onPanelClosed();
     super.dispose();
   }
 
@@ -36,6 +43,7 @@ class _GarageDetailPanelState extends State<GarageDetailPanel> {
           duration: const Duration(milliseconds: 100),
           curve: Curves.fastOutSlowIn,
         );
+        widget.onPanelClosed();
       }
     } else {
       isDraggingDown = false;
@@ -65,11 +73,14 @@ class _GarageDetailPanelState extends State<GarageDetailPanel> {
             padding: const EdgeInsets.all(16),
             children: [
               Center(
-                  child: Text(widget.garage.name,
-                      style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: primaryColor))),
+                child: Text(
+                  widget.garage.name,
+                  style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: primaryColor),
+                ),
+              ),
               const SizedBox(height: 10),
               if (widget.garage.imgUrl != null &&
                   widget.garage.imgUrl!.isNotEmpty)
@@ -88,11 +99,13 @@ class _GarageDetailPanelState extends State<GarageDetailPanel> {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 10),
-                child: Text('Detalles:',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                        color: primaryColor)),
+                child: Text(
+                  'Detalles:',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                      color: primaryColor),
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 32),
@@ -101,14 +114,19 @@ class _GarageDetailPanelState extends State<GarageDetailPanel> {
                   children: widget.garage.details
                           ?.map((detail) => Text("• $detail",
                               style: const TextStyle(fontSize: 14)))
-                          ?.toList() ??
+                          .toList() ??
                       [],
                 ),
               ),
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  // TODO: ir a pantalla de reservar espacio
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          ClientGarageDetailsView(garage: widget.garage),
+                    ),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   foregroundColor: Colors.white,

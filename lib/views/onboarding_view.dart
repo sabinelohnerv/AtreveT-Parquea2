@@ -6,7 +6,7 @@ class OnboardingPage extends StatelessWidget {
   final OnboardingViewModel viewModel;
   final PageController pageController = PageController();
 
-  OnboardingPage({Key? key, required this.viewModel}) : super(key: key);
+  OnboardingPage({super.key, required this.viewModel});
 
   @override
   Widget build(BuildContext context) {
@@ -93,13 +93,13 @@ class OnboardingSlide extends StatelessWidget {
   final BuildContext? context;
 
   const OnboardingSlide({
-    Key? key,
+    super.key,
     required this.imagePath,
     required this.title,
     required this.description,
     this.isLast = false,
     this.context,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

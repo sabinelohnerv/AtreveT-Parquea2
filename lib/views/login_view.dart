@@ -138,7 +138,7 @@ class _LoginViewStatefulState extends State<LoginViewStateful> {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 40),
+                      const SizedBox(height: 20),
                       FadeInAnimation(
                         delay: 400,
                         child: ElevatedButton.icon(
@@ -187,7 +187,7 @@ class _LoginViewStatefulState extends State<LoginViewStateful> {
                           },
                         ),
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 5),
                       FadeInAnimation(
                         delay: 400,
                         child: ElevatedButton.icon(

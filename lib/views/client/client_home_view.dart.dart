@@ -5,8 +5,22 @@ import 'package:parquea2/views/map_view.dart';
 import 'package:parquea2/views/widgets/drawers/client/drawer.dart';
 import 'package:provider/provider.dart';
 
-class ClientHomeView extends StatelessWidget {
+class ClientHomeView extends StatefulWidget {
   const ClientHomeView({super.key});
+
+  @override
+  State<StatefulWidget> createState() {
+    return _ClientHomeViewState();
+  }
+}
+
+class _ClientHomeViewState extends State<ClientHomeView> {
+  @override
+  void initState() {
+    super.initState();
+    final userViewModel = Provider.of<ClientViewModel>(context, listen: false);
+    userViewModel.loadCurrentClient();
+  }
 
   void _handleSignOut(BuildContext context, ClientViewModel viewModel) async {
     bool signedOut = await viewModel.signOut();
@@ -20,7 +34,6 @@ class ClientHomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userViewModel = Provider.of<ClientViewModel>(context);
-    userViewModel.loadCurrentClient();
 
     return Scaffold(
       appBar: AppBar(
@@ -33,13 +46,12 @@ class ClientHomeView extends StatelessWidget {
       ),
       drawer: CustomDrawer(
         fullName: userViewModel.currentClient!.fullName,
-        email: userViewModel.currentClient!.fullName,
+        email: userViewModel.currentClient!.email,
         onSignOut: () => _handleSignOut(context, userViewModel),
       ),
-      body: const Column(
+      body: const Stack(
         children: [
           Expanded(
-            flex: 8,
             child: MapScreen(),
           ),
         ],
