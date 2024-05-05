@@ -1,7 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:parquea2/functions/util.dart';
 import 'package:parquea2/models/available_time.dart';
 import 'package:parquea2/models/garage.dart';
 import 'package:parquea2/viewmodels/provider/edit_garage_viewmodel.dart';
@@ -29,6 +31,19 @@ class _EditGarageViewState extends State<EditGarageView> {
   void initState() {
     super.initState();
     _imageUrl = widget.garage.imgUrl;
+  }
+
+  String formatDayOfWeek(String day) {
+    var now = DateTime.now();
+    int daysToAdd = (DateFormat.E('en_US').dateSymbols.FIRSTDAYOFWEEK -
+            now.weekday +
+            DateFormat.E('en_US')
+                .dateSymbols
+                .STANDALONENARROWWEEKDAYS
+                .indexOf(day)) %
+        7;
+    var date = now.add(Duration(days: daysToAdd));
+    return DateFormat('EEEE', 'es_ES').format(date);
   }
 
   @override
@@ -406,8 +421,10 @@ class _EditGarageViewState extends State<EditGarageView> {
     );
   }
 
-  Widget dayAvailabilityWidget(String day, List<AvailableTime> times,
+  Widget dayAvailabilityWidget(String englishDayName, List<AvailableTime> times,
       BuildContext context, EditGarageViewModel viewModel) {
+    String dayInSpanish = translateDay(englishDayName.toLowerCase());
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -416,17 +433,18 @@ class _EditGarageViewState extends State<EditGarageView> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(day,
+              Text(dayInSpanish,
                   style: const TextStyle(
                       fontSize: 16, fontWeight: FontWeight.bold)),
               IconButton(
                 icon: Icon(Icons.add),
-                onPressed: () => showAddTimeDialog(context, day, viewModel),
+                onPressed: () =>
+                    viewModel.showAddTimeDialog(context, englishDayName),
               ),
             ],
           ),
         ),
-        ...times.map((time) {
+        ...times.map((AvailableTime time) {
           return Container(
             margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
             decoration: BoxDecoration(
@@ -440,12 +458,12 @@ class _EditGarageViewState extends State<EditGarageView> {
                 children: [
                   IconButton(
                     icon: const Icon(Icons.edit),
-                    onPressed: () =>
-                        showEditDialog(context, day, times, viewModel),
+                    onPressed: () => viewModel.showEditTimeDialog(
+                        context, englishDayName, time),
                   ),
                   IconButton(
                     icon: const Icon(Icons.delete, color: Colors.red),
-                    onPressed: () => viewModel.removeTime(day, time),
+                    onPressed: () => viewModel.removeTime(englishDayName, time),
                   ),
                 ],
               ),
