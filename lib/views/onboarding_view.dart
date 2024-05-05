@@ -139,8 +139,8 @@ class OnboardingSlide extends StatelessWidget {
                 if (isLast) ...[
                   const SizedBox(height: 20),
                   ElevatedButton(
-                    onPressed: () => Navigator.pushReplacementNamed(
-                        context, '/clientRegister'),
+                    onPressed: () =>
+                        Navigator.pushNamed(context, '/clientRegister'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Theme.of(context).colorScheme.primary,
                       foregroundColor: Colors.white,
@@ -150,25 +150,14 @@ class OnboardingSlide extends StatelessWidget {
                   ),
                   const SizedBox(height: 10),
                   ElevatedButton(
-                    onPressed: () => Navigator.pushReplacementNamed(
-                        context, '/providerRegister'),
+                    onPressed: () =>
+                        Navigator.pushNamed(context, '/providerRegister'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Theme.of(context).colorScheme.secondary,
                       foregroundColor: Colors.white,
                       minimumSize: const Size(double.infinity, 50),
                     ),
                     child: const Text('Registrarse como Ofertante'),
-                  ),
-                  const SizedBox(height: 10),
-                  ElevatedButton(
-                    onPressed: () =>
-                        Navigator.pushReplacementNamed(context, '/login'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Theme.of(context).colorScheme.tertiary,
-                      foregroundColor: Colors.white,
-                      minimumSize: const Size(double.infinity, 50),
-                    ),
-                    child: const Text('Iniciar Sesion'),
                   ),
                 ],
               ],

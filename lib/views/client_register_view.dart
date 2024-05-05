@@ -1,8 +1,11 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:parquea2/viewmodels/client_register_viewmodel.dart';
 import '/views/widgets/decorative_shape_widget.dart';
 import '/views/widgets/animations.dart';
+import 'login_view.dart';
 
 class ClientRegisterView extends StatelessWidget {
   @override
@@ -63,7 +66,7 @@ class ClientRegisterView extends StatelessWidget {
                               "Registro de Cliente",
                               style: Theme.of(context)
                                       .textTheme
-                                      .headline5
+                                      .headlineSmall
                                       ?.copyWith(fontWeight: FontWeight.bold) ??
                                   const TextStyle(
                                       fontWeight: FontWeight.bold,
@@ -141,9 +144,12 @@ class ClientRegisterView extends StatelessWidget {
                                         phoneNumberController.text,
                                       );
                                       if (registered) {
-                                        Navigator.of(context)
-                                            .pushReplacementNamed(
-                                                '/clientLogin');
+                                        Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const LoginView()),
+                                        );
                                       } else {
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(const SnackBar(

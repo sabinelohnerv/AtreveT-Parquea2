@@ -1,36 +1,22 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:flutter/material.dart';
 import 'package:parquea2/views/client_register_view.dart';
 import 'package:parquea2/views/provider_register_view.dart';
 import 'package:provider/provider.dart';
-import 'package:parquea2/viewmodels/client_login_viewmodel.dart';
-import 'package:parquea2/viewmodels/provider_login_viewmodel.dart';
-import 'package:parquea2/views/home_view.dart';
+import '../viewmodels/provider_login_viewmodel.dart';
 import '/views/widgets/animations.dart';
 
-enum UserType { client, provider }
-
 class LoginView extends StatelessWidget {
-  final UserType userType;
-
-  const LoginView({super.key, required this.userType});
+  const LoginView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final clientViewModel =
-        Provider.of<ClientLoginViewModel>(context, listen: false);
-    final providerViewModel =
-        Provider.of<ProviderLoginViewModel>(context, listen: false);
+    final loginViewModel = Provider.of<LoginViewModel>(context, listen: false);
 
     final TextEditingController emailController = TextEditingController();
     final TextEditingController passwordController = TextEditingController();
 
-    dynamic viewModel =
-        userType == UserType.client ? clientViewModel : providerViewModel;
-
     return LoginViewStateful(
-      viewModel: viewModel,
+      loginViewModel: loginViewModel,
       emailController: emailController,
       passwordController: passwordController,
     );
@@ -38,13 +24,13 @@ class LoginView extends StatelessWidget {
 }
 
 class LoginViewStateful extends StatefulWidget {
-  final dynamic viewModel;
+  final LoginViewModel loginViewModel;
   final TextEditingController emailController;
   final TextEditingController passwordController;
 
   const LoginViewStateful({
     super.key,
-    required this.viewModel,
+    required this.loginViewModel,
     required this.emailController,
     required this.passwordController,
   });
@@ -159,20 +145,10 @@ class _LoginViewStatefulState extends State<LoginViewStateful> {
                           icon: const Icon(Icons.login),
                           label: const Text("Iniciar Sesión"),
                           onPressed: () async {
-                            bool success = await widget.viewModel.login(
+                            await widget.loginViewModel.login(
                                 widget.emailController.text,
-                                widget.passwordController.text);
-                            if (success) {
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const HomeView()),
-                              );
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content: Text("Login fallido")));
-                            }
+                                widget.passwordController.text,
+                                context);
                           },
                           style: ElevatedButton.styleFrom(
                             foregroundColor: Colors.white,
@@ -190,7 +166,7 @@ class _LoginViewStatefulState extends State<LoginViewStateful> {
                       FadeInAnimation(
                         delay: 400,
                         child: ElevatedButton.icon(
-                          icon: const Icon(Icons.person_2),
+                          icon: const Icon(Icons.person_add),
                           label: const Text("Registrarse como cliente"),
                           style: ElevatedButton.styleFrom(
                             foregroundColor:
@@ -214,7 +190,7 @@ class _LoginViewStatefulState extends State<LoginViewStateful> {
                       FadeInAnimation(
                         delay: 400,
                         child: ElevatedButton.icon(
-                          icon: const Icon(Icons.point_of_sale_sharp),
+                          icon: const Icon(Icons.storefront),
                           label: const Text("Registrarse como ofertante"),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Theme.of(context)

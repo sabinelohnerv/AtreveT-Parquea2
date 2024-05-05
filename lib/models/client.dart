@@ -8,6 +8,7 @@ class Client {
   double averageRating;
   int completedReservations;
   String? fcmToken;
+  String role = 'client';
 
   Client({
     required this.id,
@@ -39,6 +40,7 @@ class Client {
       'averageRating': averageRating,
       'completedReservations': completedReservations,
       'fcmToken': fcmToken,
+      'role': role,
     };
   }
 

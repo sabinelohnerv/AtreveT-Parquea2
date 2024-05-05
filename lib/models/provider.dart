@@ -8,6 +8,7 @@ class Provider {
   double averageRating;
   int completedReservations;
   String? fcmToken;
+  String role = 'provider';
 
   Provider({
     required this.id,
@@ -39,6 +40,7 @@ class Provider {
       'averageRating': averageRating,
       'completedReservations': completedReservations,
       'fcmToken': fcmToken,
+      'role': role
     };
   }
 

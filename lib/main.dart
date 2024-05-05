@@ -14,6 +14,7 @@ import 'package:parquea2/viewmodels/garage_spaces_list_viewmodel.dart';
 import 'package:parquea2/viewmodels/make_offer_viewmodel.dart';
 import 'package:parquea2/viewmodels/provider_add_garage_viewmodel.dart';
 import 'package:parquea2/viewmodels/provider_garage_list_viewmodel.dart';
+import 'package:parquea2/viewmodels/provider_login_viewmodel.dart';
 import 'package:parquea2/viewmodels/provider_offer_list_viewmodel.dart';
 import 'package:parquea2/viewmodels/user_vehicles_list_viewmodel.dart';
 import 'package:parquea2/views/client_offer_list_view.dart';
@@ -22,8 +23,6 @@ import 'package:provider/provider.dart';
 import 'package:parquea2/viewmodels/onboarding.viewmodel.dart';
 import 'package:parquea2/viewmodels/client_register_viewmodel.dart';
 import 'package:parquea2/viewmodels/provider_register_viewmodel.dart';
-import 'package:parquea2/viewmodels/client_login_viewmodel.dart';
-import 'package:parquea2/viewmodels/provider_login_viewmodel.dart';
 import 'package:parquea2/views/home_view.dart';
 import 'package:parquea2/views/onboarding_view.dart';
 import 'package:parquea2/views/client_register_view.dart';
@@ -112,10 +111,8 @@ class MyApp extends StatelessWidget {
             create: (context) => ClientRegisterViewModel()),
         ChangeNotifierProvider<ProviderRegisterViewModel>(
             create: (context) => ProviderRegisterViewModel()),
-        ChangeNotifierProvider<ClientLoginViewModel>(
-            create: (context) => ClientLoginViewModel()),
-        ChangeNotifierProvider<ProviderLoginViewModel>(
-            create: (context) => ProviderLoginViewModel()),
+        ChangeNotifierProvider<LoginViewModel>(
+            create: (context) => LoginViewModel()),
         ChangeNotifierProvider(create: (_) => AddGarageViewModel()),
         ChangeNotifierProvider(create: (_) => AddVehicleViewModel()),
         ChangeNotifierProvider(create: (context) => GarageListViewModel()),
@@ -154,7 +151,7 @@ class MyApp extends StatelessWidget {
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.done) {
                     return snapshot.data == true
-                        ? const HomeView()
+                        ? const LoginView()
                         : OnboardingPage(
                             viewModel:
                                 Provider.of<OnboardingViewModel>(context));
@@ -165,7 +162,6 @@ class MyApp extends StatelessWidget {
           '/mapScreen': (context) => MapScreen(),
           '/clientRegister': (context) => ClientRegisterView(),
           '/providerRegister': (context) => ProviderRegisterView(),
-          '/login': (context) => const LoginView(userType: UserType.client),
           '/home': (context) => const HomeView(),
           '/clientOfferList': (context) => const ClientOfferListView(),
         },
