@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:parquea2/models/garage.dart';
 import 'package:parquea2/models/garage_space.dart';
-import 'package:parquea2/views/make_offer_view.dart';
+import 'package:parquea2/views/client/make_offer_view.dart';
 
 class ClientGarageSpaceDetails extends StatelessWidget {
   final GarageSpace garageSpace;

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:parquea2/views/client_register_view.dart';
-import 'package:parquea2/views/provider_register_view.dart';
+import 'package:parquea2/views/client/client_register_view.dart';
+import 'package:parquea2/views/provider/provider_register_view.dart';
 import 'package:provider/provider.dart';
-import '../viewmodels/provider_login_viewmodel.dart';
+import '../viewmodels/provider/provider_login_viewmodel.dart';
 import '/views/widgets/animations.dart';
 
 class LoginView extends StatelessWidget {

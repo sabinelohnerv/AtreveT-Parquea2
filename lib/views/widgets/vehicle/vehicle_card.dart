@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:parquea2/models/vehicle.dart';
-import 'package:parquea2/views/user_vehicle_details_view.dart';
+import 'package:parquea2/views/client/client_vehicle_details_view.dart';
 
 class VehicleCard extends StatelessWidget {
   final Vehicle vehicle;

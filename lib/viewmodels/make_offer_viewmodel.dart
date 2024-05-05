@@ -12,7 +12,7 @@ import 'package:parquea2/services/client_service.dart';
 import 'package:parquea2/services/offer_service.dart';
 import 'package:intl/intl.dart';
 import 'package:parquea2/services/vehicle_service.dart';
-import 'package:parquea2/views/client_offer_details_view.dart';
+import 'package:parquea2/views/client/client_offer_details_view.dart';
 
 class MakeOfferViewModel extends ChangeNotifier {
   final OfferService _offerService = OfferService();

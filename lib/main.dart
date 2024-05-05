@@ -5,29 +5,30 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:parquea2/services/garage_service.dart';
 import 'package:parquea2/services/vehicle_service.dart';
-import 'package:parquea2/viewmodels/add_vehicle_viewmodel.dart';
-import 'package:parquea2/viewmodels/add_garage_space_viewmodel.dart';
-import 'package:parquea2/viewmodels/client_garage_list_viewmodel.dart';
-import 'package:parquea2/viewmodels/client_garage_spaces_list_viewmodel.dart';
-import 'package:parquea2/viewmodels/client_offer_list_viewmodel.dart';
-import 'package:parquea2/viewmodels/garage_spaces_list_viewmodel.dart';
+import 'package:parquea2/viewmodels/client/add_vehicle_viewmodel.dart';
+import 'package:parquea2/viewmodels/client/client_viewmodel.dart';
+import 'package:parquea2/viewmodels/provider/add_garage_space_viewmodel.dart';
+import 'package:parquea2/viewmodels/client/client_garage_list_viewmodel.dart';
+import 'package:parquea2/viewmodels/client/client_garage_spaces_list_viewmodel.dart';
+import 'package:parquea2/viewmodels/client/client_offer_list_viewmodel.dart';
+import 'package:parquea2/viewmodels/provider/garage_spaces_list_viewmodel.dart';
 import 'package:parquea2/viewmodels/make_offer_viewmodel.dart';
-import 'package:parquea2/viewmodels/provider_add_garage_viewmodel.dart';
-import 'package:parquea2/viewmodels/provider_garage_list_viewmodel.dart';
-import 'package:parquea2/viewmodels/provider_login_viewmodel.dart';
-import 'package:parquea2/viewmodels/provider_offer_list_viewmodel.dart';
-import 'package:parquea2/viewmodels/user_vehicles_list_viewmodel.dart';
-import 'package:parquea2/views/client_offer_list_view.dart';
+import 'package:parquea2/viewmodels/provider/provider_add_garage_viewmodel.dart';
+import 'package:parquea2/viewmodels/provider/provider_garage_list_viewmodel.dart';
+import 'package:parquea2/viewmodels/provider/provider_login_viewmodel.dart';
+import 'package:parquea2/viewmodels/provider/provider_offer_list_viewmodel.dart';
+import 'package:parquea2/viewmodels/client/client_vehicles_list_viewmodel.dart';
+import 'package:parquea2/views/client/client_offer_list_view.dart';
 import 'package:parquea2/views/map_view.dart';
-import 'package:parquea2/views/provider_home_view.dart';
+import 'package:parquea2/views/provider/provider_home_view.dart';
 import 'package:provider/provider.dart';
 import 'package:parquea2/viewmodels/onboarding.viewmodel.dart';
-import 'package:parquea2/viewmodels/client_register_viewmodel.dart';
-import 'package:parquea2/viewmodels/provider_register_viewmodel.dart';
-import 'package:parquea2/views/client_home_view.dart.dart';
+import 'package:parquea2/viewmodels/client/client_register_viewmodel.dart';
+import 'package:parquea2/viewmodels/provider/provider_register_viewmodel.dart';
+import 'package:parquea2/views/client/client_home_view.dart.dart';
 import 'package:parquea2/views/onboarding_view.dart';
-import 'package:parquea2/views/client_register_view.dart';
-import 'package:parquea2/views/provider_register_view.dart';
+import 'package:parquea2/views/client/client_register_view.dart';
+import 'package:parquea2/views/provider/provider_register_view.dart';
 import 'package:parquea2/views/login_view.dart';
 import 'firebase_options.dart';
 import 'services/onboarding_service.dart';
@@ -119,6 +120,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => GarageListViewModel()),
         ChangeNotifierProvider(
             create: (context) => ClientGarageListViewModel()),
+        ChangeNotifierProvider(
+            create: (context) => ClientViewModel()),
         ChangeNotifierProvider(
             create: (context) => VehicleListViewModel(VehicleService())),
         ChangeNotifierProvider(
