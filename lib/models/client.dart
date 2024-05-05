@@ -7,6 +7,7 @@ class Client {
   String email;
   double averageRating;
   int completedReservations;
+  String? fcmToken;
 
   Client({
     required this.id,
@@ -15,6 +16,7 @@ class Client {
     required this.email,
     this.averageRating = 0.0,
     this.completedReservations = 0,
+    this.fcmToken,
   });
 
   factory Client.fromJson(Map<String, dynamic> json) {
@@ -24,6 +26,7 @@ class Client {
         email: json['email'] as String,
         phoneNumber: json['phoneNumber'] as String,
         averageRating: (json['averageRating'] as num).toDouble(),
+        fcmToken: json['fcmToken'] as String,
         completedReservations: (json['completedReservations'] as num).toInt());
   }
 
@@ -34,7 +37,8 @@ class Client {
       'email': email,
       'phoneNumber': phoneNumber,
       'averageRating': averageRating,
-      'completedReservations': completedReservations
+      'completedReservations': completedReservations,
+      'fcmToken': fcmToken,
     };
   }
 
@@ -45,6 +49,7 @@ class Client {
         id: snapshot.id,
         fullName: json['fullName'],
         email: json['email'],
+        fcmToken: json['fcmToken'],
         phoneNumber: json['phoneNumber'] as String,
         averageRating: (json['averageRating'] as num).toDouble(),
         completedReservations: (json['completedReservations'] as num).toInt());

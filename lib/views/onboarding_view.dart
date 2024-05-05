@@ -139,46 +139,36 @@ class OnboardingSlide extends StatelessWidget {
                 if (isLast) ...[
                   const SizedBox(height: 20),
                   ElevatedButton(
-                    onPressed: () =>
-                        Navigator.pushNamed(context, '/clientRegister'),
-                    child: const Text('Registrarse como Cliente'),
+                    onPressed: () => Navigator.pushReplacementNamed(
+                        context, '/clientRegister'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Theme.of(context).colorScheme.primary,
                       foregroundColor: Colors.white,
                       minimumSize: const Size(double.infinity, 50),
                     ),
+                    child: const Text('Registrarse como Cliente'),
                   ),
                   const SizedBox(height: 10),
                   ElevatedButton(
-                    onPressed: () =>
-                        Navigator.pushNamed(context, '/providerRegister'),
-                    child: const Text('Registrarse como Ofertante'),
+                    onPressed: () => Navigator.pushReplacementNamed(
+                        context, '/providerRegister'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Theme.of(context).colorScheme.secondary,
                       foregroundColor: Colors.white,
                       minimumSize: const Size(double.infinity, 50),
                     ),
+                    child: const Text('Registrarse como Ofertante'),
                   ),
                   const SizedBox(height: 10),
                   ElevatedButton(
                     onPressed: () =>
-                        Navigator.pushNamed(context, '/login'),
-                    child: const Text('Iniciar Sesion'),
+                        Navigator.pushReplacementNamed(context, '/login'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Theme.of(context).colorScheme.tertiary,
                       foregroundColor: Colors.white,
                       minimumSize: const Size(double.infinity, 50),
                     ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () =>
-                        Navigator.pushNamed(context, '/providerLogin'),
                     child: const Text('Iniciar Sesion'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Theme.of(context).colorScheme.tertiary,
-                      foregroundColor: Colors.white,
-                      minimumSize: const Size(double.infinity, 50),
-                    ),
                   ),
                 ],
               ],

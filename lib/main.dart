@@ -1,5 +1,8 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:parquea2/services/garage_service.dart';
 import 'package:parquea2/services/vehicle_service.dart';
 import 'package:parquea2/viewmodels/add_vehicle_viewmodel.dart';
@@ -25,18 +28,75 @@ import 'package:parquea2/views/home_view.dart';
 import 'package:parquea2/views/onboarding_view.dart';
 import 'package:parquea2/views/client_register_view.dart';
 import 'package:parquea2/views/provider_register_view.dart';
-import 'package:parquea2/views/client_login_view.dart';
-import 'package:parquea2/views/provider_login_view.dart';
 import 'package:parquea2/views/login_view.dart';
 import 'firebase_options.dart';
 import 'services/onboarding_service.dart';
 
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await initializeDateFormatting('es_ES', null);
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await _setupFirebaseMessaging();
+  _setupNotificationListeners();
   runApp(const MyApp());
+}
+
+Future<void> _setupFirebaseMessaging() async {
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+  NotificationSettings settings = await messaging.requestPermission(
+    alert: true,
+    badge: true,
+    sound: true,
+    provisional: false,
+  );
+
+  if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+    print('User granted permission');
+  } else if (settings.authorizationStatus == AuthorizationStatus.provisional) {
+    print('User granted provisional permission');
+  } else {
+    print('User declined or has not accepted permission');
+  }
+
+  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+    alert: true,
+    badge: true,
+    sound: true,
+  );
+}
+
+void _setupNotificationListeners() {
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    RemoteNotification? notification = message.notification;
+    AndroidNotification? android = message.notification?.android;
+
+    if (notification != null && android != null) {
+      flutterLocalNotificationsPlugin.show(
+        notification.hashCode,
+        notification.title,
+        notification.body,
+        const NotificationDetails(
+          android: AndroidNotificationDetails(
+            'default_channel',
+            'General Notifications',
+            channelDescription: 'All important notifications',
+            importance: Importance.high,
+            icon: '@mipmap/ic_launcher',
+          ),
+        ),
+      );
+    }
+  });
+
+  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+    print('A new onMessageOpenedApp event was published!');
+  });
 }
 
 class MyApp extends StatelessWidget {
@@ -105,9 +165,7 @@ class MyApp extends StatelessWidget {
           '/mapScreen': (context) => MapScreen(),
           '/clientRegister': (context) => ClientRegisterView(),
           '/providerRegister': (context) => ProviderRegisterView(),
-          '/clientLogin': (context) => ClientLoginView(),
-          '/providerLogin': (context) => ProviderLoginView(),
-          '/login': (context) => LoginView(userType: UserType.client),
+          '/login': (context) => const LoginView(userType: UserType.client),
           '/home': (context) => const HomeView(),
           '/clientOfferList': (context) => const ClientOfferListView(),
         },
