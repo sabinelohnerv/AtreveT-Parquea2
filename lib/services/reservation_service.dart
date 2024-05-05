@@ -54,7 +54,7 @@ class ReservationService {
     return _firestore
         .collection('reservations')
         .where('client.id', isEqualTo: clientId)
-        .where('state', isNotEqualTo: 'finalized')
+        .where('state', whereIn: ["active", "reserved", "needs-rating"])
         .snapshots()
         .map((snapshot) =>
             snapshot.docs.map((doc) => Reservation.fromSnapshot(doc)).toList());
@@ -66,7 +66,7 @@ class ReservationService {
         .collection('reservations')
         .where('provider.id', isEqualTo: providerId)
         .where('garageSpace.garageId', isEqualTo: garageId)
-        .where('state', isNotEqualTo: 'finalized')
+        .where('state', whereIn: ["active", "reserved"])
         .snapshots()
         .map((snapshot) =>
             snapshot.docs.map((doc) => Reservation.fromSnapshot(doc)).toList());
@@ -76,7 +76,7 @@ class ReservationService {
     return _firestore
         .collection('reservations')
         .where('provider.id', isEqualTo: providerId)
-        .where('state', isNotEqualTo: 'finalized')
+        .where('state', whereIn: ["active", "reserved"])
         .snapshots()
         .map((snapshot) =>
             snapshot.docs.map((doc) => Reservation.fromSnapshot(doc)).toList());

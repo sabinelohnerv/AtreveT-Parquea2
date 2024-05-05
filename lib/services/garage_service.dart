@@ -206,4 +206,57 @@ class GarageService {
 
     await garageSpaceRef.update({'state': newState});
   }
+
+  Future<void> updateGarageReservationsCompleted(String garageId) async {
+    DocumentReference garageRef =
+        _firestore.collection('garages').doc(garageId);
+
+    await _firestore.runTransaction((transaction) async {
+      DocumentSnapshot snapshot = await transaction.get(garageRef);
+
+      if (!snapshot.exists) {
+        throw Exception("Garage does not exist!");
+      }
+
+      int currentReservationsCompleted =
+          snapshot['reservationsCompleted'] as int? ?? 0;
+
+      int updatedReservationsCompleted = currentReservationsCompleted + 1;
+
+      transaction.update(
+          garageRef, {'reservationsCompleted': updatedReservationsCompleted});
+    }).catchError((error) {
+      print('Error updating reservations completed: $error');
+      throw Exception('Failed to update reservations completed');
+    });
+  }
+
+  Future<void> updateGarageRating(String garageId, double newRating) async {
+    DocumentReference garageRef =
+        _firestore.collection('garages').doc(garageId);
+
+    try {
+      await _firestore.runTransaction((transaction) async {
+        DocumentSnapshot snapshot = await transaction.get(garageRef);
+
+        if (!snapshot.exists) {
+          throw Exception("Garage does not exist!");
+        }
+
+        double currentRating = snapshot['rating'] as double? ?? 0.0;
+        int ratingsCount = snapshot['ratingsCount'] as int? ?? 0;
+
+        double totalRating = currentRating * ratingsCount;
+        totalRating += newRating;
+        ratingsCount += 1;
+        double newAverageRating = totalRating / ratingsCount;
+
+        transaction.update(garageRef,
+            {'rating': newAverageRating, 'ratingsCount': ratingsCount});
+      });
+    } catch (e) {
+      print('Error updating garage rating: $e');
+      throw Exception('Failed to update garage rating');
+    }
+  }
 }

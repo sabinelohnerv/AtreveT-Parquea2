@@ -37,6 +37,7 @@ class InformationItem extends StatelessWidget {
           style: const TextStyle(
             color: Colors.black54,
           ),
+          overflow: TextOverflow.ellipsis,
         ),
       ],
     );

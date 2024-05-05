@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:parquea2/models/reservation.dart';
 
-class ReservationCard extends StatelessWidget {
-  const ReservationCard({
+class ProviderReservationCard extends StatelessWidget {
+  const ProviderReservationCard({
     super.key,
     required this.reservation,
     required this.reservationNumber,
+    required this.spaceNumber,
     required this.onTap,
   });
 
   final Reservation reservation;
   final int reservationNumber;
+  final int spaceNumber;
   final VoidCallback onTap;
 
   @override
@@ -86,7 +88,7 @@ class ReservationCard extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      reservation.garageSpace.garageName,
+                      'Espacio ${spaceNumber.toString()}',
                       style: const TextStyle(
                           fontSize: 18, fontWeight: FontWeight.bold),
                       overflow: TextOverflow.ellipsis,

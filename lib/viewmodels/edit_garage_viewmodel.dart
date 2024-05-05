@@ -85,6 +85,7 @@ class EditGarageViewModel extends ChangeNotifier {
       availableTime: _originalGarage.availableTime,
       numberOfSpaces: _originalGarage.numberOfSpaces,
       reservationsCompleted: _originalGarage.reservationsCompleted,
+      ratingsCompleted: _originalGarage.ratingsCompleted,
       rating: _originalGarage.rating,
     );
 
