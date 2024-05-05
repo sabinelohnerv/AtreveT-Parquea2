@@ -191,7 +191,7 @@ class GarageSpaceDetails extends StatelessWidget {
                         iconData: viewModel.isCloning
                             ? Icons.hourglass_top
                             : Icons.copy,
-                        label: 'COPIAR ESPACIO',
+                        label: 'DUPLICAR',
                         onPressed: viewModel.isCloning
                             ? () {}
                             : () {

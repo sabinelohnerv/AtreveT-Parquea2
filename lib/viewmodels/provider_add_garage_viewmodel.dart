@@ -473,7 +473,7 @@ class AddGarageViewModel extends ChangeNotifier {
     String fullName = "Unknown";
     try {
       Provider? provider = await _providerService.fetchProviderById(userId);
-      if (provider != null && provider.fullName != null) {
+      if (provider != null) {
         fullName = provider.fullName;
       } else {
         print("No provider found or missing fullName for user ID: $userId");

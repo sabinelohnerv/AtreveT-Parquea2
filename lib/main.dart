@@ -160,7 +160,7 @@ class MyApp extends StatelessWidget {
                 },
               ),
           '/mapScreen': (context) => MapScreen(),
-          '/clientRegister': (context) => ClientRegisterView(),
+          '/clientRegister': (context) => const ClientRegisterView(),
           '/providerRegister': (context) => ProviderRegisterView(),
           '/home': (context) => const HomeView(),
           '/clientOfferList': (context) => const ClientOfferListView(),
