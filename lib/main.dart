@@ -19,11 +19,12 @@ import 'package:parquea2/viewmodels/provider_offer_list_viewmodel.dart';
 import 'package:parquea2/viewmodels/user_vehicles_list_viewmodel.dart';
 import 'package:parquea2/views/client_offer_list_view.dart';
 import 'package:parquea2/views/map_view.dart';
+import 'package:parquea2/views/provider_home_view.dart';
 import 'package:provider/provider.dart';
 import 'package:parquea2/viewmodels/onboarding.viewmodel.dart';
 import 'package:parquea2/viewmodels/client_register_viewmodel.dart';
 import 'package:parquea2/viewmodels/provider_register_viewmodel.dart';
-import 'package:parquea2/views/home_view.dart';
+import 'package:parquea2/views/client_home_view.dart.dart';
 import 'package:parquea2/views/onboarding_view.dart';
 import 'package:parquea2/views/client_register_view.dart';
 import 'package:parquea2/views/provider_register_view.dart';
@@ -159,11 +160,13 @@ class MyApp extends StatelessWidget {
                   return const Center(child: CircularProgressIndicator());
                 },
               ),
-          '/mapScreen': (context) => MapScreen(),
+          '/mapScreen': (context) => const MapScreen(),
           '/clientRegister': (context) => const ClientRegisterView(),
           '/providerRegister': (context) => ProviderRegisterView(),
-          '/home': (context) => const HomeView(),
+          '/clientHome': (context) => const ClientHomeView(),
+          '/providerHome': (context) => const ProviderHomeView(),
           '/clientOfferList': (context) => const ClientOfferListView(),
+          '/login': (context) => const LoginView(),
         },
       ),
     );

@@ -181,7 +181,8 @@ class _LoginViewStatefulState extends State<LoginViewStateful> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => ClientRegisterView()),
+                                  builder: (context) =>
+                                      const ClientRegisterView()),
                             );
                           },
                         ),
