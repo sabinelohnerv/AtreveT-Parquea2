@@ -1,63 +1,104 @@
 import 'package:flutter/material.dart';
 import 'package:parquea2/models/garage.dart';
 
-class GarageDetailPanel extends StatelessWidget {
+class GarageDetailPanel extends StatefulWidget {
   final Garage garage;
   final DraggableScrollableController controller;
 
   const GarageDetailPanel({Key? key, required this.garage, required this.controller}) : super(key: key);
 
   @override
+  _GarageDetailPanelState createState() => _GarageDetailPanelState();
+}
+
+class _GarageDetailPanelState extends State<GarageDetailPanel> {
+  bool isDraggingDown = false;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.controller.addListener(_handleDrag);
+  }
+
+  @override
+  void dispose() {
+    widget.controller.removeListener(_handleDrag);
+    super.dispose();
+  }
+
+  void _handleDrag() {
+    if (widget.controller.size < 0.3) {
+      if (!isDraggingDown) {
+        isDraggingDown = true;
+        widget.controller.animateTo(
+          0.0,
+          duration: Duration(milliseconds: 100),
+          curve: Curves.fastOutSlowIn,
+        );
+      }
+    } else {
+      isDraggingDown = false;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    Color primaryColor = Theme.of(context).colorScheme.primary;
+
     return DraggableScrollableSheet(
-      controller: controller,
+      controller: widget.controller,
       initialChildSize: 0.5,
-      minChildSize: 0.3,
+      minChildSize: 0.0,
       maxChildSize: 0.7,
       builder: (_, scrollController) {
         return Container(
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-            boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 10)],
+            boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 5, spreadRadius: -5)],
           ),
           child: ListView(
             controller: scrollController,
             padding: EdgeInsets.all(16),
             children: [
-              Text(garage.name, style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+              Center(child: Text(widget.garage.name, style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: primaryColor))),
               SizedBox(height: 10),
-              if (garage.imgUrl != null && garage.imgUrl!.isNotEmpty)
-                Image.network(garage.imgUrl!, height: 200, fit: BoxFit.cover),
-              Divider(),
-              Text('Espacios disponibles: ${garage.numberOfSpaces}', style: TextStyle(fontSize: 16)),
-              Text('Calificación: ${garage.rating.toStringAsFixed(1)} / 5', style: TextStyle(fontSize: 16)),
-              SizedBox(height: 10),
-              Text('Detalles:', style: TextStyle(fontWeight: FontWeight.bold)),
-              if (garage.details != null && garage.details!.isNotEmpty)
-                Text(garage.details!.join(', ')),
+              if (widget.garage.imgUrl != null && widget.garage.imgUrl!.isNotEmpty)
+                Image.network(widget.garage.imgUrl!, height: 200, fit: BoxFit.cover),
+              Divider(height: 20),
+              ListTile(
+                leading: Icon(Icons.local_parking, color: primaryColor),
+                title: Text('Espacios disponibles: ${widget.garage.numberOfSpaces}'),
+              ),
+              ListTile(
+                leading: Icon(Icons.star, color: primaryColor),
+                title: Text('Calificación: ${widget.garage.rating.toStringAsFixed(1)} / 5'),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 10),
+                child: Text('Detalles:', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: primaryColor)),
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 32),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: widget.garage.details?.map((detail) => Text("• $detail", style: TextStyle(fontSize: 14)))?.toList() ?? [],
+                ),
+              ),
               SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  // Implementar lógica para reserva o navegación
+                  // TODO: ir a pantalla de reservar espacio
                 },
-                child: Text('Reservar Espacio'),
+                child: Text('Ofertar'),
                 style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white, backgroundColor: Theme.of(context).colorScheme.primary,
+                  foregroundColor: Colors.white,
+                  backgroundColor: primaryColor,
                   padding: EdgeInsets.symmetric(vertical: 12),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                 ),
               ),
               SizedBox(height: 10),
-              ElevatedButton(
-                onPressed: () {
-                  // Implementar lógica para obtener direcciones
-                },
-                child: Text('Obtener Direcciones'),
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white, backgroundColor: Theme.of(context).colorScheme.primary,
-                  padding: EdgeInsets.symmetric(vertical: 12),
-                ),
-              ),
             ],
           ),
         );
