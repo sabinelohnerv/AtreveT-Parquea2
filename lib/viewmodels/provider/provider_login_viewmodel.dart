@@ -5,11 +5,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:parquea2/services/onboarding_service.dart';
 
 class LoginViewModel extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+  final OnboardingService _onboardingService = OnboardingService();
 
   Future<void> login(
       String email, String password, BuildContext context) async {
@@ -43,9 +45,12 @@ class LoginViewModel extends ChangeNotifier {
       switch (role) {
         case 'client':
           Navigator.pushReplacementNamed(context, '/clientHome');
+          _onboardingService.completeOnboarding();
           break;
         case 'provider':
           Navigator.pushReplacementNamed(context, '/providerHome');
+          _onboardingService.completeOnboarding();
+
           break;
         default:
           throw Exception('Unknown user role');

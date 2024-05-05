@@ -26,10 +26,10 @@ class ClientViewModel extends ChangeNotifier {
       Client? client = await _clientService.fetchClientById(userId);
       notifyListeners();
       if (client != null) {
-        _currentClient!.id = client.id;
-        _currentClient!.fullName = client.fullName;
-        _currentClient!.phoneNumber = client.phoneNumber;
-        _currentClient!.email = client.email;
+        _currentClient?.id = client.id;
+        _currentClient?.fullName = client.fullName;
+        _currentClient?.phoneNumber = client.phoneNumber;
+        _currentClient?.email = client.email;
         notifyListeners();
       }
     }
