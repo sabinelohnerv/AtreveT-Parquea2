@@ -53,6 +53,7 @@ class _AddGarageViewState extends State<AddGarageView> {
               children: [
                 CustomTextFormField(
                   labelText: 'Nombre del Garaje',
+                  enabled: true,
                   controller: garageViewModel.nameController,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -122,6 +123,7 @@ class _AddGarageViewState extends State<AddGarageView> {
                 ),
                 CustomTextFormField(
                   labelText: 'Dirección Escrita',
+                  enabled: true,
                   controller: garageViewModel.locationController,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -133,6 +135,7 @@ class _AddGarageViewState extends State<AddGarageView> {
                 //TODO: Implement Location Coordenates From Google Maps API
                 CustomTextFormField(
                   labelText: 'Ubicación',
+                  enabled: false,
                   controller: garageViewModel.coordinatesController,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -148,6 +151,7 @@ class _AddGarageViewState extends State<AddGarageView> {
                 ),
                 CustomTextFormField(
                   labelText: 'Indicaciones Adicionales',
+                  enabled: true,
                   controller: garageViewModel.referenceController,
                   validator: (value) {
                     return null;

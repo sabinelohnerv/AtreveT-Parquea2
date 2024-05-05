@@ -26,7 +26,7 @@ class CustomTextFormField extends StatefulWidget {
     this.maxLines = 1,
     this.onTap,
     this.inputFormatters,
-    this.prefixIcon,
+    this.prefixIcon, required bool enabled,
   });
 
   @override

@@ -4,6 +4,7 @@ import 'package:parquea2/models/garage.dart';
 import 'package:parquea2/models/reservation.dart';
 import 'package:parquea2/services/garage_service.dart';
 import 'package:parquea2/services/reservation_service.dart';
+import 'package:parquea2/views/provider_reservation_list.dart';
 
 class ReservationGarageListViewModel extends ChangeNotifier {
   final GarageService _garageService = GarageService();
@@ -88,5 +89,14 @@ class ReservationGarageListViewModel extends ChangeNotifier {
     }
 
     notifyListeners();
+  }
+
+  void navigateToReservationsPerGarage(BuildContext context, String garageId) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ProviderReservationListView(garageId: garageId),
+      ),
+    );
   }
 }

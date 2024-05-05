@@ -1,9 +1,11 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:parquea2/models/available_time.dart';
 import 'package:parquea2/models/garage.dart';
 import 'package:parquea2/viewmodels/edit_garage_viewmodel.dart';
+import 'package:parquea2/views/select_location_view.dart';
 import 'package:parquea2/views/widgets/textfields/custom_selectionfield.dart';
 import 'package:parquea2/views/widgets/textfields/custom_textfield.dart';
 import 'package:provider/provider.dart';
@@ -61,6 +63,7 @@ class _EditGarageViewState extends State<EditGarageView> {
                   children: [
                     CustomTextFormField(
                       labelText: 'Nombre del Garaje',
+                      enabled: true,
                       controller: garageViewModel.nameController,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -127,11 +130,9 @@ class _EditGarageViewState extends State<EditGarageView> {
                             String newImageUrl = await garageViewModel
                                 .uploadImageToFirebase(File(_image!.path));
                             setState(() {
-                              _imageUrl =
-                                  newImageUrl;
+                              _imageUrl = newImageUrl;
                             });
-                            garageViewModel.updateImageUrl(
-                                newImageUrl);
+                            garageViewModel.updateImageUrl(newImageUrl);
                           }
                         },
                         icon: const Icon(Icons.image),
@@ -149,6 +150,7 @@ class _EditGarageViewState extends State<EditGarageView> {
                     ),
                     CustomTextFormField(
                       labelText: 'Dirección Escrita',
+                      enabled: true,
                       controller: garageViewModel.locationController,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -157,18 +159,46 @@ class _EditGarageViewState extends State<EditGarageView> {
                         return null;
                       },
                     ),
-                    CustomTextFormField(
-                      labelText: 'Ubicación',
-                      controller: garageViewModel.coordinatesController,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Por favor ingrese la ubicación del garaje.';
+                    InkWell(
+                      onTap: () async {
+                        LatLng? newLocation = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SelectLocationView(),
+                          ),
+                        );
+                        if (newLocation != null) {
+                          garageViewModel.coordinatesController.text =
+                              '${newLocation.latitude}, ${newLocation.longitude}';
                         }
-                        return null;
                       },
+                      child: CustomTextFormField(
+                        labelText: 'Ubicación',
+                        onTap: () async {
+                          LatLng? newLocation = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SelectLocationView(),
+                            ),
+                          );
+                          if (newLocation != null) {
+                            garageViewModel.coordinatesController.text =
+                                '${newLocation.latitude}, ${newLocation.longitude}';
+                          }
+                        },
+                        controller: garageViewModel.coordinatesController,
+                        enabled: false,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Por favor ingrese la ubicación del garaje.';
+                          }
+                          return null;
+                        },
+                      ),
                     ),
                     CustomTextFormField(
                       labelText: 'Indicaciones Adicionales',
+                      enabled: true,
                       controller: garageViewModel.referenceController,
                       validator: (value) {
                         return null;
@@ -281,8 +311,7 @@ class _EditGarageViewState extends State<EditGarageView> {
               actions: <Widget>[
                 TextButton(
                   onPressed: () {
-                    viewModel.updateDayAvailability(
-                        day, localTimes);
+                    viewModel.updateDayAvailability(day, localTimes);
                     Navigator.of(innerContext).pop();
                   },
                   child: Text('Guardar Cambios'),

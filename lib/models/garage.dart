@@ -13,6 +13,7 @@ class Garage {
   List<AvailableTimeInDay> availableTime;
   int numberOfSpaces;
   int reservationsCompleted;
+  int ratingsCompleted;
   double rating;
 
   Garage({
@@ -26,6 +27,7 @@ class Garage {
     required this.availableTime,
     required this.numberOfSpaces,
     required this.reservationsCompleted,
+    required this.ratingsCompleted,
     required this.rating,
   });
 
@@ -41,6 +43,7 @@ class Garage {
       'availableTimeInWeek': availableTime.map((x) => x.toJson()).toList(),
       'numberOfSpaces': numberOfSpaces,
       'reservationsCompleted': reservationsCompleted,
+      'ratingsCompleted': reservationsCompleted,
       'rating': rating,
     };
   }
@@ -65,6 +68,7 @@ class Garage {
           : [],
       numberOfSpaces: data['numberOfSpaces'] as int,
       reservationsCompleted: data['reservationsCompleted'] as int,
+      ratingsCompleted: data['ratingsCompleted'] as int ?? 0,
       rating: (data['rating'] as num).toDouble(),
     );
   }

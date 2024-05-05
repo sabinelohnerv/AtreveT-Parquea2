@@ -26,31 +26,33 @@ class _MapScreenState extends State<MapScreen> {
       setState(() {
         markers = garages.map((garage) {
           List<String> parts = garage.location.coordinates.split(',');
+          MarkerId markerId = MarkerId(garage.id);
           if (parts.length == 2) {
-            try {
-              double latitude = double.parse(parts[0].trim());
-              double longitude = double.parse(parts[1].trim());
-              return Marker(
-                markerId: MarkerId(garage.id),
-                position: LatLng(latitude, longitude),
-                onTap: () {
-                  setState(() {
-                    selectedGarage = garage;
-                    draggableController.animateTo(0.3, duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
-                  });
-                },
-                icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
-              );
-            } catch (e) {
-              print('Error parsing coordinates for garage ${garage.name}: ${garage.location.coordinates}');
-              return null;
-            }
-          } else {
-            print('Invalid coordinates format for garage ${garage.name}: ${garage.location.coordinates}');
-            return null;
+            double latitude = double.parse(parts[0].trim());
+            double longitude = double.parse(parts[1].trim());
+            return Marker(
+              markerId: markerId,
+              position: LatLng(latitude, longitude),
+              onTap: () {
+                _onMarkerTapped(garage);
+              },
+              icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+            );
           }
+          return null;
         }).where((marker) => marker != null).cast<Marker>().toSet();
       });
+    });
+  }
+
+  void _onMarkerTapped(Garage garage) {
+    setState(() {
+      selectedGarage = garage;
+      draggableController.animateTo(
+        0.5,
+        duration: Duration(milliseconds: 500),
+        curve: Curves.easeInOut,
+      );
     });
   }
 
@@ -72,7 +74,11 @@ class _MapScreenState extends State<MapScreen> {
             markers: markers,
             onTap: (_) {
               setState(() {
-                draggableController.animateTo(0.0, duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
+                draggableController.animateTo(
+                  0.0,
+                  duration: Duration(milliseconds: 500),
+                  curve: Curves.easeInOut,
+                );
               });
             },
             myLocationButtonEnabled: false,

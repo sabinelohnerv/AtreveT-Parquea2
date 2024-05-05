@@ -513,6 +513,7 @@ class AddGarageViewModel extends ChangeNotifier {
       availableTime: _availableTime,
       numberOfSpaces: 0,
       reservationsCompleted: 0,
+      ratingsCompleted: 0,
       rating: 0,
     );
 

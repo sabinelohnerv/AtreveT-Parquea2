@@ -46,7 +46,7 @@ class OfferGarageListView extends StatelessWidget {
                 return ReservationGarageCard(
                   garage: garage,
                   reservationCount: reservationCount,
-                  onTap: () {},
+                  onTap: () => viewModel.navigateToReservationsPerGarage(context, garage.id),
                 );
               },
             );

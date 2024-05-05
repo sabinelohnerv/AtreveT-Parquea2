@@ -63,6 +63,7 @@ class _AddVehicleViewState extends State<AddVehicleView> {
                         Expanded(
                           child: CustomTextFormField(
                             labelText: 'Marca',
+                            enabled: true,
                             controller: vehicleViewModel.makeController,
                             prefixIcon: const Icon(Icons.build_rounded),
                           ),
@@ -71,6 +72,7 @@ class _AddVehicleViewState extends State<AddVehicleView> {
                         Expanded(
                           child: CustomTextFormField(
                             labelText: 'Modelo',
+                            enabled: true,
                             controller: vehicleViewModel.modelController,
                             prefixIcon: const Icon(Icons.directions_car_filled),
                           ),
@@ -79,6 +81,7 @@ class _AddVehicleViewState extends State<AddVehicleView> {
                     ),
                     CustomTextFormField(
                       labelText: 'Número de placa',
+                      enabled: true,
                       controller: vehicleViewModel.plateController,
                       prefixIcon: const Icon(Icons.numbers_outlined),
                     ),
