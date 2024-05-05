@@ -8,6 +8,8 @@ import '/views/widgets/animations.dart';
 import 'login_view.dart';
 
 class ClientRegisterView extends StatelessWidget {
+  const ClientRegisterView({super.key});
+
   @override
   Widget build(BuildContext context) {
     final viewModel = Provider.of<ClientRegisterViewModel>(context);
