@@ -38,8 +38,8 @@ class _ClientHomeViewState extends State<ClientHomeView> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 255, 188, 7),
-        title: const Text('PARKEADO',
-            style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text('SWIFT PARK',
+            style: TextStyle(fontWeight: FontWeight.w800)),
         foregroundColor: Colors.white,
         centerTitle: true,
         iconTheme: const IconThemeData(color: Colors.white),
