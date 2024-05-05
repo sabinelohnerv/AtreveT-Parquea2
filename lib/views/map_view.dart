@@ -145,7 +145,7 @@ class _MapScreenState extends State<MapScreen> {
               : GoogleMap(
                   onMapCreated: _onMapCreated,
                   initialCameraPosition: CameraPosition(
-                    target: initialPosition!,
+                    target: initialPosition ?? const LatLng(-17.7833, -63.1821),
                     zoom: 18,
                   ),
                   style: _mapStyle,
