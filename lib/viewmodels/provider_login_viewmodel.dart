@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -40,10 +42,10 @@ class LoginViewModel extends ChangeNotifier {
 
       switch (role) {
         case 'client':
-          Navigator.pushReplacementNamed(context, '/home');
+          Navigator.pushReplacementNamed(context, '/clientHome');
           break;
         case 'provider':
-          Navigator.pushReplacementNamed(context, '/home');
+          Navigator.pushReplacementNamed(context, '/providerHome');
           break;
         default:
           throw Exception('Unknown user role');
