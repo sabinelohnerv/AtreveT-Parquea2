@@ -27,7 +27,7 @@ class HomeGaragesCarousel extends StatelessWidget {
     } else {
       carouselItems.add(GarageCarouselCard(
         imageUrl: defaultImageUrl,
-        title: "Welcome",
+        title: "¡Bienvenido!",
       ));
       carouselItems.addAll(garages.map((garage) {
         return InkWell(
