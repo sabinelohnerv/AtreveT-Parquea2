@@ -129,7 +129,7 @@ class GarageDetails extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.only(top: 15.0),
                           child: Text(
-                            '${garage.location.coordinates}\n${garage.location.location}\n${garage.location.reference}',
+                            '${garage.location.location}\n${garage.location.reference}',
                             style: const TextStyle(
                                 fontSize: 18, fontWeight: FontWeight.w100),
                           ),

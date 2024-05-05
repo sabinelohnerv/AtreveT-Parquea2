@@ -36,6 +36,10 @@ class _MapScreenState extends State<MapScreen> {
     var status = await Permission.locationWhenInUse.request();
     if (status.isGranted) {
       determinePosition();
+    } else {
+      setState(() {
+        initialPosition = const LatLng(-17.7833, -63.1821);
+      });
     }
   }
 
@@ -145,7 +149,9 @@ class _MapScreenState extends State<MapScreen> {
               : GoogleMap(
                   onMapCreated: _onMapCreated,
                   initialCameraPosition: CameraPosition(
-                    target: initialPosition ?? const LatLng(-17.7833, -63.1821),
+                    target: initialPosition ??
+                        LatLng(-17.7833,
+                            -63.1821), // Default location if GPS not enabled
                     zoom: 18,
                   ),
                   style: _mapStyle,
