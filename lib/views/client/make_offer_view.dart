@@ -113,8 +113,9 @@ class _MakeOfferViewState extends State<MakeOfferView> {
                           ],
                         ),
                         Padding(
-                          padding: const EdgeInsets.all(15.0),
+                          padding: const EdgeInsets.all(10.0),
                           child: DropdownButtonFormField<Vehicle>(
+                            isExpanded: true,
                             value: viewModel.vehicle,
                             onChanged: (Vehicle? newValue) {
                               if (newValue != null) {
