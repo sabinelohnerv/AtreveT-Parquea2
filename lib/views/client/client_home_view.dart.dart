@@ -47,6 +47,7 @@ class _ClientHomeViewState extends State<ClientHomeView> {
       drawer: CustomDrawer(
         fullName: userViewModel.currentClient!.fullName,
         email: userViewModel.currentClient!.email,
+        rating: userViewModel.currentClient!.averageRating,
         onSignOut: () => _handleSignOut(context, userViewModel),
       ),
       body: const Stack(
