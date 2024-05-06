@@ -132,7 +132,7 @@ class EditGarageViewModel extends ChangeNotifier {
 
 
 
-  Future<void> showAddTimeDialog(BuildContext context, String day) async {
+ Future<void> showAddTimeDialog(BuildContext context, String day) async {
   TimeOfDay? startTime;
   TimeOfDay? endTime;
 
@@ -195,6 +195,15 @@ class EditGarageViewModel extends ChangeNotifier {
               ),
             ),
             const SizedBox(height: 8),
+            Text(
+              "O",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 8),
             ElevatedButton(
               onPressed: () {
                 AvailableTime newTime = AvailableTime(
@@ -248,6 +257,8 @@ class EditGarageViewModel extends ChangeNotifier {
 }
 
 
+
+
 void showEditTimeDialog(BuildContext context, String day, AvailableTime time) {
   showDialog(
     context: context,
@@ -256,7 +267,7 @@ void showEditTimeDialog(BuildContext context, String day, AvailableTime time) {
       TimeOfDay initialEndTime = timeOfDayFromString(time.endTime);
 
       return AlertDialog(
-        title: Text('Editar horario para $day', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+        title: Text('Editar horario', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
         content: StatefulBuilder(
           builder: (BuildContext context, StateSetter setState) {
             return Column(
