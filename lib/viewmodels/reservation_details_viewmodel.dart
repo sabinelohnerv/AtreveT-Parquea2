@@ -135,7 +135,6 @@ class ReservationDetailsViewModel extends ChangeNotifier {
       await updateGarageReservationsCompleted(garageId);
       await updateGarageSpaceState(garageId, spaceId, 'libre');
       await updateClientRating(clientId, rating);
-      await updateReservationClientRating(clientId, rating);
       showSnackbar(context, 'Reserva finalizada y cliente calificado con éxito',
           Colors.green);
     } catch (error) {
@@ -149,7 +148,6 @@ class ReservationDetailsViewModel extends ChangeNotifier {
     try {
       await updateReservationState(reservationId, 'finalized');
       await updateGarageRating(garageId, rating);
-      await updateReservationGarageRating(garageId, rating);
       showSnackbar(context, 'Reserva finalizada y garaje calificado con éxito',
           Colors.green);
     } catch (error) {

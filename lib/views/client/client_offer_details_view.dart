@@ -91,7 +91,8 @@ class ClientOfferDetailsView extends StatelessWidget {
                         ],
                       ),
                     ),
-                    (offer.state != 'rejected-by-provider')
+                    (offer.state != 'rejected-by-provider' &&
+                            offer.state != 'accepted')
                         ? (offer.client.id != offer.lastOfferBy)
                             ? Row(
                                 mainAxisAlignment:
@@ -150,13 +151,17 @@ class ClientOfferDetailsView extends StatelessWidget {
                                 child: Text(
                                     'Espera una respuesta del proveedor...'),
                               )
-                        : const Padding(
-                            padding: EdgeInsets.symmetric(
+                        : Padding(
+                            padding: const EdgeInsets.symmetric(
                                 vertical: 10, horizontal: 4),
                             child: Text(
-                              'OFERTA RECHAZADA',
+                              offer.state == 'rejected-by-provider'
+                                  ? 'OFERTA RECHAZADA'
+                                  : 'OFERTA ACEPTADA',
                               style: TextStyle(
-                                  color: Colors.red,
+                                  color: offer.state == 'rejected-by-provider'
+                                      ? Colors.red
+                                      : Colors.green,
                                   fontSize: 24,
                                   fontWeight: FontWeight.w500),
                               maxLines: 3,
@@ -237,7 +242,8 @@ class ClientOfferDetailsView extends StatelessWidget {
               ),
             ),
             persistentFooterButtons: [
-              if (offer.state != 'rejected-by-provider')
+              if (offer.state != 'rejected-by-provider' &&
+                  offer.state != 'accepted')
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
