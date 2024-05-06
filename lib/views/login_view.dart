@@ -6,7 +6,7 @@ import '../viewmodels/provider/provider_login_viewmodel.dart';
 import '/views/widgets/animations.dart';
 
 class LoginView extends StatelessWidget {
-  const LoginView({super.key});
+  const LoginView({Key? key});
 
   @override
   Widget build(BuildContext context) {
@@ -29,11 +29,11 @@ class LoginViewStateful extends StatefulWidget {
   final TextEditingController passwordController;
 
   const LoginViewStateful({
-    super.key,
+    Key? key,
     required this.loginViewModel,
     required this.emailController,
     required this.passwordController,
-  });
+  }) : super(key: key);
 
   @override
   _LoginViewStatefulState createState() => _LoginViewStatefulState();
@@ -61,7 +61,7 @@ class _LoginViewStatefulState extends State<LoginViewStateful> {
               ),
               Container(
                 width: double.infinity,
-                height: MediaQuery.of(context).size.width * 1.43,
+                height: MediaQuery.of(context).size.height,
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: const BorderRadius.only(
