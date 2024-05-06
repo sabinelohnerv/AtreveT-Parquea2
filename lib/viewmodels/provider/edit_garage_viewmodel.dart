@@ -119,63 +119,109 @@ class EditGarageViewModel extends ChangeNotifier {
     }
   }
 
+  void setStateForDay(String day, AvailableTime time, bool needsClear) {
+  int index = _originalGarage.availableTime.indexWhere((d) => d.day == day);
+  if (index != -1) {
+    if (needsClear) {
+      _originalGarage.availableTime[index].availableTime = [];
+    }
+    _originalGarage.availableTime[index].availableTime?.add(time);
+    notifyListeners();
+  }
+}
 
-  void showAddTimeDialog(BuildContext context, String day) {
-  showDialog(
+
+
+  Future<void> showAddTimeDialog(BuildContext context, String day) async {
+  TimeOfDay? startTime;
+  TimeOfDay? endTime;
+
+  await showDialog(
     context: context,
     builder: (BuildContext dialogContext) {
-      TimeOfDay? startTime;
-      TimeOfDay? endTime;
-
-      return StatefulBuilder(
-        builder: (BuildContext context, StateSetter setState) {
-          return AlertDialog(
-            title: const Text(
-              'Agregar nuevo rango de disponibilidad',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+      return AlertDialog(
+        title: const Text(
+          'Agregar nuevo rango de disponibilidad',
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey.shade400),
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: ListTile(
+                title: Text(startTime == null
+                    ? 'Selecciona la Hora de Inicio'
+                    : 'Hora de Inicio: ${formatTimeOfDay(startTime!)}'),
+                onTap: () async {
+                  TimeOfDay? pickedStartTime = await showTimePicker(
+                    context: dialogContext,
+                    initialTime: TimeOfDay.now(),
+                  );
+                  if (pickedStartTime != null) {
+                    startTime = pickedStartTime;
+                    (dialogContext as Element).markNeedsBuild();
+                  }
+                },
+              ),
             ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                ListTile(
-                  title: Text(startTime == null
-                      ? 'Selecciona la Hora de Inicio'
-                      : 'Hora de Inicio: ${formatTimeOfDay(startTime!)}'),
-                  onTap: () async {
-                    TimeOfDay? pickedStartTime = await showTimePicker(
-                      context: context,
-                      initialTime: TimeOfDay.now(),
-                    );
-                    if (pickedStartTime != null) {
-                      setState(() {
-                        startTime = pickedStartTime;
-                      });
-                    }
-                  },
-                ),
-                ListTile(
-                  title: Text(endTime == null
-                      ? 'Selecciona la Hora de Fin'
-                      : 'Hora de Fin: ${formatTimeOfDay(endTime!)}'),
-                  onTap: () async {
-                    TimeOfDay? pickedEndTime = await showTimePicker(
-                      context: context,
-                      initialTime: TimeOfDay.now().replacing(hour: TimeOfDay.now().hour + 1),
-                    );
-                    if (pickedEndTime != null) {
-                      setState(() {
-                        endTime = pickedEndTime;
-                      });
-                    }
-                  },
-                ),
-              ],
+            const SizedBox(height: 8),
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey.shade400),
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: ListTile(
+                title: Text(endTime == null
+                    ? 'Selecciona la Hora de Fin'
+                    : 'Hora de Fin: ${formatTimeOfDay(endTime!)}'),
+                onTap: () async {
+                  TimeOfDay? pickedEndTime = await showTimePicker(
+                    context: dialogContext,
+                    initialTime: TimeOfDay.now()
+                        .replacing(hour: TimeOfDay.now().hour + 1),
+                  );
+                  if (pickedEndTime != null) {
+                    endTime = pickedEndTime;
+                    (dialogContext as Element).markNeedsBuild();
+                  }
+                },
+              ),
             ),
-            actions: [
+            const SizedBox(height: 8),
+            ElevatedButton(
+              onPressed: () {
+                AvailableTime newTime = AvailableTime(
+                  startTime: '00:00',
+                  endTime: '23:59',
+                );
+                setStateForDay(day, newTime, true);
+                Navigator.of(dialogContext).pop();
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Theme.of(context).primaryColor,
+                foregroundColor: Colors.black,
+              ),
+              child: const Text('Disponible Todo El Día'),
+            ),
+          ],
+        ),
+        actions: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
               TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: const Text('Cancelar'),
+                onPressed: () => Navigator.of(dialogContext).pop(),
+                child: const Text(
+                  'Cancelar',
+                  style: TextStyle(color: Colors.black),
+                ),
               ),
               TextButton(
                 onPressed: () {
@@ -184,19 +230,23 @@ class EditGarageViewModel extends ChangeNotifier {
                       startTime: formatTimeOfDay(startTime!),
                       endTime: formatTimeOfDay(endTime!),
                     );
-                    addAvailableTime(day, newTime);
-                    Navigator.of(context).pop();
+                    setStateForDay(day, newTime, false);
+                    Navigator.of(dialogContext).pop();
                   }
                 },
-                child: const Text('Guardar'),
+                child: const Text(
+                  'Guardar',
+                  style: TextStyle(color: Colors.black),
+                ),
               ),
             ],
-          );
-        },
+          ),
+        ],
       );
     },
   );
 }
+
 
 void showEditTimeDialog(BuildContext context, String day, AvailableTime time) {
   showDialog(
@@ -205,59 +255,74 @@ void showEditTimeDialog(BuildContext context, String day, AvailableTime time) {
       TimeOfDay initialStartTime = timeOfDayFromString(time.startTime);
       TimeOfDay initialEndTime = timeOfDayFromString(time.endTime);
 
-      return StatefulBuilder(
-        builder: (context, setState) {
-          return AlertDialog(
-            title: Text('Editar horario para $day'),
-            content: Column(
+      return AlertDialog(
+        title: Text('Editar horario para $day', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+        content: StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                ListTile(
-                  title: Text('Hora de inicio: ${formatTimeOfDay(initialStartTime)}'),
-                  onTap: () async {
-                    TimeOfDay? newStartTime = await showTimePicker(
-                      context: context,
-                      initialTime: initialStartTime,
-                    );
-                    if (newStartTime != null) {
-                      setState(() {
-                        time.startTime = formatTimeOfDay(newStartTime);
-                      });
-                    }
-                  },
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(color: Colors.grey.shade300),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: ListTile(
+                    title: Text('Hora de inicio: ${formatTimeOfDay(initialStartTime)}'),
+                    onTap: () async {
+                      TimeOfDay? newStartTime = await showTimePicker(
+                        context: context,
+                        initialTime: initialStartTime,
+                      );
+                      if (newStartTime != null) {
+                        setState(() => time.startTime = formatTimeOfDay(newStartTime));
+                      }
+                    },
+                  ),
                 ),
-                ListTile(
-                  title: Text('Hora de fin: ${formatTimeOfDay(initialEndTime)}'),
-                  onTap: () async {
-                    TimeOfDay? newEndTime = await showTimePicker(
-                      context: context,
-                      initialTime: initialEndTime,
-                    );
-                    if (newEndTime != null) {
-                      setState(() {
-                        time.endTime = formatTimeOfDay(newEndTime);
-                      });
-                    }
-                  },
+                SizedBox(height: 10),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(color: Colors.grey.shade300),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: ListTile(
+                    title: Text('Hora de fin: ${formatTimeOfDay(initialEndTime)}'),
+                    onTap: () async {
+                      TimeOfDay? newEndTime = await showTimePicker(
+                        context: context,
+                        initialTime: initialEndTime,
+                      );
+                      if (newEndTime != null) {
+                        setState(() => time.endTime = formatTimeOfDay(newEndTime));
+                      }
+                    },
+                  ),
                 ),
               ],
-            ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  updateDayAvailability(day, _originalGarage.availableTime.firstWhere((x) => x.day == day).availableTime!);
-                  notifyListeners();
-                  Navigator.of(context).pop();
-                },
-                child: const Text('Guardar'),
-              ),
-            ],
-          );
-        },
+            );
+          },
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: const Text('Cancelar', style: TextStyle(color: Colors.black)),
+          ),
+          TextButton(
+            onPressed: () {
+              updateDayAvailability(day, [time]);
+              Navigator.of(dialogContext).pop();
+            },
+            child: const Text('Guardar', style: TextStyle(color: Colors.black)),
+          ),
+        ],
       );
     },
   );
 }
+
 
 
 
