@@ -51,6 +51,10 @@ void main() async {
 Future<void> _setupFirebaseMessaging() async {
   FirebaseMessaging messaging = FirebaseMessaging.instance;
 
+  // Obtener el token de APNS
+  String? apnsToken = await messaging.getAPNSToken();
+  print('APNS Token: $apnsToken');
+
   NotificationSettings settings = await messaging.requestPermission(
     alert: true,
     badge: true,

@@ -2,6 +2,14 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>UIBackgroundModes</key>
+	<array>
+	<string>remote-notification</string>
+	</array>
+	<key>NSRemoteNotificationType</key>
+	<string>enabled</string>
+	<key>NSAllowsArbitraryLoads</key>
+	<true/>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Para proporcionarte una experiencia completa y mantener actualizados los datos sobre la disponibilidad de espacios de garaje, necesitamos acceder a tu ubicación incluso cuando la aplicación no está en primer plano.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
