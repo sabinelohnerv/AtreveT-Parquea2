@@ -8,7 +8,7 @@ import 'home_card.dart';
 class HomeGaragesCarousel extends StatelessWidget {
   final List<Garage> garages;
   final String defaultImageUrl =
-      'https://firebasestorage.googleapis.com/v0/b/atrevet-parquea2.appspot.com/o/garage_images%2Fdefault.png?alt=media&token=3d0002e0-018e-4898-98ce-25aa36e0fdd6';
+      'https://firebasestorage.googleapis.com/v0/b/atrevet-parquea2.appspot.com/o/defaults%2Fdefault.png?alt=media&token=0f75d437-93b9-4fc9-a740-af32d55dd23a';
 
   const HomeGaragesCarousel({
     super.key,
@@ -22,7 +22,7 @@ class HomeGaragesCarousel extends StatelessWidget {
     if (garages.isEmpty) {
       carouselItems.add(GarageCarouselCard(
         imageUrl: defaultImageUrl,
-        title: "No Garages Available",
+        title: "No hay garajes registrados",
       ));
     } else {
       carouselItems.add(GarageCarouselCard(

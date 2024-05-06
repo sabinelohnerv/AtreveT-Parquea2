@@ -53,6 +53,9 @@ class _GarageDetailPanelState extends State<GarageDetailPanel> {
   @override
   Widget build(BuildContext context) {
     Color primaryColor = Theme.of(context).colorScheme.primary;
+    String ratingText = widget.garage.ratingsCompleted == 0
+        ? '${widget.garage.rating.toStringAsFixed(1)} / 5'
+        : 'N/A';
 
     return DraggableScrollableSheet(
       controller: widget.controller,
@@ -94,8 +97,7 @@ class _GarageDetailPanelState extends State<GarageDetailPanel> {
               ),
               ListTile(
                 leading: Icon(Icons.star, color: primaryColor),
-                title: Text(
-                    'Calificación: ${widget.garage.rating.toStringAsFixed(1)} / 5'),
+                title: Text('Calificación: $ratingText'),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 10),
