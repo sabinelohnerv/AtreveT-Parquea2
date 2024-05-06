@@ -99,28 +99,6 @@ class ProviderOfferDetailsView extends StatelessWidget {
                                 children: [
                                   ElevatedButton.icon(
                                     onPressed: () =>
-                                        viewModel.acceptCounterOffer(offer.id,
-                                            offer.provider.id, offer.payOffer),
-                                    label: const Text(
-                                      'ACEPTAR',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                    icon: const Icon(
-                                      Icons.check_sharp,
-                                      color: Colors.white,
-                                    ),
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.green,
-                                      foregroundColor: Colors.white,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(30),
-                                      ),
-                                    ),
-                                  ),
-                                  ElevatedButton.icon(
-                                    onPressed: () =>
                                         viewModel.submitCounterOffer(
                                       offer.id,
                                       offer.provider.id,

@@ -95,7 +95,7 @@ class GarageDetails extends StatelessWidget {
                           children: [
                             InformationTile(
                                 title: "Rating",
-                                value: garage.rating.toString(),
+                                value: garage.ratingsCompleted == 0 ? 'N/A' : garage.rating.toString(),
                                 icon: Icons.star),
                             InformationTile(
                                 title: "Espacios",

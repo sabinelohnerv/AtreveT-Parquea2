@@ -190,7 +190,6 @@ class ProviderReservationDetailsView extends StatelessWidget {
                               viewModel.reservation!.garageSpace.spaceId,
                               'ocupado',
                             );
-                            Navigator.of(context).pop();
                           },
                           color: Colors.blue),
                     if (viewModel.reservation!.state == 'active')
