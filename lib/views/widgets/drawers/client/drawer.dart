@@ -9,6 +9,7 @@ import 'package:parquea2/views/widgets/drawers/client/drawer_header.dart';
 class CustomDrawer extends StatelessWidget {
   final String fullName;
   final String email;
+  final double rating;
   final VoidCallback onSignOut;
 
   const CustomDrawer({
@@ -16,6 +17,7 @@ class CustomDrawer extends StatelessWidget {
     required this.fullName,
     required this.email,
     required this.onSignOut,
+    required this.rating,
   });
 
   @override
@@ -26,6 +28,7 @@ class CustomDrawer extends StatelessWidget {
           ClientDrawerHeaderWidget(
             fullName: fullName,
             email: email,
+            rating: rating,
           ),
           ClientDrawerBodyWidget(
             onReservationTap: () {

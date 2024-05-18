@@ -30,6 +30,8 @@ class ClientViewModel extends ChangeNotifier {
         _currentClient?.fullName = client.fullName;
         _currentClient?.phoneNumber = client.phoneNumber;
         _currentClient?.email = client.email;
+        _currentClient?.averageRating = client.averageRating;
+
         notifyListeners();
       }
     }
